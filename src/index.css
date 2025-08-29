@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  /* --font-display: "Pretendard", sans-serif; */
+  /* 추후 폰트 추가 */
+
+  --color-pint-color: #ff7043;
+
+  /* Primary color */
+  --color-primary-500: #132a4f;
+  --color-primary-400: #113d85;
+  --color-primary-300: #2667d2;
+  --color-primary-200: #72a7fe;
+  --color-primary-100: #b6d2ff;
+
+  /* Text color */
+  --color-navy-black: #1a1e27;
+  --color-dark-gray: #505866;
+  --color-light-gray: #b1b8c0;
+  --color-dark-gray-blue: #dde6f0;
+
+  /* System color */
+  --color-error: #c33f38;
+  --color-information: #3d90e3;
+  --color-warning: #eeab46;
+  --color-success: #67ac5c;
+
+  /* Label color */
+  --color-label-red: #e11321;
+  --color-label-green: #2fa800;
+  --color-label-purple: #9230cf;
+  --color-label-orange: #e86400;
+}
