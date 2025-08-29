@@ -1,8 +1,22 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Pretendard";
+  src: url("./assets/fonts/Pretendard.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "GangwonEduSaeeum";
+  src: url("./assets/fonts/GangwonEduSaeeum.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @theme {
-  /* --font-display: "Pretendard", sans-serif; */
-  /* 추후 폰트 추가 */
+  --font-pretendard: "Pretendard";
+  --font-gangwon: "GangwonEduSaeeum";
 
   --color-pint-color: #ff7043;
 
@@ -30,4 +44,8 @@
   --color-label-green: #2fa800;
   --color-label-purple: #9230cf;
   --color-label-orange: #e86400;
+}
+
+:root {
+  font-family: "Pretendard";
 }
