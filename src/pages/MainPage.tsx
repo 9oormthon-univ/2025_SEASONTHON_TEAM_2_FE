@@ -4,9 +4,9 @@ import Kakao_ChatBubble from "../assets/kakao_chatbubble.svg";
 
 function MainPage() {
     return (
-        <div className="w-screen h-screen flex flex-col justify-center items-center gap-16">
+        <div className="h-screen flex flex-col justify-center items-center gap-16">
             <div className="flex flex-col items-center">
-                <img src={Logo} />
+                <img src={Logo} alt="everflow_logo" width={518} />
                 <label className="text-primary-500 font-extrabold text-[32px]">우리가 더 가까워지는 방법</label>
             </div>
 
