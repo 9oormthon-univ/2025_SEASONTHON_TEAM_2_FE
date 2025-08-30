@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Logo from "../assets/EverFlowLogo.svg";
-import Kakao_ChatBubble from "../assets/kakao_chatbubble.svg";
+import KakaoSocialBtn from "../components/KakaoSocialBtn";
 
 function MainPage() {
     return (
@@ -11,10 +11,7 @@ function MainPage() {
             </div>
 
             <div className="flex flex-col items-center gap-6">
-                <div className="bg-[#FEE501] relative flex items-center justify-center  w-[300px] h-[45px] rounded-lg">
-                    <img src={Kakao_ChatBubble} className="absolute left-3.5" />
-                    <p className="font-semibold text-[15px]">카카오 로그인</p>
-                </div>
+                <KakaoSocialBtn />
                 <Link to={"/home"} className="font-bold text-sm underline text-dark-gray">그냥 둘러보기</Link>
             </div>
         </div>
