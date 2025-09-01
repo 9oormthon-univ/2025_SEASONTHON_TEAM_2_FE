@@ -12,43 +12,116 @@ export default function Home() {
         '2025-08-29': [{ id: 5, title: '친구와 저녁 약속' }],
     };
     return (
-        <div className="relative w-screen h-screen flex items-center justify-center px-14">
+        <div className="relative w-screen h-screen overflow-scroll flex items-center justify-center px-14 bg-[#EBEDF0]">
             <Header />
-            <div className="border border-light-gray shadow-md  w-full h-[660px] grid grid-cols-3 gap-4 p-10">
-                <div className="flex flex-col gap-4 justify-around">
-                    <div className="flex flex-col gap-4">
-                        <p className="font-semibold text-center text-navy-black text-2xl">인기 세대 토픽 Q&A 🔥</p>
-                        <div className="max-w-[439px] h-[139px] border p-5 relative rounded-lg">
-                            <input placeholder="Q. 알잘딱깔센이 무엇일까요?" className="w-full font-gangwon text-3xl" />
-                            <button className="w-[83px] h-[31px] bg-primary-500 text-white absolute bottom-3 right-5 rounded-lg">답변하기</button>
-                        </div>
-                    </div>
-                    <hr className="w-full" />
-                    <div className="flex flex-col gap-4">
-                        <p className="font-semibold text-center text-navy-black text-2xl">우리 가족 구성원</p>
-                        <div className="border-dashed max-w-[403px] h-[189px] border-3 border-light-gray grid grid-cols-4 p-5">
-                            {Array(4).fill(1).map(() => (
-                                <div className="flex flex-col items-center">
-                                    <div className="size-16 bg-light-gray rounded-full" />
-                                    <p className="text-dark-gray">구름이</p>
-                                </div>
-                            ))}
-                            <div className="flex flex-col items-center">
-                                <div className="size-16 bg-light-gray rounded-full flex items-center justify-center">
-                                    <p className="font-extrabold text-white text-4xl">+</p>
+            <div className="h-[660px] grid grid-cols-3 gap-4 p-10">
+                <div className="flex flex-col gap-4">
+                    {/* 우리 가족 섹션 */}
+                    <div className="flex flex-col gap-4 [360px] h-[165px] border border-light-gray p-4 bg-white rounded-2xl shadow-md">
+                        <div className="flex justify-between gap-6">
+                            <div className="flex items-center gap-2">
+                                <div className="size-8 bg-dark-gray" />
+                                <p className="font-semibold text-2xl">우리 가족</p>
+                            </div>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <div className="size-8 bg-dark-gray" />
+                                    <button className="font-semibold w-[131px] h-[31px] bg-primary-300 text-white rounded-xl">
+                                        구성원 추가하기 +
+                                    </button>
                                 </div>
                             </div>
                         </div>
+                        <div className="flex justify-between">
+                            {Array(4).fill(1).map((_, index) => (
+                                <div key={index} className="flex flex-col items-center gap-2">
+                                    <div className="size-12 bg-light-gray rounded-full" />
+                                    <p className="text-navy-black font-semibold">구름이</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 가족 책장 섹션 */}
+                    <div className="flex flex-col gap-6 [360px] h-[435px] border border-light-gray p-4 bg-white rounded-2xl shadow-md">
+                        <div className="flex justify-between gap-6">
+                            <div className="flex items-center gap-2">
+                                <div className="size-8 bg-dark-gray" />
+                                <p className="font-semibold text-2xl">가족 책장</p>
+                            </div>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <div className="size-8 bg-dark-gray" />
+                                    <button className="font-semibold w-[131px] h-[31px] bg-primary-300 text-white rounded-xl">
+                                        구성원 추가하기 +
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-3 gap-4">
+                            {Array(6).fill(1).map((_, index) => (
+                                <div key={index} className="flex flex-col items-center gap-2">
+                                    <div className="w-[96px] h-[120px] bg-light-gray rounded-2xl" />
+                                    <p className="text-navy-black font-semibold">00의 책</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    {/* 가족 공용 메모 섹션 */}
+                    <div className="bg-white w-full h-[122px] rounded-2xl border border-light-gray flex items-center justify-center shadow-md">
+                        <div className="size-10 bg-dark-gray" />
                     </div>
                 </div>
-                <div className=" size-20 w-full h-full border-l border-r">
-                    <p>우리 가족 캘린더</p>
-                    <CustomCalendar appointments={sampleAppointments} />
+
+                <div className="w-[573px] flex flex-col gap-4">
+                    {/* 세대별 토픽 질문 섹션 */}
+                    <div className="bg-white h-[203px] p-2 flex flex-col justify-around rounded-2xl border border-light-gray shadow-md">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <div className="size-8 bg-dark-gray" />
+                                <p className="font-semibold text-2xl">오늘의 질문</p>
+                                <span className="font-semibold text-label-red">1일 남음</span>
+                            </div>
+                            <div>
+                                <button className="font-semibold w-[131px] h-[31px] bg-primary-300 text-white rounded-xl">
+                                    구성원 추가하기 +
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <input placeholder="Q. 알잘딱깔센 이란 무슨 뜻 일까요?" className="w-full font-medium font-gangwon text-3xl" />
+                        </div>
+                        <div>
+                            <button className="font-semibold w-full h-[48px] text-xl bg-primary-300 text-white rounded-xl">
+                                답변하기
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* 질문의 답변 리스트 섹션 */}
+                    {Array(3).fill(1).map((_, index) => (
+                        <div key={index} className="bg-white h-[131px] p-2 flex flex-col justify-around rounded-2xl border border-light-gray shadow-md">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="size-8 bg-dark-gray" />
+                                    <p className="font-semibold text-2xl">엄마</p>
+                                    <span className="font-semibold text-label-red">2025.08.28 14:56</span>
+                                </div>
+                                <div>
+                                    <button className="font-semibold w-[131px] h-[31px] bg-primary-300 text-white rounded-xl">
+                                        삭제하기
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <input placeholder="Q. 알잘딱깔센 이란 무슨 뜻 일까요?" className="w-full font-medium font-gangwon text-3xl" />
+                            </div>
+                        </div>
+                    ))}
                 </div>
-                <div className="bg-pint-color size-20">
-                    예정된 약속 영역
-                </div>
+
+                <CustomCalendar appointments={sampleAppointments} />
             </div>
-        </div>
+        </div >
     )
 }
