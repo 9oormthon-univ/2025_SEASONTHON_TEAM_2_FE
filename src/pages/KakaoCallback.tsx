@@ -1,32 +1,43 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getKakaoToken, loginToServer } from "../api/authKakao";
+import { getUserProfile } from "../api/user";
 
 export default function KakaoCallback() {
-    //백엔드에 보낼 유저 code
-    const code = new URL(document.location.toString()).searchParams.get('code');
+    const code = new URL(document.location.toString()).searchParams.get('code') || "";
     const navigate = useNavigate();
 
     useEffect(() => {
-        //로딩 임시로 구현
-        const timer = setTimeout(() => {
-            navigate("/auth/on-boarding"); //온보딩 화면으로 리다이렉트 후 닉네임 설정
-        }, 3000);
+        const handleLogin = async () => {
+            try {
+                const idToken = await getKakaoToken(code);
 
-        return () => clearTimeout(timer);
-    }, [navigate]);
+                const accessToken = await loginToServer(idToken);
+
+                //받은 액세스 토큰으로 유저 정보 가져오기
+                const { email, nickname, profileUrl } = await getUserProfile(accessToken);
+
+                localStorage.setItem("userInfo", `${email}|${nickname}|${profileUrl}`);
+                navigate("/auth/on-boarding");
+
+            } catch (error) {
+                console.error("로그인 처리 중 에러 발생:", error);
+                // 에러 발생 시 예외 처리 에러 페이지로 이동
+                // navigate("/error");
+            }
+        };
+
+        if (code) {
+            handleLogin();
+        }
+    }, [code, navigate]);
 
 
     return (
         <div className="relative w-screen h-screen">
-            <div className="h-full flex flex-col gap-8 text-center font-extrabold animate-pulse relative items-center justify-center">
-                <div className="flex flex-col gap-4 ">
-                    <h1 className="text-primary-500 text-5xl">로그인 처리 중입니다...</h1>
-                    <p className="text-primary-200 text-4xl">잠시만 기다려주세요</p>
-                </div>
-                <div className="text-left font-gangwon text-4xl flex flex-col gap-8">
-                    <p>여러분은 부모님이 좋아하는 색깔을 알고계신가요?</p>
-                    <p>여러분은 자녀의 어쩌구를 알고계신가요?</p>
-                </div>
+            <div className="h-full flex flex-col gap-2 text-center font-extrabold animate-pulse relative items-center justify-center">
+                <h1 className="text-primary-500 text-4xl">로그인 처리 중입니다...</h1>
+                <p className="text-primary-200 text-3xl">잠시만 기다려주세요</p>
             </div>
         </div>
     )

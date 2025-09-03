@@ -3,6 +3,7 @@ import MainPage from "./pages/MainPage";
 import KakaoCallback from "./pages/KakaoCallback";
 import Header from "./components/Header";
 import OnBoarding from "./pages/OnBoarding";
+import Home from "./pages/Home";
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -18,5 +19,8 @@ export const router = createBrowserRouter([
             { path: "kakao/callback", element: <KakaoCallback /> },
             { path: "on-boarding", element: <OnBoarding /> }
         ]
+    }, {
+        path: "/home",
+        element: <Home />
     }
 ])
