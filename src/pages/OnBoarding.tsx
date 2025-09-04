@@ -1,33 +1,40 @@
-import { useState } from "react"
+import { useState } from "react";
+import { STEP, type StepInfo, type StepValue, type TypeValue } from "../types/onboarding.types";
+import { CreateSuccessPage, InputUserInfo, Intro, JoinPending, JoinQuestion, TermsAndConfitions } from "../components/onboarding";
 
 export default function OnBoarding() {
-    const [step, setStep] = useState(0);
+    const [stepInfo, setStepInfo] = useState<StepInfo>({
+        step: STEP.START,
+        type: "",
+    });
 
-    if (step === 0) {
-        return (
-            <div className="h-full px-28 flex flex-col justify-around gap-32">
-                <div className="self-baseline">
-                    <p className="text-primary-500 font-bold text-4xl mb-2">Everflow의 가족이 되신 것을 환영합니다.</p>
-                    <p className="font-gangwon text-4xl">여러분은 부모님, 혹은 자녀를 얼마나 알고 있나요?<br />
-                        단절되었던거 같아 답답했던 가족과의 관계, Everflow에서 풀어봐요</p>
-                </div>
-                <button onClick={() => setStep(1)} className="cursor-pointer self-end bg-primary-300 w-[473px] h-[60px] rounded-md text-white/85 text-3xl font-bold">다음</button>
-            </div>
-        )
-    }
-    if (step === 1) {
-        return (
-            <div className="h-full px-28 flex flex-col justify-around gap-32">
-                <div className="self-baseline flex flex-col gap-4">
-                    <p className="text-primary-500 font-bold text-4xl mb-2">닉네임을 설정해주세요!</p>
-                    <p className="font-gangwon text-4xl">우리 가족에게만 보여지며, 외부로 공개되지 않습니다.</p>
-                    <input placeholder="닉네임을 입력해주세요!" className="w-[602px] h-[100px] border border-light-gray rounded-lg p-5 text-2xl" />
-                </div>
-                <button className="self-end bg-primary-300 w-[473px] h-[60px] rounded-md text-white/85 text-3xl font-bold">다음</button>
-            </div>
-        )
-    }
-    return (
-        <div></div>
-    )
+    const goToNextStep = (nextStep: StepValue, type?: TypeValue) => {
+        setStepInfo({ step: nextStep, type: type || stepInfo.type });
+    };
+
+    const renderStepComponent = () => {
+        switch (stepInfo.step) {
+            case STEP.START:
+                //온보딩 홈 화면
+                return <Intro goToNextStep={goToNextStep} />;
+            case STEP.TERMS_CONDITIONS:
+                return <TermsAndConfitions goToNextStep={goToNextStep} />
+            case STEP.USER_INFO:
+                //유저 정보 입력 & 가족 검증 질문 작성 화면
+                return <InputUserInfo goToNextStep={goToNextStep} type={stepInfo.type as TypeValue} />;
+            case STEP.CREATE_COMPLETE:
+                //가족 생성 완료 시 화면
+                return <CreateSuccessPage />;
+            case STEP.JOIN_QUESTION:
+                //가족 참여 시 가족 검증 질문 작성 화면
+                return <JoinQuestion goToNextStep={goToNextStep} />;
+            case STEP.JOIN_PENDING:
+                //가족 참여 신청 완료 화면
+                return <JoinPending goToNextStep={goToNextStep} />;
+            default:
+                return <div>잘못된 접근입니다.</div>;
+        }
+    };
+
+    return <>{renderStepComponent()}</>;
 }

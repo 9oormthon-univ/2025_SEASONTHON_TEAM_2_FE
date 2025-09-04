@@ -36,8 +36,8 @@ export default function KakaoCallback() {
     return (
         <div className="relative w-screen h-screen">
             <div className="h-full flex flex-col gap-2 text-center font-extrabold animate-pulse relative items-center justify-center">
-                <h1 className="text-primary-500 text-4xl">로그인 처리 중입니다...</h1>
-                <p className="text-primary-200 text-3xl">잠시만 기다려주세요</p>
+                <h1 className="text-primary-300 text-[40px] font-kccganpan">로그인 처리 중입니다...</h1>
+                <p className="text-primary-200 text-[28px] font-extrabold">잠시만 기다려주세요</p>
             </div>
         </div>
     )

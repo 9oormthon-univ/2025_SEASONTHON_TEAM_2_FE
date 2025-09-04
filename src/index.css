@@ -14,38 +14,53 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "KCCGanpan";
+  src: url("./assets/fonts/KCCGanpan.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @theme {
   --font-pretendard: "Pretendard";
   --font-gangwon: "GangwonEduSaeeum";
+  --font-kccganpan: "KCCGanpan";
 
-  --color-pint-color: #ff7043;
+  --color-point-color-orange: #eb3d1a;
+  --color-point-color-brown: #ad7849;
 
-  /* Primary color */
+  /* 추후 삭제 */
   --color-primary-500: #132a4f;
   --color-primary-400: #113d85;
-  --color-primary-300: #2667d2;
-  --color-primary-200: #72a7fe;
-  --color-primary-100: #b6d2ff;
+
+  /* Primary color */
+  --color-primary-300: #49684a;
+  --color-primary-200: #83ad83;
+  --color-primary-100: #b1ceb1;
 
   /* Text color */
+  --color-sage-green: "#49684A";
+  --color-light-gray: #b1b8c0;
+
+  /* 추후 삭제 */
   --color-navy-black: #030232;
   --color-dark-gray: #505866;
-  --color-light-gray: #b1b8c0;
   --color-dark-gray-blue: #dde6f0;
 
-  /* System color */
-  --color-error: #c33f38;
-  --color-information: #3d90e3;
-  --color-warning: #eeab46;
-  --color-success: #67ac5c;
-
   /* Label color */
+  --color-label-pink: "#FFBCDB";
+  --color-label-blue: "#93BFFF";
+  --color-label-yellow: "#ffe691";
+  --color-label-green: #99e5a1;
+  --color-label-beige: "#FFDABD";
+
+  /* 추후 삭제 */
   --color-label-red: #e11321;
-  --color-label-green: #2fa800;
   --color-label-purple: #9230cf;
   --color-label-orange: #e86400;
 }
 
 :root {
+  background-color: #eff1f0;
   font-family: "Pretendard";
 }
