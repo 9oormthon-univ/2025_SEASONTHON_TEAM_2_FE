@@ -3,7 +3,7 @@ import HeaderLogo from "../assets/EverflowHeaderLogo.svg";
 
 export default function Header() {
     return (
-        <header className="w-screen h-20 shadow-md absolute top-0 left-0 px-[67px] py-[20px] flex items-center justify-between bg-white">
+        <header className="w-screen h-20 shadow-md z-50 absolute top-0 left-0 px-[67px] py-[20px] flex items-center justify-between bg-white">
             <Link to={"/"}>
                 <img src={HeaderLogo} alt="eveflow_header_logo" />
             </Link>
