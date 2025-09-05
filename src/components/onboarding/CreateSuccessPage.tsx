@@ -62,7 +62,7 @@ export const CreateSuccessPage = () => {
                     </div>
                     <button
                         onClick={() => navigate("/home")}
-                        className="h-[90px] w-[250px] shrink-0 cursor-pointer rounded-2xl border-2 border-primary-300 bg-[#ECF5F1] text-2xl font-bold text-primary-300 transition-colors hover:bg-primary-100"
+                        className="h-[90px] w-[250px] shrink-0 rounded-2xl border-2 border-primary-300 bg-[#ECF5F1] text-2xl font-bold text-primary-300 transition-colors hover:bg-primary-100"
                     >
                         가입완료
                     </button>

@@ -15,7 +15,7 @@ const FamilyMembersCard: React.FC<FamilyMembersCardProps> = ({ members }) => {
             <div className="flex justify-between">
                 {members.map((member) => (
                     <div key={member.id} className="flex flex-col items-center gap-2 px-2">
-                        <div className="size-12 bg-dark-gray rounded-full" /> {/* Placeholder for profile image */}
+                        <div className="size-12 bg-dark-gray rounded-full" />
                         <p className="text-[#567D57] text-lg font-kccganpan">{member.name}</p>
                     </div>
                 ))}

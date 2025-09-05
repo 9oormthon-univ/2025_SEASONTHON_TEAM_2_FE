@@ -79,7 +79,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
     const hasAppointment = (date: Date) => appointmentDates.has(moment(date).format(DATE_FORMAT));
 
     return (
-        <div className='h-[800px] m-auto p-5 overflow-hidden bg-white rounded-2xl shadow-md'>
+        <div className='h-[800-px] m-auto p-5 overflow-hidden bg-white rounded-2xl shadow-md'>
             <div className='h-fit'>
                 <header className="flex items-center mb-4">
                     <div className='flex items-center gap-1 font-kccganpan text-xl'>
@@ -87,13 +87,13 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
                         <p className='text-primary-300'>{moment(selectedDate).format("MM월")}</p>
                     </div>
                     <div className="grow" /> {/* Spacer */}
-                    <button type="button" className="bg-primary-200 text-white rounded-lg px-4 py-2 font-semibold cursor-pointer transition-colors hover:bg-primary-200 border-none">
+                    <button type="button" className="bg-primary-200 text-white rounded-lg px-4 py-2 font-semibold transition-colors hover:bg-primary-200 border-none">
                         약속 만들기 +
                     </button>
                 </header>
 
                 <main className='relative mb-8 min-h-[402px]'>
-                    <button type="button" className="cursor-pointer py-2 transition-opacity hover:opacity-70 absolute left-3 font-kccganpan" onClick={goToToday}>
+                    <button type="button" className="py-2 transition-opacity hover:opacity-70 absolute left-3 font-kccganpan" onClick={goToToday}>
                         오늘
                     </button>
                     <Calendar

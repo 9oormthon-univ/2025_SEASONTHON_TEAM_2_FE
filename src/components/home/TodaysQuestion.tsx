@@ -55,7 +55,6 @@ const TodaysQuestion: React.FC<TodaysQuestionProps> = ({ answers }) => {
                 </button>
             </div>
 
-            {/* Divider */}
             <hr className="border-t border-light-gray" />
 
             {/* Answers Section */}

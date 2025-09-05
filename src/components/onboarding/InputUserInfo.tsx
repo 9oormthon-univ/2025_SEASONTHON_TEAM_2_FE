@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { STEP, TYPE, type Step1Props } from "../../types/onboarding.types";
 import { OptionIcon } from '../../assets/icons';
 
-// --- 1. 재사용 UI 컴포넌트: InputField ---
-// 반복되는 입력 필드 구조를 하나의 컴포넌트로 분리하여 재사용성과 유지보수성을 높입니다.
 interface InputFieldProps {
     id: string;
     label: string;
@@ -13,7 +11,7 @@ interface InputFieldProps {
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     type?: 'text' | 'number';
-    name: string; // 'name' attribute for state management
+    name: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -46,8 +44,6 @@ const InputField: React.FC<InputFieldProps> = ({
 );
 
 
-// --- 2. 설정 객체: familyInputConfig ---
-// JSX 내부에 복잡하게 얽혀있던 삼항 연산자를 설정 객체로 분리하여 가독성을 높입니다.
 const familyInputConfig = {
     [TYPE.CREATE]: {
         label: "가족명을 설정해주세요!",
@@ -65,10 +61,7 @@ const familyInputConfig = {
     },
 };
 
-// --- 3. 메인 컴포넌트: InputUserInfo ---
 export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type }) => {
-    // --- 상태 관리 ---
-    // 각 입력값에 대한 상태를 관리하여 제어 컴포넌트로 만듭니다.
     const [formData, setFormData] = useState({
         nickname: '',
         familyNameOrCode: '',
@@ -81,7 +74,6 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type }) => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // --- 로직 분리 ---
     const nextStep = type === TYPE.CREATE ? STEP.CREATE_COMPLETE : STEP.JOIN_QUESTION;
     const submitButtonText = type === TYPE.CREATE ? "생성하기" : "다음";
     const currentFamilyConfig = familyInputConfig[type];
@@ -154,7 +146,7 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type }) => {
                     </div>
                     <button
                         onClick={() => goToNextStep(nextStep)}
-                        className="h-[90px] w-[250px] shrink-0 cursor-pointer rounded-2xl border-2 border-primary-300 bg-[#ECF5F1] text-2xl font-bold text-primary-300 transition-colors hover:bg-primary-100"
+                        className="h-[90px] w-[250px] shrink-0 rounded-2xl border-2 border-primary-300 bg-[#ECF5F1] text-2xl font-bold text-primary-300 transition-colors hover:bg-primary-100"
                     >
                         {submitButtonText}
                     </button>
