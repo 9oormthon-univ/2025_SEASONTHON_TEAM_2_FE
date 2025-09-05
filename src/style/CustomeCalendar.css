@@ -22,11 +22,22 @@
   width: 100%;
   border: none;
   background-color: var(--color-background);
+  font-family: var(--font-kccganpan);
 }
 
 /* 네비게이션 (년/월, < >) */
 .react-calendar__navigation {
   margin-bottom: 1em;
+}
+
+.react-calendar__navigation button {
+  font-size: 25px;
+  color: black;
+
+  &:hover,
+  &:focus {
+    background-color: transparent !important;
+  }
 }
 
 /* 년월일 */
@@ -43,7 +54,7 @@
 .react-calendar__month-view__weekdays__weekday abbr {
   text-decoration: none;
   font-weight: 500;
-  color: var(--color-text-secondary);
+  color: black;
 }
 
 /* 날짜 타일 */

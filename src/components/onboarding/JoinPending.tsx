@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { STEP, type StepProps } from "../../types/onboarding.types";
-import CheckIcon from "../../assets/CheckIcon.svg";
+import { CheckIcon } from "../../assets/icons";
 
 export const JoinPending: React.FC<StepProps> = ({ goToNextStep }) => {
     const [isModalOpen, setModalIsOpen] = useState(false);

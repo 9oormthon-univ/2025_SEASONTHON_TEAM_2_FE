@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import MagicWand from "../../assets/MagicWand.svg";
+import { MagicWand } from "../../assets/icons";
 
 export const CreateSuccessPage = () => {
     const navigate = useNavigate();

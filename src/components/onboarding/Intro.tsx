@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { STEP, TYPE, type StepProps } from "../../types/onboarding.types";
-import WarningIcon from "../../assets/WarningIcon.svg";
+import { WarningIcon } from "../../assets/icons";
 
 export const Intro: React.FC<StepProps> = ({ goToNextStep }) => {
     const [allowed, setAllowed] = useState(false);

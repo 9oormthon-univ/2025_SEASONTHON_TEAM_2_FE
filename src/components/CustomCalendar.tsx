@@ -10,6 +10,7 @@ interface Appointment {
     title: string;
     details?: string;
     attendees?: string;
+    color: string;
 }
 
 interface CustomCalendarProps {
@@ -20,14 +21,15 @@ const DATE_FORMAT = 'YYYY-MM-DD';
 
 //약속 리스트 아이템 컴포넌트
 const AppointmentItem: React.FC<{ appointment: Appointment }> = React.memo(({ appointment }) => (
-    <li className="flex justify-between items-center p-3.5 border mb-2.5 border-light-gray rounded-xl">
+    <li style={{ backgroundColor: appointment.color + "1A" }} className="flex justify-between h-[60px] items-center p-3.5 mb-4 rounded-xl relative">
+        <div style={{ backgroundColor: appointment.color }} className="h-full w-1.5 absolute left-0 rounded-l-2xl" />
         <div className="flex flex-col gap-1">
-            <span className="font-bold text-navy-black">{appointment.title}</span>
-            {appointment.details && <span className="text-sm text-light-gray">{appointment.details}</span>}
+            <span className="font-kccganpan text-[#02320B] text-sm">{appointment.title}</span>
+            {appointment.details && <span className="text-xs text-dark-gray">{appointment.details}</span>}
         </div>
         {appointment.attendees && (
-            <div className="flex items-center text-sm gap-2">
-                <span className='text-primary-300'>{appointment.attendees}</span>
+            <div className="flex flex-col items-end justify-between text-sm gap-2">
+                <span className='text-[#B2B2B2] text-xs'>{appointment.attendees}</span>
                 <span className="arrow">&gt;</span>
             </div>
         )}
@@ -36,6 +38,7 @@ const AppointmentItem: React.FC<{ appointment: Appointment }> = React.memo(({ ap
 
 // --- 메인 컴포넌트 ---
 const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
+
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [activeMonth, setActiveMonth] = useState<Date>(new Date());
 
@@ -76,54 +79,57 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
     const hasAppointment = (date: Date) => appointmentDates.has(moment(date).format(DATE_FORMAT));
 
     return (
-        <div className="w-[360px] h-[738px] overflow-scroll m-auto p-5 bg-white rounded-2xl shadow-md">
-            <header className="flex items-center mb-4">
-                <div className='flex items-center gap-1 text-xl font-medium'>
-                    <p>{moment(selectedDate).format("YYYY년")}</p>
-                    <p className='text-primary-300'>{moment(selectedDate).format("MM월")}</p>
-                </div>
-                <div className="grow" /> {/* Spacer */}
-                <button type="button" className="bg-primary-300 text-white rounded-3xl px-4 py-2 text-sm font-bold cursor-pointer transition-colors hover:bg-primary-200 border-none">
-                    약속 만들기 +
-                </button>
-            </header>
+        <div className='h-[800px] m-auto p-5 overflow-hidden bg-white rounded-2xl shadow-md'>
+            <div className='h-fit'>
+                <header className="flex items-center mb-4">
+                    <div className='flex items-center gap-1 font-kccganpan text-xl'>
+                        <p>{moment(selectedDate).format("YYYY년")}</p>
+                        <p className='text-primary-300'>{moment(selectedDate).format("MM월")}</p>
+                    </div>
+                    <div className="grow" /> {/* Spacer */}
+                    <button type="button" className="bg-primary-200 text-white rounded-lg px-4 py-2 font-semibold cursor-pointer transition-colors hover:bg-primary-200 border-none">
+                        약속 만들기 +
+                    </button>
+                </header>
 
-            <main className='relative'>
-                <button type="button" className="cursor-pointer font-medium py-2 transition-opacity hover:opacity-70 absolute left-3" onClick={goToToday}>
-                    오늘로
-                </button>
-                <Calendar
-                    onChange={handleDateChange}
-                    value={selectedDate}
-                    onActiveStartDateChange={handleMonthChange}
-                    activeStartDate={activeMonth}
-                    locale="ko-KR"
-                    calendarType='gregory'
-                    formatDay={(_, date) => moment(date).format('D')}
-                    navigationLabel={({ date }) => moment(date).format('YYYY년 MM월')}
-                    next2Label={null}
-                    prev2Label={null}
-                    tileContent={({ date, view }) =>
-                        view === 'month' && hasAppointment(date) ? <div className="size-1.5 bg-label-red rounded-full mt-1" /> : null
-                    }
-                />
-            </main>
-
+                <main className='relative mb-8 min-h-[402px]'>
+                    <button type="button" className="cursor-pointer py-2 transition-opacity hover:opacity-70 absolute left-3 font-kccganpan" onClick={goToToday}>
+                        오늘
+                    </button>
+                    <Calendar
+                        onChange={handleDateChange}
+                        value={selectedDate}
+                        onActiveStartDateChange={handleMonthChange}
+                        activeStartDate={activeMonth}
+                        locale="ko-KR"
+                        calendarType='gregory'
+                        formatDay={(_, date) => moment(date).format('D')}
+                        navigationLabel={({ date }) => moment(date).format('YYYY년 MM월')}
+                        next2Label={null}
+                        prev2Label={null}
+                        tileContent={({ date, view }) =>
+                            view === 'month' && hasAppointment(date) ? <div className="size-1.5 bg-label-red rounded-full mt-1" /> : null
+                        }
+                    />
+                </main>
+                <section>
+                    <h2 className="mb-4 px-2.5 font-kccganpan text-[#353535]">
+                        우리 {moment(selectedDate).format('YYYY년 M월 D일')}에 만나요~
+                    </h2>
+                    <div className='overflow-y-auto h-[244px] pb-16'>
+                        {selectedDateAppointments.length > 0 ? (
+                            <ul>
+                                {selectedDateAppointments.map((appt) => (
+                                    <AppointmentItem key={appt.id} appointment={appt} />
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-center px-2.5 py-8 bg-dark-gray text-white rounded-lg">등록된 약속이 없습니다. 😴</p>
+                        )}
+                    </div>
+                </section>
+            </div>
             {/* 약속 리스트 */}
-            <section className="mt-6 pt-6 border-t">
-                <h2 className="text-lg font-semibold mb-4 px-2.5">
-                    {moment(selectedDate).format('YYYY년 M월 D일')}의 약속입니다.
-                </h2>
-                {selectedDateAppointments.length > 0 ? (
-                    <ul className="list-none p-0 m-0">
-                        {selectedDateAppointments.map((appt) => (
-                            <AppointmentItem key={appt.id} appointment={appt} />
-                        ))}
-                    </ul>
-                ) : (
-                    <p className="text-center px-2.5 py-8 bg-dark-gray text-white rounded-lg">등록된 약속이 없습니다. 😴</p>
-                )}
-            </section>
         </div>
     );
 };

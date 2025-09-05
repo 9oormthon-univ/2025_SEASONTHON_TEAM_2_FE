@@ -1,0 +1,11 @@
+export { default as BellActive } from "./Bell_Active.svg";
+export { default as Bell } from "./Bell.svg";
+export { default as BookBlue } from "./Book_Blue.svg";
+export { default as BookGreen } from "./Book_Green.svg";
+export { default as BookOrange } from "./Book_Orange.svg";
+export { default as BookPink } from "./Book_Pink.svg";
+export { default as BookYellow } from "./Book_Yellow.svg";
+export { default as BookIcon } from "./BookIcon.svg";
+export { default as OptionIconGreen } from "./OptionIcon_Green.svg";
+export { default as PeoplesIcon } from "./PeoplesIcon.svg";
+export { default as QMark } from "./Q_mark.svg";

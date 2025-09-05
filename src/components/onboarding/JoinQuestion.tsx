@@ -1,5 +1,5 @@
+import { MagicWand } from "../../assets/icons";
 import { STEP, type StepProps } from "../../types/onboarding.types";
-import MagicWand from "../../assets/MagicWand.svg";
 
 export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
     return (
