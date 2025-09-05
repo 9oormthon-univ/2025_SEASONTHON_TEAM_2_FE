@@ -79,7 +79,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
     const hasAppointment = (date: Date) => appointmentDates.has(moment(date).format(DATE_FORMAT));
 
     return (
-        <div className='h-[800-px] m-auto p-5 overflow-hidden bg-white rounded-2xl shadow-md'>
+        <div className='h-[738px] m-auto p-5 overflow-hidden bg-white rounded-2xl shadow-md'>
             <div className='h-fit'>
                 <header className="flex items-center mb-4">
                     <div className='flex items-center gap-1 font-kccganpan text-xl'>

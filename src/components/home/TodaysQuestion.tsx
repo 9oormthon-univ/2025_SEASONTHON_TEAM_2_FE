@@ -16,8 +16,8 @@ const AnswerCard: React.FC<AnswerCardProps> = ({ answerData }) => (
                 <span className="font-kccganpan text-point-color-orange text-sm">{answerData.timestamp}</span>
             </div>
             {answerData.isMine && (
-                <button className="font-semibold w-[131px] h-[31px] bg-primary-300 text-white rounded-xl text-sm">
-                    삭제하기
+                <button className="font-semibold w-[44px] h-[31px] bg-primary-200 text-white rounded-lg text-sm">
+                    삭제
                 </button>
             )}
         </div>
@@ -58,7 +58,10 @@ const TodaysQuestion: React.FC<TodaysQuestionProps> = ({ answers }) => {
             <hr className="border-t border-light-gray" />
 
             {/* Answers Section */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 max-h-[500px] overflow-scroll">
+                {answers.map((item) => (
+                    <AnswerCard key={item.id} answerData={item} />
+                ))}
                 {answers.map((item) => (
                     <AnswerCard key={item.id} answerData={item} />
                 ))}

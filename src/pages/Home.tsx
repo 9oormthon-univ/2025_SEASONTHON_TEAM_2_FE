@@ -12,7 +12,7 @@ const Home: React.FC = () => {
             <Header />
             <main className="h-[660px] grid grid-cols-[360px_573px_360px] gap-4 p-10 w-full">
                 {/* 왼쪽 열 */}
-                <div className="flex flex-col gap-4 max-w-[360px]">
+                <div className="flex flex-col gap-4">
                     <FamilyMembersCard members={familyMembers} />
                     <FamilyBookshelf books={familyBooks} />
                 </div>
