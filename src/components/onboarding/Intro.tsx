@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { STEP, TYPE, type StepProps } from "../../types/onboarding.types";
-import WarningIcon from "../../assets/WarningIcon.svg";
+import { WarningIcon } from "../../assets/icons";
 
 export const Intro: React.FC<StepProps> = ({ goToNextStep }) => {
     const [allowed, setAllowed] = useState(false);
@@ -38,7 +38,7 @@ export const Intro: React.FC<StepProps> = ({ goToNextStep }) => {
                         if (!allowed) return setIsModalOpen(!allowed);
                         goToNextStep(STEP.USER_INFO, TYPE.CREATE);
                     }}
-                    className="h-[90px] w-[250px] shrink-0 cursor-pointer rounded-lg border-2 border-primary-300 bg-transparent text-2xl font-semibold transition-colors hover:bg-primary-300 hover:text-white"
+                    className="h-[90px] w-[250px] shrink-0 rounded-lg border-2 border-primary-300 bg-transparent text-2xl font-semibold transition-colors hover:bg-primary-300 hover:text-white"
                 >
                     가족 생성하기
                 </button>
@@ -52,7 +52,7 @@ export const Intro: React.FC<StepProps> = ({ goToNextStep }) => {
                             if (!allowed) return setIsModalOpen(!allowed);
                             goToNextStep(STEP.USER_INFO, TYPE.JOIN);
                         }}
-                        className="h-[90px] w-[250px] shrink-0 cursor-pointer rounded-lg bg-primary-200 text-2xl font-semibold text-white transition-opacity hover:opacity-90"
+                        className="h-[90px] w-[250px] shrink-0 rounded-lg bg-primary-200 text-2xl font-semibold text-white transition-opacity hover:opacity-90"
                     >
                         가족 참여하기
                     </button>

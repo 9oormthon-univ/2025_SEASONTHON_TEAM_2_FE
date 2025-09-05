@@ -11,7 +11,7 @@ export const router = createBrowserRouter([
     }, {
         path: "/auth",
         element:
-            <div className="relative w-screen h-screen">
+            <div className="relative w-screen h-screen max-w-[1440px] m-auto">
                 <Header />
                 <Outlet />
             </div>,

@@ -64,3 +64,8 @@
   background-color: #eff1f0;
   font-family: "Pretendard";
 }
+
+button,
+a {
+  cursor: pointer;
+}

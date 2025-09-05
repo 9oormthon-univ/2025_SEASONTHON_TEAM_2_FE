@@ -45,7 +45,7 @@ export const TermsAndConfitions: React.FC<StepProps> = ({ goToNextStep }) => {
                     onClick={() => {
                         goToNextStep(STEP.START);
                     }}
-                    className="h-[90px] w-[250px] shrink-0 cursor-pointer rounded-lg bg-primary-200 text-2xl font-semibold text-white transition-opacity hover:opacity-90"
+                    className="h-[90px] w-[250px] shrink-0 rounded-lg bg-primary-200 text-2xl font-semibold text-white transition-opacity hover:opacity-90"
                 >
                     뒤로가기
                 </button>

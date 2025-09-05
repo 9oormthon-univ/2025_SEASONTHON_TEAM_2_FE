@@ -1,5 +1,5 @@
+import { MagicWand } from "../../assets/icons";
 import { STEP, type StepProps } from "../../types/onboarding.types";
-import MagicWand from "../../assets/MagicWand.svg";
 
 export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
     return (
@@ -29,7 +29,7 @@ export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
                     </div>
                     <button
                         onClick={() => goToNextStep(STEP.JOIN_PENDING)}
-                        className="h-[90px] w-[250px] shrink-0 cursor-pointer rounded-2xl bg-primary-200 text-2xl font-bold text-white transition-colors hover:bg-primary-100"
+                        className="h-[90px] w-[250px] shrink-0 rounded-2xl bg-primary-200 text-2xl font-bold text-white transition-colors hover:bg-primary-100"
                     >
                         입장하기
                     </button>
