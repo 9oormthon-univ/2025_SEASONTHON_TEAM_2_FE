@@ -32,10 +32,11 @@ export const Intro: React.FC<StepProps> = ({ goToNextStep }) => {
                     </div>
                 )}
             </main>
-            <footer className="flex flex-wrap justify-center gap-4 self-center sm:self-end z-50" onClick={() => setIsModalOpen(!allowed)}>
+            <footer className="flex flex-wrap justify-center gap-4 self-center sm:self-end z-50">
                 <button
-                    onClick={() => {
-                        if (!allowed) return setIsModalOpen(!allowed);
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (!allowed) return setIsModalOpen(true);
                         goToNextStep(STEP.USER_INFO, TYPE.CREATE);
                     }}
                     className="h-[90px] w-[250px] shrink-0 rounded-lg border-2 border-primary-300 bg-transparent text-2xl font-semibold transition-colors hover:bg-primary-300 hover:text-white"
@@ -48,8 +49,9 @@ export const Intro: React.FC<StepProps> = ({ goToNextStep }) => {
                         <div className="absolute -bottom-2 right-4 z-[-1] size-4 rotate-45 border-b border-r border-primary-200 bg-[#ECF5F1]"></div>
                     </div>
                     <button
-                        onClick={() => {
-                            if (!allowed) return setIsModalOpen(!allowed);
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (!allowed) return setIsModalOpen(true);
                             goToNextStep(STEP.USER_INFO, TYPE.JOIN);
                         }}
                         className="h-[90px] w-[250px] shrink-0 rounded-lg bg-primary-200 text-2xl font-semibold text-white transition-opacity hover:opacity-90"
