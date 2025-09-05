@@ -1,7 +1,9 @@
 import React from "react";
 import Card from "../common/Card";
-import { QMark } from "../../assets/icons/home";
+import { Heart, QMark } from "../../assets/icons/home";
 import type { QuestionAnswer } from "../../types";
+import SectionHeader from "../common/SectionHeader";
+import ProgressBar from "./ProgressBar";
 
 interface AnswerCardProps {
     answerData: QuestionAnswer;
@@ -34,39 +36,47 @@ interface TodaysQuestionProps {
 
 const TodaysQuestion: React.FC<TodaysQuestionProps> = ({ answers }) => {
     return (
-        <Card>
-            {/* Question Section */}
-            <div className="flex flex-col gap-4 p-2 rounded-2xl">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <img src={QMark} alt="질문 아이콘" className="size-8" />
-                        <p className="font-kccganpan text-primary-300 text-2xl">오늘의 질문</p>
-                        <span className="font-kccganpan text-point-color-orange">1일 남음</span>
+        <div className="flex flex-col gap-4">
+            <Card className="h-[128px] flex flex-col justify-around">
+                <SectionHeader title="우리 가족이 이만큼 가까워졌어요!" icon={Heart} />
+                <div className="flex justify-center">
+                    <ProgressBar percentage={70} />
+                </div>
+            </Card>
+            <Card className="h-[595px]">
+                {/* Question Section */}
+                <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <img src={QMark} alt="질문 아이콘" className="size-8" />
+                            <p className="font-kccganpan text-primary-300 text-2xl">오늘의 질문</p>
+                            <span className="font-kccganpan text-point-color-orange">1일 남음</span>
+                        </div>
+                        <button className="font-semibold w-[107px] h-[31px] bg-primary-200 text-white rounded-lg text-sm">
+                            지난 질문 보기
+                        </button>
                     </div>
-                    <button className="font-semibold w-[107px] h-[31px] bg-primary-200 text-white rounded-lg text-sm">
-                        지난 질문 보기
+                    <div>
+                        <p className="text-black font-gangwon text-3xl">Q. 알잘딱깔센 이란 무슨 뜻 일까요?</p>
+                    </div>
+                    <button className="font-semibold w-full h-[48px] text-xl bg-primary-200 text-white rounded-lg">
+                        답변하기
                     </button>
                 </div>
-                <div>
-                    <p className="text-black font-gangwon text-3xl">Q. 알잘딱깔센 이란 무슨 뜻 일까요?</p>
+
+                <hr className="border-t border-light-gray" />
+
+                {/* Answers Section */}
+                <div className="flex flex-col gap-4 max-h-[430px] overflow-scroll">
+                    {answers.map((item) => (
+                        <AnswerCard key={item.id} answerData={item} />
+                    ))}
+                    {answers.map((item) => (
+                        <AnswerCard key={item.id} answerData={item} />
+                    ))}
                 </div>
-                <button className="font-semibold w-full h-[48px] text-xl bg-primary-200 text-white rounded-lg">
-                    답변하기
-                </button>
-            </div>
-
-            <hr className="border-t border-light-gray" />
-
-            {/* Answers Section */}
-            <div className="flex flex-col gap-4 max-h-[500px] overflow-scroll">
-                {answers.map((item) => (
-                    <AnswerCard key={item.id} answerData={item} />
-                ))}
-                {answers.map((item) => (
-                    <AnswerCard key={item.id} answerData={item} />
-                ))}
-            </div>
-        </Card>
+            </Card>
+        </div>
     );
 };
 

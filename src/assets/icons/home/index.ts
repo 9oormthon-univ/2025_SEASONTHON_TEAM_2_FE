@@ -9,3 +9,4 @@ export { default as BookIcon } from "./BookIcon.svg";
 export { default as OptionIconGreen } from "./OptionIcon_Green.svg";
 export { default as PeoplesIcon } from "./PeoplesIcon.svg";
 export { default as QMark } from "./Q_mark.svg";
+export { default as Heart } from "./Heart.svg";

@@ -9,3 +9,4 @@ export { default as OptionIcon } from "./OptionIcon.svg";
 export { default as ReactLogo } from "./react.svg";
 export { default as Tooltip } from "./Tooltip.svg";
 export { default as WarningIcon } from "./WarningIcon.svg";
+export { default as EFL } from "./EFL.svg";
