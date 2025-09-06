@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import moment from "moment";
 
 type ColorKey = "green" | "pink" | "orange" | "blue" | "yellow";
 
@@ -39,7 +40,7 @@ function AppointmentModalBody({
                                   onSubmit,
                                   familyCandidates,
                               }: AppointmentModalProps) {
-    const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
+    const today = useMemo(() => moment().format("YYYY-MM-DD"), []);
     const FAMILY = familyCandidates ?? ["엄마", "아빠", "언니", "동생"];
 
     const [form, setForm] = useState<AppointmentForm>({
@@ -265,7 +266,7 @@ function AppointmentModalBody({
                         <div className="sticky bottom-0 px-6 py-4 flex justify-end">
                             <button
                                 onClick={submit}
-                                className="h-12 px-6 rounded-2xl bg-primary-200 text-white font-pretendard flex items-center gap-2 hover:opacity-90"
+                                className="h-12 px-6 rounded-lg bg-primary-200 text-white font-pretendard flex items-center gap-2 hover:opacity-90"
                             >
                                 보내기
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

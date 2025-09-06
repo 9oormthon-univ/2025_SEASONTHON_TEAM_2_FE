@@ -5,6 +5,8 @@ import 'react-calendar/dist/Calendar.css';
 import '../style/CustomeCalendar.css';
 import type { Value } from 'react-calendar/dist/shared/types.js';
 import AppointmentModal from "./modal/AppointmentModal.tsx";
+import AppointmentDetailModal, {type AppointmentDetail} from "./modal/AppointmentDayDetailModal.tsx";
+
 
 interface Appointment {
     id: number;
@@ -12,6 +14,7 @@ interface Appointment {
     details?: string;
     attendees?: string;
     color: string;
+    message?:string;
 }
 
 interface CustomCalendarProps {
@@ -22,8 +25,23 @@ const DATE_FORMAT = 'YYYY-MM-DD';
 
 
 //약속 리스트 아이템 컴포넌트
-const AppointmentItem: React.FC<{ appointment: Appointment }> = React.memo(({ appointment }) => (
-    <li style={{ backgroundColor: appointment.color + "1A" }} className="flex justify-between h-[60px] items-center p-3.5 mb-4 rounded-xl relative">
+const AppointmentItem: React.FC<{
+    appointment: Appointment;
+    onClick?: (a: Appointment) => void;
+}> = React.memo(({ appointment, onClick }) => (
+    <li
+        onClick={() => onClick?.(appointment)}
+        onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onClick?.(appointment);
+            }
+        }}
+        role="button"
+        tabIndex={0}
+        style={{ backgroundColor: appointment.color + "1A" }}
+        className="flex justify-between h-[60px] items-center p-3.5 mb-4 rounded-xl relative cursor-pointer hover:opacity-90"
+    >
         <div style={{ backgroundColor: appointment.color }} className="h-full w-1.5 absolute left-0 rounded-l-2xl" />
         <div className="flex flex-col gap-1">
             <span className="font-kccganpan text-[#02320B] text-sm">{appointment.title}</span>
@@ -37,6 +55,7 @@ const AppointmentItem: React.FC<{ appointment: Appointment }> = React.memo(({ ap
         )}
     </li>
 ));
+
 
 // --- 메인 컴포넌트 ---
 const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
@@ -82,6 +101,35 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
     // 약속 유무 확인 함수
     const hasAppointment = (date: Date) => appointmentDates.has(moment(date).format(DATE_FORMAT));
 
+    // 상세 모달 상태
+    const [detailOpen, setDetailOpen] = useState(false);
+    const [detailAppt, setDetailAppt] = useState<AppointmentDetail | null>(null);
+
+// 리스트 아이템 클릭 시 상세 모달 열기
+    const openDetail = (a: Appointment) => {
+        // details 예: "8/26 11:00, 서울대공원" → 일시/장소 분리
+        let dateTime: string | undefined;
+        let place: string | undefined;
+        if (a.details) {
+            const [dt, ...rest] = a.details.split(",");
+            dateTime = dt?.trim();
+            place = rest.join(",").trim() || undefined;
+        }
+
+        setDetailAppt({
+            id: a.id,
+            title: a.title,
+            dateTime,
+            place,
+            to: a.attendees ? a.attendees.split(" ")[0] : undefined, // 대충 받는 사람 추정
+            from: "나",
+            message: a.message || "",                                 // 있으면 표시
+            color: a.color,
+        });
+        setDetailOpen(true);
+    };
+
+
     return (
         <div className='h-[738px] m-auto p-5 overflow-hidden bg-white rounded-2xl shadow-md'>
             <div className='h-fit'>
@@ -126,7 +174,10 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
                         {selectedDateAppointments.length > 0 ? (
                             <ul>
                                 {selectedDateAppointments.map((appt) => (
-                                    <AppointmentItem key={appt.id} appointment={appt} />
+                                    <AppointmentItem
+                                        key={appt.id}
+                                        appointment={appt}
+                                        onClick={openDetail}/>
                                 ))}
                             </ul>
                         ) : (
@@ -141,6 +192,16 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
                 onClose={() => setOpen(false)}
                 onSubmit={(data) => {
                     console.log('약속 저장:', data);
+                }}
+            />
+            <AppointmentDetailModal
+                isOpen={detailOpen}
+                appt={detailAppt}
+                onClose={() => setDetailOpen(false)}
+                onCancel={(id) => {
+                    // TODO: 취소 처리 로직
+                    console.log("cancel:", id);
+                    setDetailOpen(false);
                 }}
             />
         </div>

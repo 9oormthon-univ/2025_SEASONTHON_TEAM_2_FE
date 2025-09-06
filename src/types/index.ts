@@ -5,6 +5,7 @@ export interface Appointment {
   details?: string;
   attendees?: string;
   color: string;
+  message?: string;
 }
 
 // 캘린더 전체 데이터 타입 (날짜를 key로 가짐)
