@@ -4,6 +4,7 @@ import moment from 'moment';
 import 'react-calendar/dist/Calendar.css';
 import '../style/CustomeCalendar.css';
 import type { Value } from 'react-calendar/dist/shared/types.js';
+import AppointmentModal from "./modal/AppointmentModal.tsx";
 
 interface Appointment {
     id: number;
@@ -18,6 +19,7 @@ interface CustomCalendarProps {
 }
 
 const DATE_FORMAT = 'YYYY-MM-DD';
+
 
 //약속 리스트 아이템 컴포넌트
 const AppointmentItem: React.FC<{ appointment: Appointment }> = React.memo(({ appointment }) => (
@@ -41,6 +43,8 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
 
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [activeMonth, setActiveMonth] = useState<Date>(new Date());
+
+    const [open, setOpen] = useState(false);
 
     // 선택된 날짜의 약속 목록
     const formattedDate = moment(selectedDate).format(DATE_FORMAT);
@@ -87,7 +91,9 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
                         <p className='text-primary-300'>{moment(selectedDate).format("MM월")}</p>
                     </div>
                     <div className="grow" /> {/* Spacer */}
-                    <button type="button" className="bg-primary-200 text-white rounded-lg px-4 py-2 font-semibold transition-colors hover:bg-primary-200 border-none">
+                    <button type="button"
+                            onClick={()=>setOpen(true)}
+                            className="bg-primary-200 text-white rounded-lg px-4 py-2 font-semibold transition-colors hover:bg-primary-200 border-none">
                         약속 만들기 +
                     </button>
                 </header>
@@ -129,7 +135,14 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
                     </div>
                 </section>
             </div>
-            {/* 약속 리스트 */}
+            <AppointmentModal
+                isOpen={open}
+                defaultDate={formattedDate}
+                onClose={() => setOpen(false)}
+                onSubmit={(data) => {
+                    console.log('약속 저장:', data);
+                }}
+            />
         </div>
     );
 };
