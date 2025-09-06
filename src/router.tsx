@@ -3,12 +3,15 @@ import MainPage from "./pages/MainPage";
 import KakaoCallback from "./pages/KakaoCallback";
 import Header from "./components/Header";
 import Home from "./pages/Home";
+import HomeIndex from "./pages/HomeIndex";
 import IntroPage from "./pages/onboarding/IntroPage";
 import TermsPage from "./pages/onboarding/TermsPage";
 import UserInfoPage from "./pages/onboarding/UserInfoPage";
 import CreateCompletePage from "./pages/onboarding/CreateCompletePage";
 import JoinQuestionPage from "./pages/onboarding/JoinQuestionPage";
 import JoinPendingPage from "./pages/onboarding/JoinPendingPage";
+import FamilyBookshelfDetail from "./components/bookshelf/FamilyBookshelfDetail.tsx";
+
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -36,6 +39,10 @@ export const router = createBrowserRouter([
         ]
     }, {
         path: "/home",
-        element: <Home />
+        element: <Home />,
+        children:[
+            {index:true, element: <HomeIndex/>},
+            {path: "books/:bookId", element: <FamilyBookshelfDetail/>}
+        ]
     }
 ])
