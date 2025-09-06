@@ -29,10 +29,10 @@ export interface Book {
 
 // 질문 답변 타입
 export interface QuestionAnswer {
-  id: number;
-  author: string;
-  authorImageUrl?: string;
-  timestamp: string;
-  answer: string;
+  id: number; // answerId
+  author: string; // nickname
+  authorImageUrl?: string; // profileImageUrl (필요시 추가)
+  timestamp: string; // createdAt
+  answer: string; // content
   isMine?: boolean; // 본인 답변 여부
 }

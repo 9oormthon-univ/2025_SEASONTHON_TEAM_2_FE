@@ -21,7 +21,8 @@ export const sampleAppointments: AppointmentData = {
       details: "2025-09-06 11:00, 서울대공원",
       attendees: "마마 외 1인",
       color: "#FFE691",
-      message:"어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구",
+      message:
+        "어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구",
     },
     {
       id: 3,
