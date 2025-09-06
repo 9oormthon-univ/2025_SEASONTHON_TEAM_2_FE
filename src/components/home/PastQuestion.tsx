@@ -57,10 +57,10 @@ export default function PastQuestion({ data, isLoading, onClose }: Props) {
                     </div>
                 ) : (
                     data.map((q) => (
-                        <div key={q.id} className="rounded-lg bg-[#EFF1F0] p-4 cursor-pointer" onClick={() => getPastAnswer(q.id)}>
+                        <div key={q.id} className="flex flex-col gap-4 rounded-lg bg-[#EFF1F0] p-4 cursor-pointer" onClick={() => getPastAnswer(q.id)}>
                             <p className="font-gangwon text-[28px] text-black">Q. {q.question}</p>
                             {answerOpen && answer && (
-                                <>
+                                <div className="flex flex-col gap-4">
                                     {answer.map((item) => (
                                         <div key={item.answerId} className="w-full h-[137px] rounded-2xl bg-white flex flex-col gap-4 p-4">
                                             <div className="flex items-center gap-2 font-kccganpan text-lg text-primary-300">
@@ -73,7 +73,7 @@ export default function PastQuestion({ data, isLoading, onClose }: Props) {
                                             </div>
                                         </div>
                                     ))}
-                                </>
+                                </div>
                             )}
                         </div>
                     ))
