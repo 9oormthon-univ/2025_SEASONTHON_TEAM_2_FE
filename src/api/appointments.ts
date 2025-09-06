@@ -80,4 +80,59 @@ const getAppointmentsByDate = async (
   return response.data || [];
 };
 
-export { createAppointments, getAppointmentsMonth, getAppointmentsByDate };
+interface IAppointmentsDetailById {
+  // appointmentId: number;
+  // appointmentName: string;
+  // color: string;
+  // content: string;
+  // endTime: string;
+  // location: string;
+  // proposeUserName: string;
+  // startTime: string;
+  // participants: string[];
+
+  appointmentId: number;
+  appointmentName: string;
+  startTime: string;
+  endTime: string;
+  location: string;
+  content?: string;
+  proposeUserName: string;
+  color: string;
+  participantNum: number;
+  participants: string[];
+}
+
+const getAppointmentsDetailById = async (appointmentId?: number) => {
+  const response = await axios
+    .get<{ data: IAppointmentsDetailById }>(
+      `${import.meta.env.VITE_API_URL}/api/appointments/${appointmentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    )
+    .then((res) => res.data);
+  return response.data;
+};
+
+const deleteAppointmentsById = async (appointmentId: number) => {
+  const response = await axios.delete(
+    `${import.meta.env.VITE_API_URL}/api/appointments/${appointmentId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+export {
+  createAppointments,
+  getAppointmentsMonth,
+  getAppointmentsByDate,
+  getAppointmentsDetailById,
+  deleteAppointmentsById,
+};

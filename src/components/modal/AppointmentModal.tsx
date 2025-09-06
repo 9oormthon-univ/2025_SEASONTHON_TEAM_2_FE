@@ -124,7 +124,7 @@ function AppointmentModalBody({
             aria-modal="true"
             aria-label="약속 만들기"
         >
-            <div className="relative w-full max-w-[900px] pl-10">
+            <div className="relative w-full max-w-[943px] pl-10 h-[780px]">
                 <div
                     className="relative p-3"
                     style={{ backgroundColor: COLOR_TOKEN[form.color] }}
@@ -144,7 +144,10 @@ function AppointmentModalBody({
                                             className="flex flex-col items-center gap-2 focus:outline-none"
                                         >
                                             <div
-                                                className={`w-12 h-12 rounded-full flex items-center justify-center ${selectMember ? "bg-[#EDEDED]" : "bg-[#F5F5F5] "}`}
+                                                style={{
+                                                    backgroundImage: `url(${member.profileUrl})`
+                                                }}
+                                                className={`w-12 h-12 rounded-full flex items-center bg-center bg-cover justify-center ${selectMember ? "opacity-70" : "opacity-100 "}`}
                                             >
                                                 {selectMember && (
                                                     <span className="inline-block w-6 h-6 rounded-full bg-primary-200 text-white text-center">
