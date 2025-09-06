@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { STEP, TYPE, type Step1Props } from "../../types/onboarding.types";
 import { OptionIcon } from '../../assets/icons';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { familyJoinRequest } from '../../api/auth/family';
 
 interface InputFieldProps {
     id: string;
@@ -63,6 +65,7 @@ const familyInputConfig = {
 };
 
 export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type }) => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         nickname: '',
         familyNameOrCode: '',
@@ -91,6 +94,32 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type }) => {
             }
             else console.log("familyCreate 실패", res);
         })
+    }
+
+    const familyJoin = async () => {
+        const json = await familyJoinRequest(formData.nickname, formData.familyNameOrCode);
+
+        if (json.success) {
+            return navigate(`/auth/on-boarding/join-question?code=${formData.familyNameOrCode}&nickname=${formData.nickname}`);
+        }
+        else throw new Error(json.message);
+
+        // await axios.post(`${import.meta.env.VITE_API_URL}/family/join/request`, {
+        //     "nickname": formData.nickname,
+        //     "inviteCode": formData.familyNameOrCode
+        // }, {
+        //     headers: {
+        //         Authorization: `Bearer ${localStorage.getItem("access_token")}`
+        //     }
+        // }).then((res) => {
+        //     if (res.data.success) {
+        //         console.log(res.data);
+        //         return navigate(`/auth/on-boarding/join-question?code=${formData.familyNameOrCode}`);
+        //     }
+        //     else {
+        //         console.log("familyJoin Error", res.data);
+        //     }
+        // });
     }
 
     const nextStep = type === TYPE.CREATE ? STEP.CREATE_COMPLETE : STEP.JOIN_QUESTION;
@@ -164,8 +193,13 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type }) => {
                         </p>
                     </div>
                     <button
-                        onClick={() => familyCreate()}
-                        className="h-[90px] w-[250px] shrink-0 rounded-2xl border-2 border-primary-300 bg-[#ECF5F1] text-2xl font-bold text-primary-300 transition-colors hover:bg-primary-100"
+                        onClick={() => {
+                            if (type === "JOIN") {
+                                familyJoin();
+                            }
+                            else familyCreate();
+                        }}
+                        className="h-[90px] w-[250px] shrink-0 rounded-2xl border-2 ㅇborder-primary-300 bg-[#ECF5F1] text-2xl font-bold text-primary-300 transition-colors hover:bg-primary-100"
                     >
                         {submitButtonText}
                     </button>

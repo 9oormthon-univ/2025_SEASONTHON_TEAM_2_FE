@@ -23,6 +23,7 @@ const loginToServer = async (id_token: string) => {
     }
   );
   console.log("✅ 서비스 로그인 성공", res.data);
+  localStorage.setItem("access_token", res.data.data.accessToken);
   return res.data.data.accessToken;
 };
 
