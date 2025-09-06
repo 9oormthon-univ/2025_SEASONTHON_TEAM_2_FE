@@ -4,11 +4,12 @@ import { Heart, QMark } from "../../assets/icons/home";
 import SectionHeader from "../common/SectionHeader";
 import ProgressBar from "./ProgressBar";
 import PastQuestion from "./PastQuestion";
-import { answerCurrentTopic, getAnswers, getCurrentTopic, getPastTopics, isOwn } from "../../api/home/topics";
+import { answerCurrentTopic, getAnswers, getCurrentTopic, getPastTopics } from "../../api/home/topics";
 import { useQuery } from "@tanstack/react-query";
 import { diffDay } from "../../lib/util";
 import moment from "moment";
 import LoadingSpinner from "../LoadingSpinner";
+import { getProgressFamily } from "../../api/auth/family";
 
 const AnswerCard = ({ answerData }: {
     answerData: {
@@ -94,7 +95,12 @@ const TodaysQuestion = () => {
         queryFn: getPastTopics,
         enabled: view === "history",
     });
-    console.log("QWEWQEWQE@!#@!#", pastTopicsData)
+
+    const { data: percentage } = useQuery({
+        queryKey: ["percentage"],
+        queryFn: getProgressFamily
+    });
+
 
 
     return (
@@ -103,7 +109,7 @@ const TodaysQuestion = () => {
                 <Card className="h-[128px] flex flex-col justify-around">
                     <SectionHeader title="우리 가족이 이만큼 가까워졌어요!" icon={Heart} />
                     <div className="flex justify-center">
-                        <ProgressBar percentage={70} />
+                        <ProgressBar percentage={percentage} />
                     </div>
                 </Card>
             )}
