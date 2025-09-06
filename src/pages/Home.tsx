@@ -1,6 +1,5 @@
 import FamilyMembersCard from "../components/home/FamilyMembersCard";
 import FamilyBookshelf from "../components/home/FamilyBookshelf";
-import { familyBooks } from "../data/homeMockData";
 import { EFL } from "../assets/icons";
 import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -22,7 +21,7 @@ export default function HomeLayout() {
             <main className="grid grid-cols-[360px_1fr] gap-4 p-10 w-full">
                 <div className="flex flex-col gap-4">
                     <FamilyMembersCard />
-                    <FamilyBookshelf books={familyBooks} />
+                    <FamilyBookshelf />
                 </div>
                 <Outlet />
             </main>
