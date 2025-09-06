@@ -8,7 +8,7 @@ export const TermsAndConfitions: React.FC<StepProps> = ({ goToNextStep }) => {
                     <h1 className="font-kccganpan text-4xl text-primary-300">
                         서비스 이용 약관 상세보기 페이지입니다.
                     </h1>
-                    <div className="overflow-scroll p-5 w-[627px] h-[525px] bg-[#FFFCFA] border border-light-gray rounded-2xl">
+                    <div className="overflow-scroll p-5 w-[627px] h-[525px] bg-white border border-light-gray rounded-2xl">
                         <div className="text-sm leading-relaxed">
                             <h3 className="font-bold text-lg mb-4">서비스 이용약관</h3>
 
