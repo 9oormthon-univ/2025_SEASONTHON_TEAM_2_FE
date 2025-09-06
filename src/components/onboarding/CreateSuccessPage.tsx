@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { MagicWand } from "../../assets/icons";
+import type { IFamilyData } from "../../pages/onboarding/CreateCompletePage";
 
-export const CreateSuccessPage = () => {
+export const CreateSuccessPage = ({ familyData }: { familyData: IFamilyData }) => {
     const navigate = useNavigate();
+
     return (
         <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-8">
             {/* 최대 너비 제한 및 중앙 정렬 */}
@@ -14,11 +16,11 @@ export const CreateSuccessPage = () => {
                             <span className="text-primary-300">귀여운막내</span> 님 환영합니다.
                         </h1>
                         <p className="text-3xl text-primary-200">
-                            <span className="text-point-color-orange">행복한 우리집</span>의 가족 코드에요.
+                            <span className="text-point-color-orange">{familyData.familyName}</span>의 가족 코드에요.
                         </p>
                     </div>
                     <div className="my-4 flex h-[184px] w-full max-w-md items-center justify-center rounded-2xl border border-light-gray bg-white">
-                        <p className="text-6xl font-bold tracking-widest text-primary-300">000000</p>
+                        <p className="text-6xl font-bold tracking-widest text-primary-300">{familyData.familyCode}</p>
                     </div>
                     <div className="self-end text-right font-gangwon">
                         <p className="text-3xl">
@@ -41,10 +43,10 @@ export const CreateSuccessPage = () => {
                     </div>
                     <div className="flex flex-col gap-4">
                         <p className="font-kccganpan text-2xl text-primary-200">
-                            <span className="text-primary-300">Q. 질문</span> 우리 가족 구성원은 몇 명 인가요?
+                            <span className="text-primary-300">Q. 질문</span> {familyData.verificationQuestion}
                         </p>
                         <p className="font-kccganpan text-2xl text-primary-200">
-                            <span className="text-primary-300">A. 답변</span> 4명
+                            <span className="text-primary-300">A. 답변</span> {familyData.verificationAnswer}
                         </p>
                     </div>
                     <div className="text-right font-gangwon text-3xl">
