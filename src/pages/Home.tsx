@@ -1,7 +1,7 @@
 import Header from "../components/Header";
 import FamilyMembersCard from "../components/home/FamilyMembersCard";
 import FamilyBookshelf from "../components/home/FamilyBookshelf";
-import { familyMembers, familyBooks } from "../data/homeMockData";
+import { familyBooks } from "../data/homeMockData";
 import { EFL } from "../assets/icons";
 import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";

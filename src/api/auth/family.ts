@@ -64,6 +64,7 @@ interface IFamilyMyMembers {
   members: {
     nickname: string;
     profileUrl: string;
+    id: number;
   }[];
 }
 

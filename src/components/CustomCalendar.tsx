@@ -5,8 +5,11 @@ import 'react-calendar/dist/Calendar.css';
 import '../style/CustomeCalendar.css';
 import type { Value } from 'react-calendar/dist/shared/types.js';
 import AppointmentModal from "./modal/AppointmentModal.tsx";
-import AppointmentDetailModal, {type AppointmentDetail} from "./modal/AppointmentDayDetailModal.tsx";
-
+import AppointmentDetailModal, { type AppointmentDetail } from "./modal/AppointmentDayDetailModal.tsx";
+// react-query와 API 함수를 import 합니다.
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createAppointments } from '../api/appointments'; // 경로에 맞게 수정해주세요.
+import type { IAppointmentsProps } from '../api/appointments';
 
 interface Appointment {
     id: number;
@@ -14,7 +17,7 @@ interface Appointment {
     details?: string;
     attendees?: string;
     color: string;
-    message?:string;
+    message?: string;
 }
 
 interface CustomCalendarProps {
@@ -22,7 +25,6 @@ interface CustomCalendarProps {
 }
 
 const DATE_FORMAT = 'YYYY-MM-DD';
-
 
 //약속 리스트 아이템 컴포넌트
 const AppointmentItem: React.FC<{
@@ -59,27 +61,39 @@ const AppointmentItem: React.FC<{
 
 // --- 메인 컴포넌트 ---
 const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
-
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [activeMonth, setActiveMonth] = useState<Date>(new Date());
-
     const [open, setOpen] = useState(false);
 
-    // 선택된 날짜의 약속 목록
+    // react-query 클라이언트와 mutation 훅 설정
+    const queryClient = useQueryClient();
+
+    const createAppointmentMutation = useMutation({
+        mutationFn: createAppointments, // API 요청을 수행할 함수
+        onSuccess: () => {
+            alert("약속이 성공적으로 생성되었습니다. ✅");
+            // 약속 생성 성공 시, 캘린더 데이터를 다시 불러오기 위해 관련 쿼리를 무효화합니다.
+            // 'appointments'는 약속 목록을 가져오는 queryKey라고 가정합니다. 실제 사용하는 키로 변경해주세요.
+            queryClient.invalidateQueries({ queryKey: ['appointments'] });
+        },
+        onError: (error) => {
+            console.error("약속 생성 중 오류 발생:", error);
+            alert("약속 생성에 실패했습니다. 😥");
+        },
+    });
+
     const formattedDate = moment(selectedDate).format(DATE_FORMAT);
     const selectedDateAppointments = appointments[formattedDate] || [];
 
-    // 날짜 변경 핸들러
     const handleDateChange = (value: Value) => {
         if (value instanceof Date) {
             setSelectedDate(value);
         }
     };
 
-    // 월 변경 핸들러
     const handleMonthChange = ({ activeStartDate }: { activeStartDate: Date | null }) => {
         if (activeStartDate) {
-            setActiveMonth(activeStartDate); // 월 변경
+            setActiveMonth(activeStartDate);
             if (moment(activeStartDate).isSame(new Date(), 'month')) {
                 setSelectedDate(new Date());
             } else {
@@ -88,26 +102,19 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
         }
     };
 
-    // '오늘로' 버튼 클릭 핸들러
     const goToToday = () => {
         const today = new Date();
-        setActiveMonth(today); // 캘린더 뷰 업데이트
-        setSelectedDate(today); // 선택된 날짜 업데이트
+        setActiveMonth(today);
+        setSelectedDate(today);
     };
 
-    // 약속이 있는 날짜들의 Set
     const appointmentDates = new Set(Object.keys(appointments));
-
-    // 약속 유무 확인 함수
     const hasAppointment = (date: Date) => appointmentDates.has(moment(date).format(DATE_FORMAT));
 
-    // 상세 모달 상태
     const [detailOpen, setDetailOpen] = useState(false);
     const [detailAppt, setDetailAppt] = useState<AppointmentDetail | null>(null);
 
-// 리스트 아이템 클릭 시 상세 모달 열기
     const openDetail = (a: Appointment) => {
-        // details 예: "8/26 11:00, 서울대공원" → 일시/장소 분리
         let dateTime: string | undefined;
         let place: string | undefined;
         if (a.details) {
@@ -121,14 +128,13 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
             title: a.title,
             dateTime,
             place,
-            to: a.attendees ? a.attendees.split(" ")[0] : undefined, // 대충 받는 사람 추정
+            to: a.attendees ? a.attendees.split(" ")[0] : undefined,
             from: "나",
-            message: a.message || "",                                 // 있으면 표시
+            message: a.message || "",
             color: a.color,
         });
         setDetailOpen(true);
     };
-
 
     return (
         <div className='h-[738px] m-auto p-5 overflow-hidden bg-white rounded-2xl shadow-md'>
@@ -138,10 +144,10 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
                         <p>{moment(selectedDate).format("YYYY년")}</p>
                         <p className='text-primary-300'>{moment(selectedDate).format("MM월")}</p>
                     </div>
-                    <div className="grow" /> {/* Spacer */}
+                    <div className="grow" />
                     <button type="button"
-                            onClick={()=>setOpen(true)}
-                            className="bg-primary-200 text-white rounded-lg px-4 py-2 font-semibold transition-colors hover:bg-primary-200 border-none">
+                        onClick={() => setOpen(true)}
+                        className="bg-primary-200 text-white rounded-lg px-4 py-2 font-semibold transition-colors hover:bg-primary-200 border-none">
                         약속 만들기 +
                     </button>
                 </header>
@@ -177,7 +183,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
                                     <AppointmentItem
                                         key={appt.id}
                                         appointment={appt}
-                                        onClick={openDetail}/>
+                                        onClick={openDetail} />
                                 ))}
                             </ul>
                         ) : (
@@ -190,8 +196,10 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ appointments }) => {
                 isOpen={open}
                 defaultDate={formattedDate}
                 onClose={() => setOpen(false)}
-                onSubmit={(data) => {
-                    console.log('약속 저장:', data);
+                onSubmit={(data: IAppointmentsProps) => {
+                    console.log('서버로 전송할 최종 데이터:', data);
+                    // useMutation의 mutate 함수를 호출하여 API 요청을 실행합니다.
+                    createAppointmentMutation.mutate(data);
                 }}
             />
             <AppointmentDetailModal
