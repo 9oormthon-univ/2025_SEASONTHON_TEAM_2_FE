@@ -21,7 +21,7 @@ export default function HomeLayout() {
             {/* 왼쪽*/}
             <main className="grid grid-cols-[360px_1fr] gap-4 p-10 w-full">
                 <div className="flex flex-col gap-4">
-                    <FamilyMembersCard members={familyMembers} />
+                    <FamilyMembersCard />
                     <FamilyBookshelf books={familyBooks} />
                 </div>
                 <Outlet />
