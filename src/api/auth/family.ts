@@ -10,6 +10,12 @@ export interface IFamilyJoinRequstResponse {
   success: boolean;
 }
 
+export interface IFamilyEditRequest {
+    familyName: string;
+    verificationQuestion: string;
+    verificationAnswer: string;
+}
+
 const familyJoinRequest = async (
   nickname: string,
   inviteCode: string
@@ -97,4 +103,9 @@ const joinFamily = async (inviteCode: string) => {
     return res.data;
 };
 
-export { familyJoinRequest, familyJoinComplete, getMyFamilyMembers, getFamilyInfo, joinFamily, createFamily };
+const editFamilyInfo = async (data: IFamilyEditRequest) => {
+    const res = await axiosInstance.patch('/family/edit', data);
+    return res.data;
+};
+
+export { familyJoinRequest, familyJoinComplete, getMyFamilyMembers, getFamilyInfo, joinFamily, createFamily, editFamilyInfo };
