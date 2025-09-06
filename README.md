@@ -31,3 +31,86 @@ Node 버전: ≥ 20.19 (Vite 7 / plugin-react-swc)
 
 서버 상태: TanStack Query
 날짜/캘린더가 필요한 화면은 react-calendar + moment 조합 사용 하였습니다.
+
+## FE 디렉터리 가이드
+```
+├─ public/
+├─ src/
+│  ├─ api/
+│  │  ├─ auth/
+│  │  │  └─ family.ts
+│  │  ├─ home/
+│  │  │  ├─ appointments.ts
+│  │  │  └─ topics.ts
+│  │  ├─ authKakao.ts
+│  │  ├─ axiosInstance.ts
+│  │  ├─ notifications.tsx
+│  │  └─ user.ts
+│  │
+│  ├─ assets/
+│  ├─ fonts/
+│  ├─ icons/
+│  │  ├─ home/
+│  │  ├─ Bookshelf_bg.svg
+│  │  ├─ CheckIcon.svg
+│  │  ├─ EFL.svg
+│  │  ├─ EverFlowChar.svg
+│  │  ├─ EverFlowLogo.svg
+│  │  ├─ EverflowHeaderLogo.svg
+│  │  ├─ HeaderLogo.svg
+│  │  ├─ MagicWand.svg
+│  │  ├─ OptionIcon.svg
+│  │  ├─ Tooltip.svg
+│  │  ├─ WarningIcon.svg
+│  │  ├─ index.ts
+│  │  ├─ kakao_chatbubble.svg
+│  │  └─ react.svg
+│  │
+│  ├─ components/
+│  │  ├─ bookshelf/
+│  │  ├─ common/
+│  │  ├─ home/
+│  │  ├─ modal/
+│  │  ├─ notifications/
+│  │  ├─ onboarding/
+│  │  ├─ CustomCalendar.tsx
+│  │  ├─ Header.tsx
+│  │  ├─ KakaoSocialBtn.tsx
+│  │  ├─ LoadingSpinner.tsx
+│  │  └─ MainHeader.tsx
+│  │
+│  ├─ data/
+│  │  └─ homeMockData.ts
+│  │
+│  ├─ lib/
+│  │  └─ util.ts
+│  │
+│  ├─ pages/
+│  │  ├─ onboarding/
+│  │  ├─ Home.tsx
+│  │  ├─ HomeIndex.tsx
+│  │  ├─ KakaoCallback.tsx
+│  │  ├─ MainPage.tsx
+│  │  └─ NotificationsPage.tsx
+│  │
+│  ├─ style/
+│  │  └─ CustomeCalendar.css
+│  │
+│  ├─ types/
+│  │  ├─ index.ts
+│  │  └─ onboarding.types.ts
+│  │
+│  ├─ index.css
+│  ├─ main.tsx
+│  ├─ router.tsx
+│  └─ vite-env.d.ts
+│
+├─ .gitignore
+├─ LICENSE
+├─ README.md
+├─ eslint.config.js
+├─ index.html
+└─ package-lock.json
+
+
+```
