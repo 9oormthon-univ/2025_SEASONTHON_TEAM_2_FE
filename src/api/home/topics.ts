@@ -1,6 +1,5 @@
 import axios from "axios";
 import { type QuestionAnswer } from "../../types";
-import { getUserProfile } from "../user";
 
 // 오늘의 질문 API 응답 타입
 interface ICurrentTopicResponse {
@@ -100,10 +99,4 @@ export const getPastTopics = async (): Promise<IGetPastTopics[]> => {
   );
   // 데이터가 없을 경우, 기본값으로 빈 topics 배열을 가진 객체를 반환합니다.
   return response.data.data.topics || { topics: [] };
-};
-
-export const isOwn = async (id: number) => {
-  const user_id = await getUserProfile(localStorage.getItem("access_token")!);
-
-  return Boolean(user_id === id);
 };
