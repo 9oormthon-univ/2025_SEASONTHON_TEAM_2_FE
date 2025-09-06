@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { STEP, TYPE, type Step1Props } from "../../types/onboarding.types";
 import { OptionIcon } from '../../assets/icons';
+import axios from 'axios';
 
 interface InputFieldProps {
     id: string;
@@ -65,14 +66,32 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type }) => {
     const [formData, setFormData] = useState({
         nickname: '',
         familyNameOrCode: '',
-        question: '',
-        answer: '',
+        verificationQuestion: '',
+        verificationAnswer: '',
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
+
+    const familyCreate = async () => {
+        await axios.post(`${import.meta.env.VITE_API_URL}/family/create`, {
+            "nickname": formData.nickname,
+            "familyName": formData.familyNameOrCode,
+            "verificationQuestion": formData.verificationQuestion,
+            "verificationAnswer": formData.verificationAnswer
+        }, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`
+            },
+        }).then((res) => {
+            if (res.data.success) {
+                goToNextStep(nextStep);
+            }
+            else console.log("familyCreate 실패", res);
+        })
+    }
 
     const nextStep = type === TYPE.CREATE ? STEP.CREATE_COMPLETE : STEP.JOIN_QUESTION;
     const submitButtonText = type === TYPE.CREATE ? "생성하기" : "다음";
@@ -111,24 +130,24 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type }) => {
                     <section>
                         <p className="mb-4 font-kccganpan text-3xl text-primary-200">이어서, 가족 검증 질문을 작성해주세요</p>
                         <InputField
-                            id="question"
-                            name="question"
+                            id="verificationQuestion"
+                            name="verificationQuestion"
                             label="Q. 질문"
                             placeholder="우리 가족 구성원은 몇 명 인가요?"
                             maxLength={20}
                             helperText="최대 20자, 추후 수정이 가능해요"
-                            value={formData.question}
+                            value={formData.verificationQuestion}
                             onChange={handleInputChange}
                         />
                         <div className="mt-4" /> {/* 간격 추가 */}
                         <InputField
-                            id="answer"
-                            name="answer"
+                            id="verificationAnswer"
+                            name="verificationAnswer"
                             label="A. 답변"
                             placeholder="4명"
-                            maxLength={20}
-                            helperText="최대 20자, 추후 수정이 가능해요"
-                            value={formData.answer}
+                            maxLength={8}
+                            helperText="최대 8자, 추후 수정이 가능해요"
+                            value={formData.verificationAnswer}
                             onChange={handleInputChange}
                         />
                     </section>
@@ -145,7 +164,7 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type }) => {
                         </p>
                     </div>
                     <button
-                        onClick={() => goToNextStep(nextStep)}
+                        onClick={() => familyCreate()}
                         className="h-[90px] w-[250px] shrink-0 rounded-2xl border-2 border-primary-300 bg-[#ECF5F1] text-2xl font-bold text-primary-300 transition-colors hover:bg-primary-100"
                     >
                         {submitButtonText}
