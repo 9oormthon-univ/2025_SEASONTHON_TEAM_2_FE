@@ -1,70 +1,75 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import moment from "moment";
+import { useQuery } from "@tanstack/react-query";
+import { getMyFamilyMembers } from "../../api/auth/family";
+import type { IAppointmentsProps } from "../../api/appointments";
 
-type ColorKey = "green" | "pink" | "orange" | "blue" | "yellow";
+export type ColorKey = "green" | "pink" | "orange" | "blue" | "yellow";
 
 export type AppointmentForm = {
-    members: string[];
+    members: number[];
     mode: "single" | "range";
     date: string;
     time: string;
     startDate: string;
     endDate: string;
     title: string;
-    place: string;
+    location: string;
     color: ColorKey;
-    message: string;
+    content: string;
 };
 
 type AppointmentModalProps = {
     isOpen: boolean;
     defaultDate?: string;
     onClose: () => void;
-    onSubmit?: (data: AppointmentForm) => void;
+    onSubmit?: (data: IAppointmentsProps) => void;
     familyCandidates?: string[];
 };
 
 const COLOR_TOKEN: Record<ColorKey, string> = {
-    green:  "#CDECCB",
-    pink:   "#F8C8D8",
+    green: "#CDECCB",
+    pink: "#F8C8D8",
     orange: "#FFD6A5",
-    blue:   "#BDE0FE",
+    blue: "#BDE0FE",
     yellow: "#FFF3B0",
 };
 
 function AppointmentModalBody({
-                                  isOpen,
-                                  defaultDate,
-                                  onClose,
-                                  onSubmit,
-                                  familyCandidates,
-                              }: AppointmentModalProps) {
-    const today = useMemo(() => moment().format("YYYY-MM-DD"), []);
-    const FAMILY = familyCandidates ?? ["엄마", "아빠", "언니", "동생"];
+    isOpen,
+    defaultDate,
+    onClose,
+    onSubmit,
+}: AppointmentModalProps) {
+    const today = useMemo(() => moment().format("YYYY-MM-DD HH:MM"), []);
+    const { data: familyMemebers } = useQuery({
+        queryKey: ["my-family-members"],
+        queryFn: getMyFamilyMembers
+    });
 
     const [form, setForm] = useState<AppointmentForm>({
-        members: ["엄마", "동생"],
+        members: [],
         mode: "single",
         date: defaultDate ?? today,
-        time: "11:00",
+        time: "00:00",
         startDate: defaultDate ?? today,
         endDate: defaultDate ?? today,
         title: "",
-        place: "",
+        location: "",
         color: "green",
-        message: "",
+        content: "",
     });
+
     useEffect(() => {
         if (!isOpen) return;
         const prev = document.body.style.overflow;
         document.body.style.overflow = "hidden";
         const d = defaultDate ?? today;
-        setForm((p) => ({ ...p, date: d, startDate: d, endDate: d }));
+        setForm((p) => ({ ...p, date: d, startDate: d, endDate: d, members: [], title: "", location: "", content: "" }));
         return () => { document.body.style.overflow = prev; };
     }, [isOpen, defaultDate, today]);
 
-    // ESC로도 닫을 수 있게
     useEffect(() => {
         if (!isOpen) return;
         const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -74,16 +79,40 @@ function AppointmentModalBody({
 
     if (!isOpen) return null;
 
-    const toggleMember = (name: string) =>
+    const toggleMember = (id: number) =>
         setForm((p) =>
-            p.members.includes(name)
-                ? { ...p, members: p.members.filter((m) => m !== name) }
-                : { ...p, members: [...p.members, name] }
+            p.members.includes(id)
+                ? { ...p, members: p.members.filter((m) => m !== id) }
+                : { ...p, members: [...p.members, id] }
         );
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit?.(form);
+
+        let startTime: string;
+        let endTime: string;
+        const format = 'YYYY-MM-DD HH:mm'; //날짜 데이터 포맷
+
+        if (form.mode === 'single') {
+            const dateTime = moment(`${form.date} ${form.time}`).format(format);
+            startTime = dateTime;
+            endTime = dateTime;
+        } else { // 'range' mode
+            startTime = moment(form.startDate).startOf('day').format(format);
+            endTime = moment(form.endDate).endOf('day').format(format);
+        }
+
+        const serverData: IAppointmentsProps = {
+            name: form.title,
+            content: form.content,
+            location: form.location,
+            startTime,
+            endTime,
+            color: form.color.toUpperCase(),
+            participantUserIds: form.members,
+        };
+
+        onSubmit?.(serverData);
         onClose();
     };
 
@@ -95,52 +124,45 @@ function AppointmentModalBody({
             aria-modal="true"
             aria-label="약속 만들기"
         >
-            <div className="relative w-full max-w-[900px] pl-10">
-
+            <div className="relative w-full max-w-[943px] pl-10 h-[780px]">
                 <div
                     className="relative p-3"
                     style={{ backgroundColor: COLOR_TOKEN[form.color] }}
                 >
                     <div className="bg-white max-h-[85vh] overflow-hidden flex flex-col">
-
                         <div className="px-6 pt-6">
                             <h2 className="font-kccganpan text-[18px] mb-4">
                                 가족 구성원 중 약속을 신청할 사람을 선택해주세요.
                             </h2>
-
-
                             <div className="flex items-center gap-5 mb-4">
-                                {FAMILY.map((name) => {
-                                    const sel = form.members.includes(name);
+                                {familyMemebers?.members.map((member) => {
+                                    const selectMember = form.members.includes(member.id);
                                     return (
                                         <button
-                                            key={name}
-                                            type="button"
-                                            onClick={() => toggleMember(name)}
+                                            key={member.id}
+                                            onClick={() => toggleMember(member.id)}
                                             className="flex flex-col items-center gap-2 focus:outline-none"
                                         >
                                             <div
-                                                className={`w-12 h-12 rounded-full flex items-center justify-center
-                        ${sel ? "bg-[#EDEDED]"  : "bg-[#F5F5F5] "}`}
+                                                style={{
+                                                    backgroundImage: `url(${member.profileUrl})`
+                                                }}
+                                                className={`w-12 h-12 rounded-full flex items-center bg-center bg-cover justify-center ${selectMember ? "opacity-70" : "opacity-100 "}`}
                                             >
-                                                {sel && (
+                                                {selectMember && (
                                                     <span className="inline-block w-6 h-6 rounded-full bg-primary-200 text-white text-center">
-                            ✓
-                          </span>
+                                                        ✓
+                                                    </span>
                                                 )}
                                             </div>
-                                            <span className={`text-[14px] font-pretendard ${sel ? "text-primary-200" : "text-[#6B7280]"}`}>
-                        {name}
-                      </span>
+                                            <span className={`text-[14px] font-pretendard ${selectMember ? "text-primary-200" : "text-[#6B7280]"}`}>
+                                                {member.nickname}
+                                            </span>
                                         </button>
-                                    );
+                                    )
                                 })}
                             </div>
-
-
                             <div className="font-kccganpan text-[18px] mb-4">약속 날짜와 시간을 정해주세요</div>
-
-
                             <div className="flex items-center gap-4 mb-3 font-pretendard">
                                 <label className="flex items-center gap-2 cursor-pointer">
                                     <input
@@ -210,8 +232,8 @@ function AppointmentModalBody({
                                     <label className="block mb-3 font-kccganpan text-[18px]">어디서 만나나요?</label>
                                     <input
                                         placeholder="서울대공원"
-                                        value={form.place}
-                                        onChange={(e) => setForm((p) => ({ ...p, place: e.target.value }))}
+                                        value={form.location}
+                                        onChange={(e) => setForm((p) => ({ ...p, location: e.target.value }))}
                                         className="w-55 h-11 px-3 font-pretendard rounded-2xl border border-light-gray bg-[#FFFCFA]"
                                     />
                                 </div>
@@ -235,8 +257,8 @@ function AppointmentModalBody({
                                                 >
                                                     {isSel && (
                                                         <span className="inline-block w-6 h-6 rounded-full bg-primary-200 text-white text-center">
-                              ✓
-                            </span>
+                                                            ✓
+                                                        </span>
                                                     )}
                                                 </div>
                                                 <span className={`text-sm ${isSel ? "font-pretendard" : ""}`}>
@@ -245,7 +267,7 @@ function AppointmentModalBody({
                                                     {key === "orange" && "주황"}
                                                     {key === "blue" && "파랑"}
                                                     {key === "yellow" && "노랑"}
-                        </span>
+                                                </span>
                                             </button>
                                         );
                                     })}
@@ -256,8 +278,8 @@ function AppointmentModalBody({
                                 <label className="block mb-3 font-kccganpan text-[18px]">약속 신청 편지를 작성하세요</label>
                                 <textarea
                                     placeholder="편지 내용을 작성해주세요"
-                                    value={form.message}
-                                    onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
+                                    value={form.content}
+                                    onChange={(e) => setForm((p) => ({ ...p, content: e.target.value }))}
                                     className="w-full min-h-28 p-3 font-gangwon text-[28px] rounded-2xl border border-light-gray bg-[#FFFCFA]"
                                 />
                             </div>

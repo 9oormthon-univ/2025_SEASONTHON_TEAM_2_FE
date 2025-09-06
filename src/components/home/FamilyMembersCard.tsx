@@ -22,8 +22,7 @@ const FamilyMembersCard = () => {
                 <div className="justify-between grid grid-cols-4 gap-y-2">
                     {data?.members.map((member, index) => (
                         <div key={index} className="flex flex-col items-center gap-2 px-2">
-                            {/* <img src={member.profileUrl} alt={`${member.nickname}'s profile_img`} className="size-12 rounded-full" /> */}
-                            <div className="size-12 bg-black rounded-full" />
+                            <img src={member.profileUrl} alt={`${member.nickname}'s profile_img`} className="size-12 rounded-full" />
                             <p className="text-[#567D57] text-center font-kccganpan text-sm">{member.nickname}</p>
                         </div>
                     ))}
