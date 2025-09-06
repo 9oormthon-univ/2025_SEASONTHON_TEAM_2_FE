@@ -59,4 +59,24 @@ const familyJoinComplete = async (
   return json;
 };
 
-export { familyJoinRequest, familyJoinComplete };
+interface IFamilyMyMembers {
+  familyName: string;
+  members: {
+    nickname: string;
+    profileUrl: string;
+  }[];
+}
+
+const getMyFamilyMembers = async () => {
+  const data: IFamilyMyMembers = await axios
+    .get(`${import.meta.env.VITE_API_URL}/family/my/members`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    })
+    .then((res) => res.data.data);
+
+  return data;
+};
+
+export { familyJoinRequest, familyJoinComplete, getMyFamilyMembers };
