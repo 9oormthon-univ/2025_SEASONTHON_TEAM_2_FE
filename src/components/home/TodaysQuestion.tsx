@@ -19,12 +19,13 @@ const AnswerCard = ({ answerData }: {
         nickname: string;
         topicId: number;
         userId: number;
+        profileUrl: string;
     }
 }) => (
     <div className="p-2 flex flex-col gap-2">
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-                <div className="size-12 bg-dark-gray rounded-full" />
+                <img src={answerData.profileUrl} className="size-12 rounded-full" />
                 <p className="font-kccganpan text-primary-300 text-2xl">{answerData.nickname}</p>
                 <span className="font-kccganpan text-point-color-orange text-sm">{moment(answerData.createdAt).format("YYYY-MM-DD HH:MM")}</span>
             </div>
@@ -54,7 +55,7 @@ const TodaysQuestion = () => {
         queryFn: () => getAnswers(currentTopic!.id)
     });
 
-    console.log("qweqwe", currentTopic)
+    console.log("qweqwe", answerData)
     const [isWriting, setIsWriting] = useState(false);
     const [text, setText] = useState("");
     const inputRef = useRef<HTMLTextAreaElement | null>(null);
