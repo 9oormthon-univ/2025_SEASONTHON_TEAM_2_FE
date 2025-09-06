@@ -1,4 +1,5 @@
 import axios from "axios";
+import axiosInstance from "../axiosInstance.ts";
 
 export interface IFamilyJoinRequstResponse {
   code: string;
@@ -80,4 +81,20 @@ const getMyFamilyMembers = async () => {
   return data;
 };
 
-export { familyJoinRequest, familyJoinComplete, getMyFamilyMembers };
+const createFamily = async (familyName: string) => {
+    const res = await axiosInstance.post('/family', { familyName });
+    return res.data;
+};
+
+const getFamilyInfo = async () => {
+    // 👇 엔드포인트를 '/family/my'로 수정하고, 반환값을 res.data.data로 변경
+    const res = await axiosInstance.get('/family/my');
+    return res.data.data;
+};
+
+const joinFamily = async (inviteCode: string) => {
+    const res = await axiosInstance.post('/family/join', { inviteCode });
+    return res.data;
+};
+
+export { familyJoinRequest, familyJoinComplete, getMyFamilyMembers, getFamilyInfo, joinFamily, createFamily };
