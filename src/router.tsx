@@ -12,11 +12,11 @@ import JoinQuestionPage from "./pages/onboarding/JoinQuestionPage";
 import JoinPendingPage from "./pages/onboarding/JoinPendingPage";
 import FamilyBookshelfDetail from "./components/bookshelf/FamilyBookshelfDetail.tsx";
 import FamilyManage from "./components/home/FamilyManage.tsx";
+import NotificationsPage from "./pages/NotificationsPage";
 
 export const router = createBrowserRouter([
     {
-        path: "/",
-        element: <MainPage />,
+        path: "/", element: <MainPage />,
     }, {
         path: "/auth",
         element:
@@ -46,5 +46,8 @@ export const router = createBrowserRouter([
             { path: "books/:bookId", element: <FamilyBookshelfDetail /> },
             { path: "family/manage", element: <FamilyManage /> }
         ]
+    },{
+        path:"/notifications",
+        element:<NotificationsPage/>
     }
 ])
