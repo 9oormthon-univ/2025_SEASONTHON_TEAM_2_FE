@@ -7,10 +7,9 @@ export default function Header() {
 
     //로컬스토리지에 저장하는 방식 변경 요망
     const [_, __, user_profile] = localStorage.getItem("userInfo")?.split("|") || "";
-
     return (
         <header className="w-screen max-w-[1440px] h-20 shadow-md z-50 absolute top-0 left-0 px-[67px] py-[20px] flex items-center justify-between bg-white">
-            <Link to={"/"}>
+            <Link to={"/home"}>
                 <img src={EverflowHeaderLogo} alt="eveflow_header_logo" />
             </Link>
             {/* 로그인 되어있을 때 활성화 */}
