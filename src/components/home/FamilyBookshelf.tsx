@@ -82,7 +82,7 @@ export default function FamilyBookshelf() {
 
             <div className="relative pb-40">
                 {/* 콘텐츠 */}
-                <div className="grid grid-cols-3 gap-y-8 gap-x-4">
+                <div className="grid grid-cols-3 gap-y-10 gap-x-4">
                     {loading ? (
                         // 로딩 스켈레톤(간단)
                         Array.from({ length: 6 }).map((_, i) => (
@@ -109,11 +109,9 @@ export default function FamilyBookshelf() {
                             </button>
                         ))
                     )}
+                    <div className="absolute inset-x-0 top-1/3 h-2 bg-[#AD7849] rounded" />
                 </div>
-
-                {/* 선 두 줄 – 아래쪽으로 고정 */}
-                <div className="absolute inset-x-0 bottom-33 h-2 bg-[#AD7849] rounded" />
-                <div className="absolute inset-x-0 bottom-0 h-2 bg-[#AD7849] rounded" />
+                <div className="absolute inset-x-0 top-2/3 h-2 bg-[#AD7849] rounded" />
             </div>
         </Card>
     );
