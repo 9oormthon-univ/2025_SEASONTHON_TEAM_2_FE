@@ -11,6 +11,7 @@ import CreateCompletePage from "./pages/onboarding/CreateCompletePage";
 import JoinQuestionPage from "./pages/onboarding/JoinQuestionPage";
 import JoinPendingPage from "./pages/onboarding/JoinPendingPage";
 import FamilyBookshelfDetail from "./components/bookshelf/FamilyBookshelfDetail.tsx";
+import FamilyManage from "./components/home/FamilyManage.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -40,9 +41,10 @@ export const router = createBrowserRouter([
     }, {
         path: "/home",
         element: <Home />,
-        children:[
-            {index:true, element: <HomeIndex/>},
-            {path: "books/:bookId", element: <FamilyBookshelfDetail/>}
+        children: [
+            { index: true, element: <HomeIndex /> },
+            { path: "books/:bookId", element: <FamilyBookshelfDetail /> },
+            { path: "family/manage", element: <FamilyManage /> }
         ]
     }
 ])

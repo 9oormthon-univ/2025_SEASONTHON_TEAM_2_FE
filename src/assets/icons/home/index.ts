@@ -10,3 +10,5 @@ export { default as OptionIconGreen } from "./OptionIcon_Green.svg";
 export { default as PeoplesIcon } from "./PeoplesIcon.svg";
 export { default as QMark } from "./Q_mark.svg";
 export { default as Heart } from "./Heart.svg";
+export { default as Xmark } from "./Xmark.svg";
+export { default as LinkIcon } from "./LinkIcon.svg";

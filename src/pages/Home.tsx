@@ -16,16 +16,14 @@ export default function HomeLayout() {
     }, []);
 
     return (
-        <div className="relative w-screen h-screen max-w-[1440px] pt-20 m-auto flex items-center justify-center px-14 bg-[#EBEDF0]">
+        <div className="relative w-screen max-w-[1440px] pt-20 m-auto flex items-center justify-center px-14 bg-[#EBEDF0]">
             <Header />
             {/* 왼쪽*/}
             <main className="grid grid-cols-[360px_1fr] gap-4 p-10 w-full">
                 <div className="flex flex-col gap-4">
-                    <FamilyMembersCard members={familyMembers} />
+                    <FamilyMembersCard />
                     <FamilyBookshelf books={familyBooks} />
                 </div>
-
-
                 <Outlet />
             </main>
 
