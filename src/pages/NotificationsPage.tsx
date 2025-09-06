@@ -193,8 +193,7 @@ export default function NotificationsPage() {
                         )}
                     </div>
                 </section>
-
-                <CustomCalendar/>
+                <CustomCalendar />
             </main>
         </div>
     );
