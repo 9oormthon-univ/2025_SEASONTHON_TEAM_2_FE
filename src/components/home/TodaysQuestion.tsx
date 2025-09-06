@@ -5,6 +5,9 @@ import type { QuestionAnswer } from "../../types";
 import SectionHeader from "../common/SectionHeader";
 import ProgressBar from "./ProgressBar";
 import PastQuestion from "./PastQuestion";
+import { getCurrentTopic } from "../../api/home/topics";
+import { useQuery } from "@tanstack/react-query";
+import { diffDay } from "../../lib/util";
 
 interface AnswerCardProps {
     answerData: QuestionAnswer;
@@ -39,6 +42,12 @@ interface TodaysQuestionProps {
 }
 
 const TodaysQuestion: React.FC<TodaysQuestionProps> = ({ answers }) => {
+    const { data: currentTopic, isLoading: topicLoading } = useQuery({
+        queryKey: ["current-topics"],
+        queryFn: getCurrentTopic
+    });
+
+    console.log("qweqwe", currentTopic)
     const [list, setList] = useState<QuestionAnswer[]>(answers);
     const [isWriting, setIsWriting] = useState(false);
     const [text, setText] = useState("");
@@ -205,7 +214,11 @@ const TodaysQuestion: React.FC<TodaysQuestionProps> = ({ answers }) => {
                                 <div className="flex items-center gap-2">
                                     <img src={QMark} alt="질문 아이콘" className="size-8" />
                                     <p className="font-kccganpan text-primary-300 text-[24px]">오늘의 질문</p>
-                                    <span className="font-kccganpan text-point-color-orange">1일 남았어요</span> {/*백엔드 호출 값에 따라 수정 (아마도 날짜라서 등록날짜-현재날짜 이렇게?)*/}
+                                    {
+                                        currentTopic && (
+                                            <span className="font-kccganpan text-point-color-orange">{diffDay(currentTopic.activeFrom, currentTopic?.activeUntil)}</span>
+                                        )
+                                    }
                                 </div>
                                 <button
                                     onClick={() => setView("history")}
@@ -216,9 +229,15 @@ const TodaysQuestion: React.FC<TodaysQuestionProps> = ({ answers }) => {
                             </div>
 
                             <div>
-                                <p className="text-black font-gangwon text-3xl">
-                                    Q. 알잘딱깔센 이란 무슨 뜻 일까요알잘딱알잘딱알잘딱알잘딱딱알잘딱알잘딱알잘딱 0000?
-                                </p>
+                                {topicLoading ? (
+                                    <p className="text-black font-gangwon text-3xl animate-bounce text-center">
+                                        오늘의 질문을 불러오고 있어요!!
+                                    </p>
+                                ) : (
+                                    <p className="text-black font-gangwon text-3xl">
+                                        Q. {currentTopic?.question}
+                                    </p>
+                                )}
                             </div>
 
                             {isWriting && !hasMyAnswer && (
