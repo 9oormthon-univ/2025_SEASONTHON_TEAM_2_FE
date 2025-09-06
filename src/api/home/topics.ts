@@ -1,4 +1,5 @@
 import axios from "axios";
+import { type QuestionAnswer } from "../../types";
 import { QuestionAnswer } from "../../types";
 import { getUserProfile } from "../user";
 
