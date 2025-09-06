@@ -15,11 +15,18 @@ const FamilyMembersCard = () => {
 
     return (
         <Card className="h-fit">
-            <SectionHeader icon={PeoplesIcon} title="귀여운 민서네" buttonIcon={OptionIconGreen} onButtonClick={() => navigate("family/manage")} />
+            {/* 👇 "귀여운 민서네"를 API에서 받아온 familyName으로 수정했습니다. */}
+            <SectionHeader
+                icon={PeoplesIcon}
+                title={data?.familyName || "우리 가족"}
+                buttonIcon={OptionIconGreen}
+                onButtonClick={() => navigate("family/manage")}
+            />
             {isLoading ? (
                 <LoadingSpinner text="가족들이 찾아오고 있어요!" size={32} />
             ) : (
                 <div className="justify-between grid grid-cols-4 gap-y-2">
+                    {/* 데이터가 없을 경우를 대비해 optional chaining(?.)을 사용합니다. */}
                     {data?.members.map((member, index) => (
                         <div key={index} className="flex flex-col items-center gap-2 px-2">
                             <img src={member.profileUrl} alt={`${member.nickname}'s profile_img`} className="size-12 rounded-full" />

@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import Bell from "./../assets/icons/home/Bell.svg";
 import BellActive from "./../assets/icons/home/Bell_Active.svg";
 import { EverflowHeaderLogo } from "./../assets/icons";
@@ -50,25 +51,13 @@ function MyPageModal({
                 </div>
 
                 <div className="flex items-center justify-end gap-2">
-                    <button
-                        onClick={handleNickname}
-                        className="h-9 px-3 rounded-lg bg-[#EFF2EF] text-[#2A2F2A] text-sm"
-                        type="button"
-                    >
+                    <button onClick={handleNickname} className="h-9 px-3 rounded-lg bg-[#EFF2EF] text-[#2A2F2A] text-sm" type="button">
                         닉네임 수정
                     </button>
-                    <button
-                        onClick={handleProfile}
-                        className="h-9 px-3 rounded-lg bg-[#EFF2EF] text-[#2A2F2A] text-sm"
-                        type="button"
-                    >
+                    <button onClick={handleProfile} className="h-9 px-3 rounded-lg bg-[#EFF2EF] text-[#2A2F2A] text-sm" type="button">
                         프로필 수정
                     </button>
-                    <button
-                        onClick={handleLogout}
-                        className="h-9 px-3 rounded-lg bg-[#F3D7D7] text-[#D06666] text-sm"
-                        type="button"
-                    >
+                    <button onClick={handleLogout} className="h-9 px-3 rounded-lg bg-[#F3D7D7] text-[#D06666] text-sm" type="button">
                         로그아웃
                     </button>
                 </div>
@@ -77,27 +66,73 @@ function MyPageModal({
     );
 }
 
+type NotificationDTO = {
+    notificationId: number;
+    notificationType: string;
+    contentText: string;
+    link?: string;
+};
+
+const getRecentNotifications = async (): Promise<NotificationDTO[]> => {
+    const response = await axios
+        .get<{ data: NotificationDTO[] }>(
+            `${import.meta.env.VITE_API_URL}/api/notifications/recent`,
+            {
+                headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
+            }
+        )
+        .then((res) => res.data);
+
+    return response.data ?? [];
+};
+
+
+const mapKind = (t: string): NotiItem["kind"] => {
+    switch (t) {
+        case "APPOINTMENT":
+        case "APPT":
+            return "약속";
+        case "MEMBER":
+            return "구성원";
+        case "DAILY_QUESTION":
+            return "오늘의 질문";
+        default:
+            return "구성원";
+    }
+};
+
+const mapCategory = (t: string, link?: string): NotiItem["category"] =>
+    t === "APPOINTMENT" || t === "APPT" || !!link ? "action" : "read";
+
+const mapDtoToNotiItem = (dto: NotificationDTO): NotiItem => ({
+    id: dto.notificationId,
+    kind: mapKind(dto.notificationType),
+    text: dto.contentText,
+    category: mapCategory(dto.notificationType, dto.link),
+});
+
+
 export default function MainHeader({ hasUnread, disableNotiPopover }: Props) {
     const navigate = useNavigate();
     const [hovering, setHovering] = useState(false);
     const [myOpen, setMyOpen] = useState(false);
+    const [items, setItems] = useState<NotiItem[]>([]);
 
-    const bellIcon = hasUnread ? BellActive : Bell;
     const user_profile = (localStorage.getItem("userInfo")?.split("|") ?? [])[2] ?? "";
 
-    const notiItems: NotiItem[] = useMemo(
-        () => [
-            { id: 1, kind: "약속", text: "민서님이 엄마님에게 약속을 신청했어요", category: "action" },
-            { id: 2, kind: "약속", text: "아버님이 약속을 수락했어요", category: "read" },
-            { id: 3, kind: "구성원", text: "할머니님이 우리 가족에 입장했어요", category: "read" },
-            { id: 4, kind: "구성원", text: "함수님이 우리 가족 입장에 대기 중 이에요", category: "read" },
-        ],
-        []
-    );
+    useEffect(() => {
+        getRecentNotifications()
+            .then((dtos) => setItems(dtos.map(mapDtoToNotiItem)))
+            .catch(() => setItems([]));
+    }, []);
+
+    const hasAny = items.length > 0;
+    const computedHasUnread = hasAny && (hasUnread ?? true); // ← 알림 0개면 무조건 false
+    const bellIcon = computedHasUnread ? BellActive : Bell;
 
     const payload: NotiPayload[] = useMemo(
-        () => notiItems.map(({ id, kind, text, category }) => ({ id, kind, text, category })),
-        [notiItems]
+        () => items.map(({ id, kind, text, category }) => ({ id, kind, text, category })),
+        [items]
     );
 
     return (
@@ -112,7 +147,7 @@ export default function MainHeader({ hasUnread, disableNotiPopover }: Props) {
                         <div
                             className="relative"
                             onMouseEnter={() => {
-                                if (!disableNotiPopover && hasUnread) setHovering(true);
+                                if (!disableNotiPopover && computedHasUnread) setHovering(true);
                             }}
                             onMouseLeave={() => setHovering(false)}
                         >
@@ -126,7 +161,7 @@ export default function MainHeader({ hasUnread, disableNotiPopover }: Props) {
                             </button>
 
                             {!disableNotiPopover && (
-                                <NotificationPopover items={notiItems} visible={!!hasUnread && hovering} />
+                                <NotificationPopover items={items} visible={!!computedHasUnread && hovering} />
                             )}
                         </div>
                     </li>
@@ -144,11 +179,7 @@ export default function MainHeader({ hasUnread, disableNotiPopover }: Props) {
                 </ul>
             </header>
 
-            <MyPageModal
-                open={myOpen}
-                onClose={() => setMyOpen(false)}
-                avatarUrl={user_profile}
-            />
+            <MyPageModal open={myOpen} onClose={() => setMyOpen(false)} avatarUrl={user_profile} />
         </>
     );
 }

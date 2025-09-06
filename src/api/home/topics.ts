@@ -1,5 +1,6 @@
 import axios from "axios";
 import { type QuestionAnswer } from "../../types";
+import { QuestionAnswer } from "../../types";
 import { getUserProfile } from "../user";
 
 // 오늘의 질문 API 응답 타입

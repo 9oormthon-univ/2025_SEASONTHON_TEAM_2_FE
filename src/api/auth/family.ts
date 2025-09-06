@@ -1,4 +1,5 @@
 import axios from "axios";
+import axiosInstance from "../axiosInstance.ts";
 
 export interface IFamilyJoinRequstResponse {
   code: string;
@@ -7,6 +8,12 @@ export interface IFamilyJoinRequstResponse {
   };
   message: string;
   success: boolean;
+}
+
+export interface IFamilyEditRequest {
+  familyName: string;
+  verificationQuestion: string;
+  verificationAnswer: string;
 }
 
 const familyJoinRequest = async (
@@ -80,4 +87,39 @@ const getMyFamilyMembers = async () => {
   return data;
 };
 
-export { familyJoinRequest, familyJoinComplete, getMyFamilyMembers };
+const createFamily = async (familyName: string) => {
+  const res = await axiosInstance.post("/family", { familyName });
+  return res.data;
+};
+
+const getFamilyInfo = async () => {
+  // 👇 엔드포인트를 '/family/my'로 수정하고, 반환값을 res.data.data로 변경
+  const res = await axiosInstance.get("/family/my");
+  return res.data.data;
+};
+
+const joinFamily = async (inviteCode: string) => {
+  const res = await axiosInstance.post("/family/join", { inviteCode });
+  return res.data;
+};
+
+const editFamilyInfo = async (data: IFamilyEditRequest) => {
+  const res = await axiosInstance.patch("/family/edit", data);
+  return res.data;
+};
+
+const getProgressFamily = async () => {
+  const res = await axiosInstance.get("/api/home/progress");
+  return res.data.data.percentage;
+};
+
+export {
+  familyJoinRequest,
+  familyJoinComplete,
+  getMyFamilyMembers,
+  getFamilyInfo,
+  joinFamily,
+  createFamily,
+  editFamilyInfo,
+  getProgressFamily,
+};
