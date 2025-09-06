@@ -1,6 +1,5 @@
 import MainHeader from "../components/MainHeader.tsx";
 import CustomCalendar from "../components/CustomCalendar";
-import { sampleAppointments } from "../data/homeMockData";
 import { useLocation } from "react-router-dom";
 import type { NotiItem } from "../components/notifications/NotificationPopover";
 import bellIcon from "../assets/icons/home/Bell.svg";
@@ -113,7 +112,7 @@ export default function NotificationsPage() {
                     </div>
                 </section>
 
-                <CustomCalendar appointments={sampleAppointments} />
+                <CustomCalendar />
             </main>
         </div>
     );

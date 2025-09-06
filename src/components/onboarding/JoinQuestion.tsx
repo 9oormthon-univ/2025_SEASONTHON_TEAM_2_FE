@@ -23,12 +23,14 @@ export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
             const json = await familyJoinComplete(code, answer);
             if (json.success) {
                 navigate("/home");
+                //답변 맞으면 /home으로 가야함 근데 안되네?
             }
             else {
                 goToNextStep(STEP.JOIN_PENDING);
             }
-        } catch (err) {
-            console.log(err.response.data.message);
+        } catch (err: unknown) {
+            return null;
+            // console.log(err.response.data.message);
         }
     }
 

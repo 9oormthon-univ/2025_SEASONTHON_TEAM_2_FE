@@ -54,6 +54,7 @@ interface Appointment {
   location: string;
   proposeUserName: string;
   participantNum: number;
+  color: string;
 }
 
 const getAppointmentsByDate = async (

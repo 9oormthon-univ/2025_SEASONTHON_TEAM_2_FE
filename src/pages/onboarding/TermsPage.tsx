@@ -5,7 +5,7 @@ import { STEP, type StepValue, type TypeValue } from "../../types/onboarding.typ
 export default function TermsPage() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const type = searchParams.get("type") as TypeValue;
+    // const type = searchParams.get("type") as TypeValue;
 
     const goToNextStep = (nextStep: StepValue, type?: TypeValue) => {
         const currentType = type || searchParams.get("type");
