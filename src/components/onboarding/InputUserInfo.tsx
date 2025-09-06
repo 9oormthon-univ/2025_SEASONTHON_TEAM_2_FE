@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { STEP, TYPE, type Step1Props, type TypeValue } from "../../types/onboarding.types";
+import { STEP, TYPE, type Step1Props } from "../../types/onboarding.types";
 import { OptionIcon } from '../../assets/icons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';

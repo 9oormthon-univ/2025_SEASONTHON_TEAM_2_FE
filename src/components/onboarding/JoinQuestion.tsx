@@ -1,7 +1,7 @@
 import { MagicWand } from "../../assets/icons";
 import { STEP, type StepProps } from "../../types/onboarding.types";
 import { familyJoinComplete, familyJoinRequest } from "../../api/auth/family";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -9,6 +9,7 @@ export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
     const [searchParams] = useSearchParams();
     const code = searchParams.get("code")!;
     const nickname = searchParams.get("nickname")!;
+    const navigate = useNavigate();
 
     const { data, isLoading } = useQuery({
         queryKey: ['consume-month'],
@@ -20,19 +21,15 @@ export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
     const familyJoin = async () => {
         try {
             const json = await familyJoinComplete(code, answer);
-            console.log(json);
-            if (json.success && json.data) {
-                //답변이 일치함
+            if (json.success) {
+                navigate("/home");
             }
             else {
-                //답변이 일치하지 않음
+                goToNextStep(STEP.JOIN_PENDING);
             }
         } catch (err) {
             console.log(err.response.data.message);
         }
-        goToNextStep(STEP.JOIN_PENDING);
-        //답변 일치 여부와 관계 없이 가입 대기중 페이지로 넘김
-
     }
 
     const onAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {

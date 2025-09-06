@@ -33,9 +33,7 @@ const familyJoinRequest = async (
 
 export interface IFamilyJoinCompleteResponse {
   code: string;
-  data: {
-    verificationQuestion: string;
-  };
+  data: string;
   message: string;
   success: boolean;
 }
@@ -43,8 +41,8 @@ export interface IFamilyJoinCompleteResponse {
 const familyJoinComplete = async (
   inviteCode: string,
   verificationAnswer: string
-): Promise<IFamilyJoinRequstResponse> => {
-  const json: IFamilyJoinRequstResponse = await axios
+): Promise<IFamilyJoinCompleteResponse> => {
+  const json: IFamilyJoinCompleteResponse = await axios
     .post(
       `${import.meta.env.VITE_API_URL}/family/join/complete`,
       {
@@ -58,7 +56,6 @@ const familyJoinComplete = async (
       }
     )
     .then((res) => res.data);
-
   return json;
 };
 
