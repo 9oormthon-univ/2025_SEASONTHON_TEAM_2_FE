@@ -13,13 +13,14 @@ export default function KakaoCallback() {
                 const idToken = await getKakaoToken(code);
 
                 const accessToken = await loginToServer(idToken);
-
                 //받은 액세스 토큰으로 유저 정보 가져오기
-                const { email, nickname, profileUrl } = await getUserProfile(accessToken);
+                const userInfo = await getUserProfile(accessToken);
+                localStorage.setItem("userInfo", `${userInfo.email}|${userInfo.nickname}|${userInfo.profileUrl}`);
 
-                localStorage.setItem("userInfo", `${email}|${nickname}|${profileUrl}`);
-                navigate("/auth/on-boarding");
-
+                if (userInfo.role === "ROLE_USER") {
+                    navigate("/home");
+                }
+                else navigate("/auth/on-boarding");
             } catch (error) {
                 console.error("로그인 처리 중 에러 발생:", error);
                 // 에러 발생 시 예외 처리 에러 페이지로 이동

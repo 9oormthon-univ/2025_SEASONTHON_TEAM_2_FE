@@ -1,6 +1,14 @@
 import axios from "axios";
 
-const getUserProfile = async (accessToken: string) => {
+interface IUserInfo {
+  email: string;
+  familyCode: string;
+  nickname: string;
+  profileUrl: string;
+  role: string;
+  userId: number;
+}
+const getUserProfile = async (accessToken: string): Promise<IUserInfo> => {
   const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/me`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });

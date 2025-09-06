@@ -14,13 +14,13 @@ type Props = {
 };
 
 function MyPageModal({
-                         open,
-                         onClose,
-                         avatarUrl,
-                         onEditNickname,
-                         onEditProfile,
-                         onLogout,
-                     }: {
+    open,
+    onClose,
+    avatarUrl,
+    onEditNickname,
+    onEditProfile,
+    onLogout,
+}: {
     open: boolean;
     onClose: () => void;
     avatarUrl?: string;
@@ -138,7 +138,7 @@ export default function MainHeader({ hasUnread, disableNotiPopover }: Props) {
     return (
         <>
             <header className="w-screen max-w-[1440px] h-20 shadow-md z-50 absolute top-0 left-0 px-[67px] py-[20px] flex items-center justify-between bg-white">
-                <Link to={"/"}>
+                <Link to={"/home"}>
                     <img src={EverflowHeaderLogo} alt="eveflow_header_logo" />
                 </Link>
 
