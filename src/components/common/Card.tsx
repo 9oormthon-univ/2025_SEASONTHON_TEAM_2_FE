@@ -4,7 +4,7 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ children, className = '' }) => (
-    <div className={`flex flex-col gap-4 bg-white border border-light-gray p-4 rounded-2xl shadow-md ${className}`}>
+    <div className={`flex flex-col gap-4 bg-white border border-light-gray p-4 rounded-2xl ${className}`}>
         {children}
     </div>
 );
