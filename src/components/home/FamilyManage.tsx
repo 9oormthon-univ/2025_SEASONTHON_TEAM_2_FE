@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { LinkIcon, PeoplesIcon, Xmark } from "../../assets/icons/home";
 import SectionHeader from "../common/SectionHeader";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {createFamily, getFamilyInfo, joinFamily, editFamilyInfo, type IFamilyEditRequest} from '../../api/auth/family';
+import { createFamily, getFamilyInfo, joinFamily, editFamilyInfo, type IFamilyEditRequest } from '../../api/auth/family';
 import { useState, useEffect } from 'react';
 import LoadingSpinner from "../LoadingSpinner";
 
@@ -107,7 +107,7 @@ export default function FamilyManage() {
 
     const handleCancelEdit = () => {
         // 수정 전 데이터로 복원
-        if(familyInfo) {
+        if (familyInfo) {
             setEditData({
                 familyName: familyInfo.familyName,
                 verificationQuestion: familyInfo.verificationQuestion,

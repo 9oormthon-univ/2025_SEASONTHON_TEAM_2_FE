@@ -15,9 +15,8 @@ export default function KakaoCallback() {
                 const accessToken = await loginToServer(idToken);
                 //받은 액세스 토큰으로 유저 정보 가져오기
                 const userInfo = await getUserProfile(accessToken);
-                localStorage.setItem("userInfo", `${userInfo.email}|${userInfo.nickname}|${userInfo.profileUrl}`);
 
-                if (userInfo.role === "ROLE_USER") {
+                if (userInfo?.role === "ROLE_USER") {
                     navigate("/home");
                 }
                 else navigate("/auth/on-boarding");

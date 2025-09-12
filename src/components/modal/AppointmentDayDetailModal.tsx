@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import moment from "moment";
 import type { ColorKey } from "./AppointmentModal";
-import { getAppointmentsDetailById } from "../../api/appointments";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../LoadingSpinner";
+import { getAppointmentDetailById } from "../../api/appointments";
 
 interface AppointmentDetailFromApi {
     appointmentId: number;
@@ -50,7 +50,7 @@ const COLOR_TOKEN: Record<ColorKey, string> = {
 function Body({ isOpen, id, onClose, onCancel }: Props) {
     const { data: appt, isLoading } = useQuery({
         queryKey: ["appointmentDetail", id],
-        queryFn: (): Promise<AppointmentDetailFromApi> => getAppointmentsDetailById(id!),
+        queryFn: (): Promise<AppointmentDetailFromApi> => getAppointmentDetailById(id!),
         enabled: !!id,
         select: (dataFromApi) => {
             if (!dataFromApi) return undefined;
