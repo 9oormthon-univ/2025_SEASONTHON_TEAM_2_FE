@@ -19,7 +19,6 @@ export default function PastQuestion({ data, isLoading, onClose }: Props) {
     const getPastAnswer = async (id: number) => {
         setAnswerOpen(prev => !prev);
         const answer = await getAnswers(id);
-        console.log(answer);
         setAnswer(answer);
     }
 

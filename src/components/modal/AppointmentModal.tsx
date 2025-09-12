@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 import { getMyFamilyMembers } from "../../api/auth/family";
-import type { IAppointmentsProps } from "../../api/appointments";
+import type { AppointmentPayload } from "../../api/appointments";
 
 export type ColorKey = "green" | "pink" | "orange" | "blue" | "yellow";
 
@@ -24,7 +24,7 @@ type AppointmentModalProps = {
     isOpen: boolean;
     defaultDate?: string;
     onClose: () => void;
-    onSubmit?: (data: IAppointmentsProps) => void;
+    onSubmit?: (data: AppointmentPayload) => void;
     familyCandidates?: string[];
 };
 
@@ -102,7 +102,7 @@ function AppointmentModalBody({
             endTime = moment(form.endDate).endOf('day').format(format);
         }
 
-        const serverData: IAppointmentsProps = {
+        const serverData: AppointmentPayload = {
             name: form.title,
             content: form.content,
             location: form.location,
