@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Bell from "./../assets/icons/home/Bell.svg";
 import BellActive from "./../assets/icons/home/Bell_Active.svg";
 import { EverflowHeaderLogo } from "./../assets/icons";
@@ -113,7 +112,6 @@ export default function MainHeader({ hasUnread, disableNotiPopover }: Props) {
     const [items, setItems] = useState<NotiItem[]>([]);
     const { user } = useAuthStore();
     const user_profile = user?.profileUrl ?? "";
-    console.log(user)
     useEffect(() => {
         getRecentNotifications()
             .then((dtos) => setItems(dtos.map(mapDtoToNotiItem)))

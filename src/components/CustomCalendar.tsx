@@ -8,7 +8,7 @@ import AppointmentModal from "./modal/AppointmentModal.tsx";
 import AppointmentDetailModal from "./modal/AppointmentDayDetailModal.tsx";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createAppointments, getAppointmentsMonth, getAppointmentsByDate, deleteAppointmentsById } from '../api/appointments';
-import type { IAppointmentsProps } from '../api/appointments';
+import type { AppointmentPayload } from '../api/appointments';
 import LoadingSpinner from './LoadingSpinner.tsx';
 
 // UI에 약속 목록을 표시하기 위한 데이터 타입
@@ -213,7 +213,7 @@ const CustomCalendar = () => {
                 isOpen={open}
                 defaultDate={moment(selectedDate).format(DATE_FORMAT)}
                 onClose={() => setOpen(false)}
-                onSubmit={(data: IAppointmentsProps) => {
+                onSubmit={(data: AppointmentPayload) => {
                     createAppointmentMutation.mutate(data);
                 }}
             />

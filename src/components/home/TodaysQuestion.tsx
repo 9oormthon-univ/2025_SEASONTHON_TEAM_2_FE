@@ -55,7 +55,6 @@ const TodaysQuestion = () => {
         queryFn: () => getAnswers(currentTopic!.id)
     });
 
-    console.log("qweqwe", answerData)
     const [isWriting, setIsWriting] = useState(false);
     const [text, setText] = useState("");
     const inputRef = useRef<HTMLTextAreaElement | null>(null);

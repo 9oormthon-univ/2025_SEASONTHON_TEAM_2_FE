@@ -61,7 +61,6 @@ const getMyFamilyMembers = async () => {
   const res = await axiosInstance
     .get<{ data: IFamilyMyMembers }>("/family/my/members")
     .then((r) => r.data);
-  console.log("!@#@!#!#", res.data);
   return res.data || [];
 };
 
