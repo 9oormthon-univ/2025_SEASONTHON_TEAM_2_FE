@@ -3,6 +3,7 @@ import axios, {
   type AxiosInstance,
   type InternalAxiosRequestConfig,
 } from "axios";
+import { useAuthStore } from "../store/auth";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -16,7 +17,7 @@ axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     config.headers = config.headers ?? {};
     try {
-      const token = localStorage.getItem("access_token");
+      const token = useAuthStore.getState().accessToken;
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
