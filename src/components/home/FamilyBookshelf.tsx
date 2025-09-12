@@ -1,6 +1,4 @@
-// src/components/home/FamilyBookshelf.tsx
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import Card from "../common/Card";
 import SectionHeader from "../common/SectionHeader";
 import { useNavigate } from "react-router-dom";

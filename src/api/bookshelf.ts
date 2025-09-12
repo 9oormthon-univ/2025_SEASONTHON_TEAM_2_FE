@@ -57,3 +57,13 @@ export const getFamilyMembers = async (): Promise<FamilyMember[]> => {
     throw error;
   }
 };
+
+export type UpdateAnswersDTO = {
+  items: { questionId: number; answer: string }[];
+};
+
+export const saveAnswersToServer = async ({
+  items,
+}: UpdateAnswersDTO): Promise<void> => {
+  await axiosInstance.patch("/api/bookshelf/bookshelf/me", { items });
+};

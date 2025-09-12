@@ -4,32 +4,12 @@ import BookshelfBg from "../../assets/icons/Bookshelf_bg.svg";
 import { BookIcon } from "../../assets/icons/home";
 import axiosInstance from "../../api/axiosInstance";
 import moment from "moment";
+import { getBookshelfByUserId, getMyBookshelf, type UpdateAnswersDTO } from "../../api/bookshelf";
 
 type Entry = { id: number; question: string; answer?: string };
 
-type MyBookshelfDTO = {
-    userId: number;
-    nickname: string;
-    lastUpdatedAt: string;
-    items: { questionId: number; questionText: string; answer?: string }[];
-};
-
-type UpdateAnswersDTO = {
-    items: { questionId: number; answer: string }[];
-};
-
 const saveAnswersToServer = async ({ items }: UpdateAnswersDTO): Promise<void> => {
     await axiosInstance.patch('/api/bookshelf/bookshelf/me', { items });
-};
-
-const getMyBookshelf = async (): Promise<MyBookshelfDTO> => {
-    const res = await axiosInstance.get<{ data: MyBookshelfDTO }>('/api/bookshelf/me').then(r => r.data);
-    return res.data;
-};
-
-const getBookshelfByUserId = async (userId: number): Promise<MyBookshelfDTO> => {
-    const res = await axiosInstance.get<{ data: MyBookshelfDTO }>(`/api/bookshelf/${userId}`).then(r => r.data);
-    return res.data;
 };
 
 const fmt = (iso?: string) => {
@@ -56,16 +36,14 @@ export default function FamilyBookshelfDetailPage() {
     const savingRef = useRef(false);
 
     useEffect(() => {
-        let mounted = true;
+        const abortController = new AbortController();
 
-        const toEntries = (data: MyBookshelfDTO): Entry[] =>
-            (data.items ?? []).map((it) => ({
-                id: it.questionId,
-                question: it.questionText,
-                answer: it.answer ?? "",
-            }));
+        const loadBookshelf = async () => {
+            setNotFound(false);
+            setIsEditable(false);
+            dirtyRef.current = false;
+            setSaveError(null);
 
-        const load = async () => {
             if (!bookId) {
                 setNotFound(true);
                 return;
@@ -73,65 +51,58 @@ export default function FamilyBookshelfDetailPage() {
 
             try {
                 const me = await getMyBookshelf();
-                if (!mounted) return;
+                if (abortController.signal.aborted) return;
                 setMyUserId(me.userId);
-            } catch { /* ignore */ }
 
-            if (bookId === "me") {
-                try {
-                    const data = await getMyBookshelf();
-                    if (!mounted) return;
-                    setOwner(data.nickname || "나");
-                    setSavedAt(fmt(data.lastUpdatedAt));
-                    setEntries(toEntries(data));
-                    setIsEditable(true);
-                    setNotFound(false);
-                } catch {
-                    if (!mounted) return;
+                let targetId: number;
+                let isMyBookshelf = false;
+
+                if (bookId === "me") {
+                    targetId = me.userId;
+                    isMyBookshelf = true;
+                } else {
+                    targetId = Number(bookId);
+                    if (Number.isNaN(targetId)) {
+                        setNotFound(true);
+                        return;
+                    }
+                    isMyBookshelf = targetId === me.userId;
+                }
+
+                setIsEditable(isMyBookshelf);
+
+                const data = isMyBookshelf
+                    ? await getMyBookshelf()
+                    : await getBookshelfByUserId(targetId);
+
+                if (abortController.signal.aborted) return;
+
+                setOwner(data.nickname || (isMyBookshelf ? "나" : "가족"));
+                setSavedAt(fmt(data.lastUpdatedAt));
+                setEntries((data.items ?? []).map((it) => ({
+                    id: it.questionId,
+                    question: it.questionText,
+                    answer: it.answer ?? "",
+                })));
+
+            } catch (error) {
+                console.error("책장 데이터 로딩 실패:", error);
+                if (bookId === 'me') {
                     setOwner("나");
                     setEntries([]);
                     setIsEditable(true);
-                    setSavedAt("-");
-                    setNotFound(false);
-                }
-                return;
-            }
-
-            const idNum = Number(bookId);
-            if (Number.isNaN(idNum)) {
-                setNotFound(true);
-                return;
-            }
-
-            try {
-                const data = await getBookshelfByUserId(idNum);
-                if (!mounted) return;
-                setOwner(data.nickname || "가족");
-                setSavedAt(fmt(data.lastUpdatedAt));
-                setEntries(toEntries(data));
-
-                if (myUserId && idNum === myUserId) {
-                    setIsEditable(true);
                 } else {
-                    setIsEditable(false);
+                    setNotFound(true);
                 }
-                setNotFound(false);
-            } catch {
-                if (!mounted) return;
-                setOwner("가족");
-                setSavedAt("-");
-                setEntries([]);
-                setIsEditable(false);
-                setNotFound(false);
             }
         };
 
-        load();
-        dirtyRef.current = false;
-        setSaveError(null);
+        loadBookshelf();
 
-        return () => { mounted = false; };
-    }, [bookId, myUserId]);
+        return () => {
+            abortController.abort();
+        };
+    }, [bookId]);
 
     const doServerSave = async () => {
         if (!isEditable || !dirtyRef.current || savingRef.current) {
