@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import BookshelfBg from "../../assets/icons/Bookshelf_bg.svg";
 import { BookIcon } from "../../assets/icons/home";
+import axiosInstance from "../../api/axiosInstance";
+import moment from "moment";
 
 type Entry = { id: number; question: string; answer?: string };
 
@@ -13,53 +14,27 @@ type MyBookshelfDTO = {
     items: { questionId: number; questionText: string; answer?: string }[];
 };
 
+type UpdateAnswersDTO = {
+    items: { questionId: number; answer: string }[];
+};
+
+const saveAnswersToServer = async ({ items }: UpdateAnswersDTO): Promise<void> => {
+    await axiosInstance.patch('/api/bookshelf/bookshelf/me', { items });
+};
+
 const getMyBookshelf = async (): Promise<MyBookshelfDTO> => {
-    const token = localStorage.getItem("access_token");
-    const resp = await axios
-        .get<{ data: MyBookshelfDTO }>(`${import.meta.env.VITE_API_URL}/api/bookshelf/me`, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((r) => r.data);
-    return resp.data;
+    const res = await axiosInstance.get<{ data: MyBookshelfDTO }>('/api/bookshelf/me').then(r => r.data);
+    return res.data;
 };
 
 const getBookshelfByUserId = async (userId: number): Promise<MyBookshelfDTO> => {
-    const token = localStorage.getItem("access_token");
-    const resp = await axios
-        .get<{ data: MyBookshelfDTO }>(`${import.meta.env.VITE_API_URL}/api/bookshelf/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((r) => r.data);
-    return resp.data;
-};
-
-/** ==== LocalStorage ==== */
-type LocalBook = { savedAt: string; answers: Record<number, string> };
-const LS_KEY = (userId: number | null) => `bookshelf:me:${userId ?? "unknown"}`;
-
-const loadLocal = (userId: number | null): LocalBook | null => {
-    try {
-        const raw = localStorage.getItem(LS_KEY(userId));
-        return raw ? (JSON.parse(raw) as LocalBook) : null;
-    } catch {
-        return null;
-    }
-};
-const saveLocal = (userId: number | null, data: LocalBook) => {
-    try {
-        localStorage.setItem(LS_KEY(userId), JSON.stringify(data));
-    } catch {
-        /* ignore quota */
-    }
+    const res = await axiosInstance.get<{ data: MyBookshelfDTO }>(`/api/bookshelf/${userId}`).then(r => r.data);
+    return res.data;
 };
 
 const fmt = (iso?: string) => {
     if (!iso) return "-";
-    const d = new Date(iso);
-    const pad = (n: number) => String(n).padStart(2, "0");
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(
-        d.getMinutes()
-    )}:${pad(d.getSeconds())}`;
+    return moment(new Date(iso)).format("YYYY-MM-DD HH:MM:SS");
 };
 const nowIso = () => new Date().toISOString();
 
@@ -72,17 +47,14 @@ export default function FamilyBookshelfDetailPage() {
     const [entries, setEntries] = useState<Entry[]>([]);
     const [notFound, setNotFound] = useState(false);
 
-    // 내 정보(편집 가능 여부 판정에 사용)
     const [myUserId, setMyUserId] = useState<number | null>(null);
     const [isEditable, setIsEditable] = useState(false);
 
-    // autosave
     const [saving, setSaving] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
     const dirtyRef = useRef(false);
     const savingRef = useRef(false);
 
-    // 초기 로딩
     useEffect(() => {
         let mounted = true;
 
@@ -99,47 +71,32 @@ export default function FamilyBookshelfDetailPage() {
                 return;
             }
 
-            // 내 userId 먼저 확보 (편집 가능 판단에 필요)
             try {
                 const me = await getMyBookshelf();
                 if (!mounted) return;
                 setMyUserId(me.userId);
-            } catch {
-                // 무시 (비로그인 등)
-            }
+            } catch { /* ignore */ }
 
-            // me or others
             if (bookId === "me") {
                 try {
                     const data = await getMyBookshelf();
                     if (!mounted) return;
                     setOwner(data.nickname || "나");
-
-                    // 로컬 병합
-                    let base = toEntries(data);
-                    const local = loadLocal(data.userId);
-                    if (local?.answers) {
-                        base = base.map((e) => ({ ...e, answer: local.answers[e.id] ?? e.answer ?? "" }));
-                        setSavedAt(fmt(local.savedAt));
-                    } else {
-                        setSavedAt(fmt(data.lastUpdatedAt));
-                    }
-
-                    setEntries(base);
+                    setSavedAt(fmt(data.lastUpdatedAt));
+                    setEntries(toEntries(data));
                     setIsEditable(true);
                     setNotFound(false);
                 } catch {
                     if (!mounted) return;
                     setOwner("나");
                     setEntries([]);
-                    setIsEditable(true); // me는 편집 가능
+                    setIsEditable(true);
                     setSavedAt("-");
                     setNotFound(false);
                 }
                 return;
             }
 
-            // 숫자 id 접근
             const idNum = Number(bookId);
             if (Number.isNaN(idNum)) {
                 setNotFound(true);
@@ -151,22 +108,13 @@ export default function FamilyBookshelfDetailPage() {
                 if (!mounted) return;
                 setOwner(data.nickname || "가족");
                 setSavedAt(fmt(data.lastUpdatedAt));
+                setEntries(toEntries(data));
 
-                let base = toEntries(data);
-
-                // 만약 숫자 id가 내 userId와 같다면(홈 타일에서 본인 클릭) -> 편집 가능 + 로컬 병합
                 if (myUserId && idNum === myUserId) {
-                    const local = loadLocal(myUserId);
-                    if (local?.answers) {
-                        base = base.map((e) => ({ ...e, answer: local.answers[e.id] ?? e.answer ?? "" }));
-                        setSavedAt(fmt(local.savedAt));
-                    }
                     setIsEditable(true);
                 } else {
                     setIsEditable(false);
                 }
-
-                setEntries(base);
                 setNotFound(false);
             } catch {
                 if (!mounted) return;
@@ -179,20 +127,14 @@ export default function FamilyBookshelfDetailPage() {
         };
 
         load();
-
         dirtyRef.current = false;
         setSaveError(null);
 
-        return () => {
-            mounted = false;
-        };
+        return () => { mounted = false; };
     }, [bookId, myUserId]);
 
-    /** 로컬 저장 (3초 주기 + 닫기 버튼 시 강제 호출) */
-    const doLocalSave = async () => {
-        if (!isEditable) return;
-        if (!dirtyRef.current && !savingRef.current) {
-            // 변경 없음
+    const doServerSave = async () => {
+        if (!isEditable || !dirtyRef.current || savingRef.current) {
             return;
         }
         try {
@@ -200,49 +142,33 @@ export default function FamilyBookshelfDetailPage() {
             setSaving(true);
             setSaveError(null);
 
-            const answers: Record<number, string> = {};
-            for (const e of entries) answers[e.id] = (e.answer ?? "").trim();
+            const payload: UpdateAnswersDTO = {
+                items: entries.map(e => ({
+                    questionId: e.id,
+                    answer: (e.answer ?? "").trim(),
+                })),
+            };
 
-            const ts = nowIso();
-            saveLocal(myUserId, { savedAt: ts, answers });
+            await saveAnswersToServer(payload);
 
-            setSavedAt(fmt(ts));
+            setSavedAt(fmt(nowIso()));
             dirtyRef.current = false;
         } catch {
-            setSaveError("자동 저장에 실패했어요. 저장 공간을 확인해 주세요.");
+            setSaveError("자동 저장에 실패했어요. 네트워크를 확인해 주세요.");
         } finally {
             savingRef.current = false;
             setSaving(false);
         }
     };
 
-    // 3초마다 자동 저장
+    // 3초마다 자동 저장 (서버로)
     useEffect(() => {
         if (!isEditable) return;
         const iv = setInterval(() => {
-            void doLocalSave();
+            void doServerSave();
         }, 3000);
         return () => clearInterval(iv);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isEditable, entries, myUserId]);
-
-    // 페이지 이탈 시 마지막 저장
-    useEffect(() => {
-        if (!isEditable) return;
-        const handler = () => {
-            if (dirtyRef.current && !savingRef.current) {
-                const answers: Record<number, string> = {};
-                for (const e of entries) answers[e.id] = (e.answer ?? "").trim();
-                const ts = nowIso();
-                try {
-                    saveLocal(myUserId, { savedAt: ts, answers });
-                } catch {
-                    /* ignore */
-                }
-            }
-        };
-        window.addEventListener("beforeunload", handler);
-        return () => window.removeEventListener("beforeunload", handler);
     }, [isEditable, entries, myUserId]);
 
     const updateAnswer = (id: number, val: string) => {
@@ -252,9 +178,8 @@ export default function FamilyBookshelfDetailPage() {
     };
 
     const handleClose = async () => {
-        // 닫기 시 즉시 저장 + 저장 시간 갱신
         if (isEditable) {
-            await doLocalSave();
+            await doServerSave();
         }
         navigate("/home", { replace: true });
     };
@@ -286,18 +211,17 @@ export default function FamilyBookshelfDetailPage() {
                                 <span className="font-pretendard ml-2 text-sm text-light-gray">저장 시간 : {savedAt}</span>
                                 {isEditable && (
                                     <span
-                                        className={`ml-3 text-xs font-pretendard ${
-                                            saving ? "text-[#4C505C]" : saveError ? "text-red-500" : "text-[#7A7A7A]"
-                                        }`}
+                                        className={`ml-3 text-xs font-pretendard ${saving ? "text-[#4C505C]" : saveError ? "text-red-500" : "text-[#7A7A7A]"
+                                            }`}
                                     >
-                    {saving
-                        ? "자동 저장 중..."
-                        : saveError
-                            ? saveError
-                            : dirtyRef.current
-                                ? "변경 사항 있음 (자동 저장 대기)"
-                                : "모든 변경 사항이 저장됨"}
-                  </span>
+                                        {saving
+                                            ? "자동 저장 중..."
+                                            : saveError
+                                                ? saveError
+                                                : dirtyRef.current
+                                                    ? "변경 사항 있음 (자동 저장 대기)"
+                                                    : "모든 변경 사항이 저장됨"}
+                                    </span>
                                 )}
                             </div>
                             <button
