@@ -13,6 +13,8 @@ export type AuthUser = {
 type AuthState = {
   accessToken: string | null;
   user: AuthUser;
+  refreshToken: string | null;
+  setRefreshToken: (token: string | null) => void;
   setAccessToken: (token: string | null) => void;
   setUser: (user: AuthUser) => void;
   clear: () => void;
@@ -23,14 +25,17 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       accessToken: null,
       user: null,
+      refreshToken: null,
+      setRefreshToken: (token) => set({ refreshToken: token }),
       setAccessToken: (token) => set({ accessToken: token }),
       setUser: (user) => set({ user }),
-      clear: () => set({ accessToken: null, user: null }),
+      clear: () => set({ refreshToken: null, accessToken: null, user: null }),
     }),
     {
       name: "auth-store",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
+        refreshToken: state.refreshToken,
         accessToken: state.accessToken,
         user: state.user,
       }),

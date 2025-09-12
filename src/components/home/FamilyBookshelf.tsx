@@ -1,6 +1,4 @@
-// src/components/home/FamilyBookshelf.tsx
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import Card from "../common/Card";
 import SectionHeader from "../common/SectionHeader";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +10,7 @@ import {
     BookYellow,
     BookIcon,
 } from "../../assets/icons/home";
+import axiosInstance from "../../api/axiosInstance";
 
 type BookshelfMember = {
     userId: number;
@@ -35,14 +34,8 @@ const COLOR_ICON_MAP: Record<BookshelfMember["shelfColor"], string> = {
 };
 
 const fetchBookshelves = async (): Promise<Tile[]> => {
-    const token = localStorage.getItem("access_token");
-    if (!token) return [];
-
     try {
-        const { data } = await axios.get<{ data: BookshelvesDTO }>(
-            `${import.meta.env.VITE_API_URL}/api/home/bookshelves`,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const { data } = await axiosInstance.get<{ data: BookshelvesDTO }>('/api/home/bookshelves');
 
         const rows = data?.data?.members ?? [];
         return rows.map((m) => ({

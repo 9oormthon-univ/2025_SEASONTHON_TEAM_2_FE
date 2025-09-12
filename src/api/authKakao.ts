@@ -26,6 +26,7 @@ const loginToServer = async (id_token: string) => {
   console.log("✅ 서비스 로그인 성공", res.data);
   const token: string = res.data.data.accessToken;
   try {
+    useAuthStore.getState().setRefreshToken(token);
     useAuthStore.getState().setAccessToken(token);
   } catch {
     throw new Error("엑세스 토큰 저장 실패");
