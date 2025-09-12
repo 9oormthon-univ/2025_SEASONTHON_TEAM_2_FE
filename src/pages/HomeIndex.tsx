@@ -8,7 +8,6 @@ export default function HomeIndex() {
             <div className="self-start">
                 <CustomCalendar />
             </div>
-
         </div>
     );
 }
