@@ -4,9 +4,11 @@ import { EFL } from "../assets/icons";
 import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MainHeader from "../components/MainHeader.tsx";
+import { useAuthStore } from "../store/auth.ts";
 
 export default function HomeLayout() {
-    const username = localStorage.getItem("userInfo")?.split("|")[1] || "";
+    const { user } = useAuthStore();
+    const username = user?.nickname || "";
     const [isPopUpOpen, setPopUpOpen] = useState(true);
 
     useEffect(() => {

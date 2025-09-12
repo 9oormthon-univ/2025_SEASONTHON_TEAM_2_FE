@@ -1,44 +1,59 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
+
+interface ApiResponse<T> {
+  data: T;
+}
 
 export type MyBookshelfDTO = {
-    userId: number;
-    nickname: string;
-    lastUpdatedAt: string;
-    items: { questionId: number; questionText: string; answer?: string }[];
-};
-
-export const getMyBookshelf = async (): Promise<MyBookshelfDTO> => {
-    const r = await axios
-        .get<{ data: MyBookshelfDTO }>(
-            `${import.meta.env.VITE_API_URL}/api/bookshelf/me`,
-            { headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` } }
-        )
-        .then(res => res.data);
-    return r.data;
-};
-
-export const getBookshelfByUserId = async (userId: number): Promise<MyBookshelfDTO> => {
-    const r = await axios
-        .get<{ data: MyBookshelfDTO }>(
-            `${import.meta.env.VITE_API_URL}/api/bookshelf/${userId}`,
-            { headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` } }
-        )
-        .then(res => res.data);
-    return r.data;
+  userId: number;
+  nickname: string;
+  lastUpdatedAt: string;
+  items: { questionId: number; questionText: string; answer?: string }[];
 };
 
 export type FamilyMember = {
-    userId: number;
-    nickname: string;
-    profileImageUrl?: string;
+  userId: number;
+  nickname: string;
+  profileImageUrl?: string;
+};
+
+export const getMyBookshelf = async (): Promise<MyBookshelfDTO> => {
+  try {
+    const response = await axiosInstance.get<ApiResponse<MyBookshelfDTO>>(
+      "/api/bookshelf/me"
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("내 책장 정보를 가져오는 중 오류 발생:", error);
+    throw error;
+  }
+};
+
+export const getBookshelfByUserId = async (
+  userId: number
+): Promise<MyBookshelfDTO> => {
+  try {
+    const response = await axiosInstance.get<ApiResponse<MyBookshelfDTO>>(
+      `/api/bookshelf/${userId}`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error(
+      `사용자(ID: ${userId}) 책장 정보를 가져오는 중 오류 발생:`,
+      error
+    );
+    throw error;
+  }
 };
 
 export const getFamilyMembers = async (): Promise<FamilyMember[]> => {
-    const r = await axios
-        .get<{ data: FamilyMember[] }>(
-            `${import.meta.env.VITE_API_URL}/api/family/members`,
-            { headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` } }
-        )
-        .then(res => res.data);
-    return r.data ?? [];
+  try {
+    const response = await axiosInstance.get<ApiResponse<FamilyMember[]>>(
+      "/api/family/members"
+    );
+    return response.data.data ?? [];
+  } catch (error) {
+    console.error("가족 구성원 목록을 가져오는 중 오류 발생:", error);
+    throw error;
+  }
 };

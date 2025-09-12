@@ -1,4 +1,3 @@
-import axios from "axios";
 import axiosInstance from "../axiosInstance.ts";
 
 export interface IFamilyJoinRequstResponse {
@@ -20,22 +19,13 @@ const familyJoinRequest = async (
   nickname: string,
   inviteCode: string
 ): Promise<IFamilyJoinRequstResponse> => {
-  const json: IFamilyJoinRequstResponse = await axios
-    .post(
-      `${import.meta.env.VITE_API_URL}/family/join/request`,
-      {
-        nickname,
-        inviteCode,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }
-    )
-    .then((res) => res.data);
-
-  return json;
+  const res = await axiosInstance
+    .post<IFamilyJoinRequstResponse>("/family/join/request", {
+      nickname,
+      inviteCode,
+    })
+    .then((r) => r.data);
+  return res;
 };
 
 export interface IFamilyJoinCompleteResponse {
@@ -49,21 +39,13 @@ const familyJoinComplete = async (
   inviteCode: string,
   verificationAnswer: string
 ): Promise<IFamilyJoinCompleteResponse> => {
-  const json: IFamilyJoinCompleteResponse = await axios
-    .post(
-      `${import.meta.env.VITE_API_URL}/family/join/complete`,
-      {
-        inviteCode,
-        verificationAnswer,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }
-    )
-    .then((res) => res.data);
-  return json;
+  const res = await axiosInstance
+    .post<IFamilyJoinCompleteResponse>("/family/join/complete", {
+      inviteCode,
+      verificationAnswer,
+    })
+    .then((r) => r.data);
+  return res;
 };
 
 interface IFamilyMyMembers {
@@ -76,15 +58,11 @@ interface IFamilyMyMembers {
 }
 
 const getMyFamilyMembers = async () => {
-  const data: IFamilyMyMembers = await axios
-    .get(`${import.meta.env.VITE_API_URL}/family/my/members`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    })
-    .then((res) => res.data.data);
-
-  return data;
+  const res = await axiosInstance
+    .get<{ data: IFamilyMyMembers }>("/family/my/members")
+    .then((r) => r.data);
+  console.log("!@#@!#!#", res.data);
+  return res.data || [];
 };
 
 const createFamily = async (familyName: string) => {

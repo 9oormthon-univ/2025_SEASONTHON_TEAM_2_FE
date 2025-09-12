@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAuthStore } from "../store/auth";
 
 const getKakaoToken = async (code: string) => {
   const params = {
@@ -23,8 +24,13 @@ const loginToServer = async (id_token: string) => {
     }
   );
   console.log("✅ 서비스 로그인 성공", res.data);
-  localStorage.setItem("access_token", res.data.data.accessToken);
-  return res.data.data.accessToken;
+  const token: string = res.data.data.accessToken;
+  try {
+    useAuthStore.getState().setAccessToken(token);
+  } catch {
+    throw new Error("엑세스 토큰 저장 실패");
+  }
+  return token;
 };
 
 export { getKakaoToken, loginToServer };

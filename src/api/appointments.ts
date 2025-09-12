@@ -1,6 +1,10 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
-export interface IAppointmentsProps {
+interface ApiResponse<T> {
+  data: T;
+}
+
+export interface AppointmentPayload {
   name: string;
   content: string;
   location: string;
@@ -10,43 +14,7 @@ export interface IAppointmentsProps {
   participantUserIds: number[];
 }
 
-const createAppointments = async (formData: IAppointmentsProps) => {
-  console.log(formData);
-  const response = await axios.post(
-    `${import.meta.env.VITE_API_URL}/api/appointments`,
-    formData,
-    {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    }
-  );
-  console.log(response.data);
-  return response.data;
-};
-
-const getAppointmentsMonth = async (
-  year: number,
-  month: number
-): Promise<string[]> => {
-  const response = await axios
-    .get<{ data: { dates?: string[] } }>(
-      `${import.meta.env.VITE_API_URL}/api/appointments/month`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        params: {
-          year,
-          month,
-        },
-      }
-    )
-    .then((res) => res.data);
-  return response.data.dates || [];
-};
-
-interface Appointment {
+export interface Appointment {
   appointmentId: number;
   appointmentName: string;
   startTime: string;
@@ -57,83 +25,89 @@ interface Appointment {
   color: string;
 }
 
-const getAppointmentsByDate = async (
+export interface AppointmentDetail extends Appointment {
+  content?: string;
+  participants: string[];
+}
+
+export const createAppointments = async (payload: AppointmentPayload) => {
+  try {
+    const response = await axiosInstance.post<ApiResponse<AppointmentDetail>>(
+      "/api/appointments",
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error creating appointment:", error);
+    throw error;
+  }
+};
+
+export const getAppointmentsMonth = async (
+  year: number,
+  month: number
+): Promise<string[]> => {
+  try {
+    const response = await axiosInstance.get<ApiResponse<{ dates: string[] }>>(
+      "/api/appointments/month",
+      { params: { year, month } }
+    );
+    return response.data.data?.dates ?? [];
+  } catch (error) {
+    console.error("Error fetching monthly appointments:", error);
+    throw error;
+  }
+};
+
+export const getAppointmentsByDate = async (
   year: number,
   month: number,
   day: number
 ): Promise<Appointment[]> => {
-  const response = await axios
-    .get<{ data: Appointment[] }>(
-      `${import.meta.env.VITE_API_URL}/api/appointments/date`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        params: {
-          year,
-          month,
-          day,
-        },
-      }
-    )
-    .then((res) => res.data);
-  console.log(response.data);
-  return response.data || [];
+  try {
+    const response = await axiosInstance.get<ApiResponse<Appointment[]>>(
+      "/api/appointments/date",
+      { params: { year, month, day } }
+    );
+    return response.data.data ?? [];
+  } catch (error) {
+    console.error("Error fetching daily appointments:", error);
+    throw error;
+  }
 };
 
-interface IAppointmentsDetailById {
-  // appointmentId: number;
-  // appointmentName: string;
-  // color: string;
-  // content: string;
-  // endTime: string;
-  // location: string;
-  // proposeUserName: string;
-  // startTime: string;
-  // participants: string[];
+export const getAppointmentDetailById = async (
+  appointmentId: number
+): Promise<AppointmentDetail> => {
+  if (!appointmentId) {
+    throw new Error("Appointment ID is required.");
+  }
 
-  appointmentId: number;
-  appointmentName: string;
-  startTime: string;
-  endTime: string;
-  location: string;
-  content?: string;
-  proposeUserName: string;
-  color: string;
-  participantNum: number;
-  participants: string[];
-}
-
-const getAppointmentsDetailById = async (appointmentId?: number) => {
-  const response = await axios
-    .get<{ data: IAppointmentsDetailById }>(
-      `${import.meta.env.VITE_API_URL}/api/appointments/${appointmentId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }
-    )
-    .then((res) => res.data);
-  return response.data;
+  try {
+    const response = await axiosInstance.get<ApiResponse<AppointmentDetail>>(
+      `/api/appointments/${appointmentId}`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error(
+      `Error fetching appointment detail for ID ${appointmentId}:`,
+      error
+    );
+    throw error;
+  }
 };
 
-const deleteAppointmentsById = async (appointmentId: number) => {
-  const response = await axios.delete(
-    `${import.meta.env.VITE_API_URL}/api/appointments/${appointmentId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    }
-  );
-  return response.data;
-};
-
-export {
-  createAppointments,
-  getAppointmentsMonth,
-  getAppointmentsByDate,
-  getAppointmentsDetailById,
-  deleteAppointmentsById,
+export const deleteAppointmentsById = async (appointmentId: number) => {
+  try {
+    const response = await axiosInstance.delete(
+      `/api/appointments/${appointmentId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error deleting appointment with ID ${appointmentId}:`,
+      error
+    );
+    throw error;
+  }
 };

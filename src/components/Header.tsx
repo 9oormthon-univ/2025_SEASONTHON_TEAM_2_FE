@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { EverflowHeaderLogo } from "../assets/icons";
 import { Bell } from "../assets/icons/home";
+import { useAuthStore } from "../store/auth";
 
 export default function Header() {
-    const isLoggedIn = localStorage.getItem("userInfo") ? true : false;
+    const { user } = useAuthStore();
+    const isLoggedIn = !!user;
+    const user_profile = user?.profileUrl ?? "";
 
-    //로컬스토리지에 저장하는 방식 변경 요망
-    const [_, __, user_profile] = localStorage.getItem("userInfo")?.split("|") || "";
     return (
         <header className="w-screen max-w-[1440px] h-20 shadow-md z-50 absolute top-0 left-0 px-[67px] py-[20px] flex items-center justify-between bg-white">
             <Link to={"/home"}>
