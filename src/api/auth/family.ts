@@ -32,8 +32,6 @@ const familyJoinRequest = async (
         inviteCode,
       }
     );
-
-    // 서버 응답은 성공(2xx)했지만, 비즈니스 로직 상 실패인 경우 에러 throw
     if (!response.data.success) {
       throw new Error(
         response.data.message || "가족 참여 요청에 실패했습니다."
@@ -42,13 +40,11 @@ const familyJoinRequest = async (
 
     return response.data;
   } catch (error) {
-    // Axios 에러인 경우 서버가 보낸 구체적인 에러 메시지를 전달
     if (axios.isAxiosError(error) && error.response) {
       const errorMessage =
         error.response.data?.message || "초대 코드가 유효하지 않습니다.";
       throw new Error(errorMessage);
     }
-    // 그 외 네트워크 에러 등
     throw new Error("요청 중 오류가 발생했습니다.");
   }
 };
@@ -125,13 +121,33 @@ const familyJoinComplete = async (
   inviteCode: string,
   verificationAnswer: string
 ): Promise<IFamilyJoinCompleteResponse> => {
-  const res = await axiosInstance
-    .post<IFamilyJoinCompleteResponse>("/family/join/complete", {
-      inviteCode,
-      verificationAnswer,
-    })
-    .then((r) => r.data);
-  return res;
+  try {
+    const response = await axiosInstance.post<IFamilyJoinCompleteResponse>(
+      "/family/join/complete",
+      {
+        inviteCode,
+        verificationAnswer,
+      }
+    );
+
+    // 비즈니스 로직 상 실패 처리
+    if (!response.data.success) {
+      throw new Error(
+        response.data.message || "가족 참여 완료에 실패했습니다."
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    // Axios 에러인 경우 서버가 보낸 구체적인 에러 메시지(예: 정답 불일치)를 전달
+    if (axios.isAxiosError(error) && error.response) {
+      const errorMessage =
+        error.response.data?.message || "정답이 일치하지 않습니다.";
+      throw new Error(errorMessage);
+    }
+    // 그 외 네트워크 에러 등
+    throw new Error("요청 중 오류가 발생했습니다.");
+  }
 };
 
 interface IFamilyMyMembers {
