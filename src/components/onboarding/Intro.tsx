@@ -6,7 +6,7 @@ export const Intro: React.FC<StepProps> = ({ goToNextStep }) => {
     const [allowed, setAllowed] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     return (
-        <div className="flex min-h-screen flex-col justify-between p-8 sm:p-16 md:p-28">
+        <div className="flex min-h-screen flex-col justify-between px-32 py-48">
             <main>
                 <div className="mb-8 flex flex-col gap-4">
                     <h1 className="font-kccganpan text-4xl text-primary-300">
