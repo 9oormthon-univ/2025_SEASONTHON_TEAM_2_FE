@@ -1,4 +1,3 @@
-import { useAuthStore } from "../store/auth";
 import axiosInstance from "./axiosInstance";
 
 interface ApiResponse<T> {
