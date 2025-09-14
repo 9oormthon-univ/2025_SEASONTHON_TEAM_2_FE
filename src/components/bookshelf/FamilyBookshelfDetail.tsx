@@ -2,15 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BookshelfBg from "../../assets/icons/Bookshelf_bg.svg";
 import { BookIcon } from "../../assets/icons/home";
-import axiosInstance from "../../api/axiosInstance";
 import moment from "moment";
-import { getBookshelfByUserId, getMyBookshelf, type UpdateAnswersDTO } from "../../api/bookshelf";
+import { getBookshelfByUserId, getMyBookshelf, saveAnswersToServer, type UpdateAnswersDTO } from "../../api/bookshelf";
 
 type Entry = { id: number; question: string; answer?: string };
-
-const saveAnswersToServer = async ({ items }: UpdateAnswersDTO): Promise<void> => {
-    await axiosInstance.patch('/api/bookshelf/bookshelf/me', { items });
-};
 
 const fmt = (iso?: string) => {
     if (!iso) return "-";

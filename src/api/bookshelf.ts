@@ -1,3 +1,4 @@
+import { useAuthStore } from "../store/auth";
 import axiosInstance from "./axiosInstance";
 
 interface ApiResponse<T> {
@@ -65,5 +66,7 @@ export type UpdateAnswersDTO = {
 export const saveAnswersToServer = async ({
   items,
 }: UpdateAnswersDTO): Promise<void> => {
-  await axiosInstance.patch("/api/bookshelf/bookshelf/me", { items });
+  await axiosInstance.patch("/api/bookshelf/me", {
+    items,
+  });
 };
