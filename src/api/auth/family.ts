@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosInstance from "../axiosInstance.ts";
 
 export interface IFamilyJoinRequstResponse {
@@ -19,13 +20,90 @@ const familyJoinRequest = async (
   nickname: string,
   inviteCode: string
 ): Promise<IFamilyJoinRequstResponse> => {
-  const res = await axiosInstance
-    .post<IFamilyJoinRequstResponse>("/family/join/request", {
-      nickname,
-      inviteCode,
-    })
-    .then((r) => r.data);
-  return res;
+  try {
+    const response = await axiosInstance.post<IFamilyJoinRequstResponse>(
+      "/family/join/request",
+      {
+        nickname,
+        inviteCode,
+      }
+    );
+    if (!response.data.success) {
+      throw new Error(
+        response.data.message || "가족 참여 요청에 실패했습니다."
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      const errorMessage =
+        error.response.data?.message || "초대 코드가 유효하지 않습니다.";
+      throw new Error(errorMessage);
+    }
+    throw new Error("요청 중 오류가 발생했습니다.");
+  }
+};
+
+interface IFamilyCreateData {
+  nickname: string;
+  familyNameOrCode: string;
+  verificationQuestion: string;
+  verificationAnswer: string;
+}
+
+interface IFamilyCreateData {
+  nickname: string;
+  familyNameOrCode: string; // UI 상태와 관련된 이름
+  verificationQuestion: string;
+  verificationAnswer: string;
+}
+
+// API 성공 시 응답 데이터 타입 (예시)
+interface IFamilyCreateResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    // 성공 시 추가 데이터가 있다면 정의
+    familyId: string;
+  };
+}
+
+/**
+ * 가족 생성 API 요청 함수
+ * @param formData - 가족 생성에 필요한 데이터
+ * @returns 성공 시 API 응답 데이터를, 실패 시 에러를 throw 합니다.
+ */
+const familyCreate = async (
+  formData: IFamilyCreateData
+): Promise<IFamilyCreateResponse> => {
+  const payload = {
+    nickname: formData.nickname,
+    familyName: formData.familyNameOrCode,
+    verificationQuestion: formData.verificationQuestion,
+    verificationAnswer: formData.verificationAnswer,
+  };
+
+  try {
+    const response = await axiosInstance.post<IFamilyCreateResponse>(
+      "/family/create",
+      payload
+    );
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || "가족 생성에 실패했습니다.");
+    }
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      const errorMessage =
+        error.response.data?.message || "서버 요청 중 오류가 발생했습니다.";
+      throw new Error(errorMessage);
+    }
+
+    throw new Error("알 수 없는 오류가 발생했습니다.");
+  }
 };
 
 export interface IFamilyJoinCompleteResponse {
@@ -39,13 +117,33 @@ const familyJoinComplete = async (
   inviteCode: string,
   verificationAnswer: string
 ): Promise<IFamilyJoinCompleteResponse> => {
-  const res = await axiosInstance
-    .post<IFamilyJoinCompleteResponse>("/family/join/complete", {
-      inviteCode,
-      verificationAnswer,
-    })
-    .then((r) => r.data);
-  return res;
+  try {
+    const response = await axiosInstance.post<IFamilyJoinCompleteResponse>(
+      "/family/join/complete",
+      {
+        inviteCode,
+        verificationAnswer,
+      }
+    );
+
+    // 비즈니스 로직 상 실패 처리
+    if (!response.data.success) {
+      throw new Error(
+        response.data.message || "가족 참여 완료에 실패했습니다."
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    // Axios 에러인 경우 서버가 보낸 구체적인 에러 메시지(예: 정답 불일치)를 전달
+    if (axios.isAxiosError(error) && error.response) {
+      const errorMessage =
+        error.response.data?.message || "정답이 일치하지 않습니다.";
+      throw new Error(errorMessage);
+    }
+    // 그 외 네트워크 에러 등
+    throw new Error("요청 중 오류가 발생했습니다.");
+  }
 };
 
 interface IFamilyMyMembers {
@@ -90,6 +188,46 @@ const getProgressFamily = async () => {
   return res.data.data.percentage;
 };
 
+// 가족 코드 유효성 검증 API
+interface IFamilyCodeValidationResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    familyName: string;
+    isValid: boolean;
+  };
+}
+
+const validateFamilyCode = async (
+  familyCode: string
+): Promise<IFamilyCodeValidationResponse> => {
+  try {
+    const response = await axiosInstance.post<IFamilyCodeValidationResponse>(
+      `/family/join/request`,
+      {
+        nickname: "str",
+        inviteCode: familyCode,
+      }
+    );
+    console.log("asd", response.data);
+
+    if (!response.data.success) {
+      throw new Error(
+        response.data.message || "유효하지 않은 가족 코드입니다."
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      const errorMessage =
+        error.response.data?.message || "유효하지 않은 가족 코드입니다.";
+      throw new Error(errorMessage);
+    }
+    throw new Error("요청 중 오류가 발생했습니다.");
+  }
+};
+
 export {
   familyJoinRequest,
   familyJoinComplete,
@@ -99,4 +237,6 @@ export {
   createFamily,
   editFamilyInfo,
   getProgressFamily,
+  familyCreate,
+  validateFamilyCode,
 };

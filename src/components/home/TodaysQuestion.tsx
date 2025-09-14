@@ -102,14 +102,13 @@ const TodaysQuestion = () => {
     });
 
 
-
     return (
         <div className="flex flex-col gap-4 h-[750px]">
             {view === "today" && !isWriting && (
                 <Card className="h-[128px] flex flex-col justify-around">
                     <SectionHeader title="우리 가족이 이만큼 가까워졌어요!" icon={Heart} />
                     <div className="flex justify-center">
-                        <ProgressBar percentage={percentage} />
+                        <ProgressBar percentage={percentage ?? 0} />
                     </div>
                 </Card>
             )}
