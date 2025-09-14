@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import type { NotiItem } from "../components/notifications/NotificationPopover";
 import bellIcon from "../assets/icons/home/Bell.svg";
 import xmarkIcon from "../assets/icons/home/Xmark.svg";
+import axiosInstance from "../api/axiosInstance.ts";
 
 type NotificationDTO = {
     notificationId: number;
@@ -15,33 +16,13 @@ type NotificationDTO = {
 };
 
 const getAllUnreadNotifications = async (): Promise<NotificationDTO[]> => {
-    const response = await axios
-        .get<{ data: NotificationDTO[] }>(
-            `${import.meta.env.VITE_API_URL}/api/notifications`,
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-                },
-            }
-        )
-        .then((res) => res.data);
-    return response.data ?? [];
+    const res = await axiosInstance.get<{ data: NotificationDTO[] }>('/api/notifications').then(r => r.data);
+    return res.data ?? [];
 };
 
 const readAllNotifications = async (): Promise<string | undefined> => {
-    const response = await axios
-        .patch<{ data?: { message?: string } }>(
-            `${import.meta.env.VITE_API_URL}/api/notifications/read-all`,
-            null,
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-                },
-            }
-        )
-        .then((res) => res.data);
-
-    return response.data?.message;
+    const res = await axiosInstance.get<{ data?: { message?: string } }>('/api/notifications/read-all').then(r => r.data);
+    return res.data?.message;
 };
 
 const readNotificationById = async (notificationId: number): Promise<string | undefined> => {
@@ -83,7 +64,7 @@ export default function NotificationsPage() {
     useEffect(() => {
         getAllUnreadNotifications()
             .then((dtos) => setList(dtos.map(mapDtoToNotiItem)))
-            .catch(() => {});
+            .catch(() => { });
     }, []);
 
     const handleMarkAllRead = async () => {

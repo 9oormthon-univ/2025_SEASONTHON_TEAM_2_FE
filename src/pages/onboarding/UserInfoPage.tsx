@@ -6,6 +6,7 @@ export default function UserInfoPage() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const type = searchParams.get("type") as TypeValue;
+    const code = searchParams.get("code") as string;
 
     const goToNextStep = (nextStep: StepValue, type?: TypeValue) => {
         const currentType = type || searchParams.get("type");
@@ -22,5 +23,5 @@ export default function UserInfoPage() {
         }
     };
 
-    return <InputUserInfo goToNextStep={goToNextStep} type={type} />;
+    return <InputUserInfo goToNextStep={goToNextStep} type={type} code={code} />;
 }

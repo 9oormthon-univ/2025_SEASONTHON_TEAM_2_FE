@@ -1,9 +1,17 @@
 import { Intro } from "../../components/onboarding";
 import { useNavigate } from "react-router-dom";
 import { STEP, type StepValue, type TypeValue } from "../../types/onboarding.types";
+import { useEffect } from "react";
 
 export default function IntroPage() {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const redirectUrl = localStorage.getItem("postLoginRedirect");
+        if (redirectUrl) {
+            navigate(redirectUrl);
+        }
+    }, [navigate]);
 
     const goToNextStep = (nextStep: StepValue, type?: TypeValue) => {
         switch (nextStep) {

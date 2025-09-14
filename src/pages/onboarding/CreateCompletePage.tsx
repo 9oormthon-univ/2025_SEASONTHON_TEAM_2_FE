@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CreateSuccessPage } from "../../components/onboarding";
-import axios from "axios";
+import axiosInstance from "../../api/axiosInstance";
 
 export interface IFamilyData {
     familyCode: string;
@@ -19,15 +19,11 @@ export default function CreateCompletePage() {
 
     useEffect(() => {
         const getMyFamily = async () => {
-            await axios.get(`${import.meta.env.VITE_API_URL}/family/my`, {
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`
-                }
-            }).then((res) => {
+            await axiosInstance('/family/my').then((res) => {
                 if (res.data.success) {
                     setFamilyData(res.data.data);
                 }
-            });
+            })
         }
         getMyFamily();
     })
