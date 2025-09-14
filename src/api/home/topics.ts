@@ -54,8 +54,8 @@ export const answerCurrentTopic = async (topicId: number, content: string) => {
 };
 
 // 4. 답변 수정하기 본인 것만 가능
-export const deleteAnswer = async (topicId: number, content: string) => {
-  const response = await axiosInstance.patch(`/api/answers/${topicId}`, {
+export const modifyMyAnswer = async (topicId: number, content: string) => {
+  const response = await axiosInstance.patch(`/api/topics/${topicId}/answers`, {
     content,
   });
 

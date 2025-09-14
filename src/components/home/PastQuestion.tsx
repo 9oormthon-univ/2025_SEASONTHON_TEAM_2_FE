@@ -1,7 +1,80 @@
 import { useMemo, useState } from "react";
-import { QMark } from "../../assets/icons/home";
-import { getAnswers, type IGetAnswersByID, type IGetPastTopics } from "../../api/home/topics";
 import moment from "moment";
+import { QMark } from "../../assets/icons/home";
+import { getAnswers } from "../../api/home/topics";
+
+interface IGetPastTopics {
+    id: number;
+    question: string;
+}
+
+interface IGetAnswersByID {
+    answerId: number;
+    profileUrl: string;
+    nickname: string;
+    createdAt: string;
+    content: string;
+}
+
+
+type QuestionItemProps = {
+    questionData: IGetPastTopics;
+};
+
+function QuestionItem({ questionData }: QuestionItemProps) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [answers, setAnswers] = useState<IGetAnswersByID[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleToggle = async () => {
+        if (isOpen) {
+            setIsOpen(false);
+            return;
+        }
+
+        if (answers.length === 0) {
+            setIsLoading(true);
+            try {
+                const fetchedAnswers = await getAnswers(questionData.id);
+                setAnswers(fetchedAnswers);
+            } catch (error) {
+                console.error("답변을 불러오는 데 실패했습니다.", error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        setIsOpen(true);
+    };
+
+    return (
+        <div className="flex flex-col gap-4 rounded-lg bg-[#EFF1F0] p-4 cursor-pointer" onClick={handleToggle}>
+            <p className="font-gangwon text-[28px] text-black">Q. {questionData.question}</p>
+
+            {isOpen && (
+                <div className="flex flex-col gap-4">
+                    {isLoading ? (
+                        <p className="text-gray-500">답변을 불러오는 중...</p>
+                    ) : answers.length === 0 ? (
+                        <p className="text-gray-500">아직 등록된 답변이 없어요.</p>
+                    ) : (
+                        answers.map((item) => (
+                            <div key={item.answerId} className="w-full h-auto rounded-2xl bg-white flex flex-col gap-4 p-4">
+                                <div className="flex items-center gap-2 font-kccganpan text-lg text-primary-300 flex-wrap">
+                                    <img src={item.profileUrl} className="size-11 rounded-full" alt={`${item.nickname} 프로필`} />
+                                    <p>{item.nickname}</p>
+                                    <p className="text-sm text-[#ED9482]">{moment(item.createdAt).format("YYYY.MM.DD HH:mm")}</p>
+                                </div>
+                                <div className="w-full min-h-[50px] p-2 bg-[#EFF1F0] font-gangwon text-3xl text-dark-gray break-words">
+                                    <p>A. {item.content}</p>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
 
 type Props = {
     data: IGetPastTopics[];
@@ -13,16 +86,10 @@ const PAGE_SIZE = 10;
 
 export default function PastQuestion({ data, isLoading, onClose }: Props) {
     const [page, setPage] = useState(1);
-    const [answer, setAnswer] = useState<IGetAnswersByID[]>();
-    const [answerOpen, setAnswerOpen] = useState(false);
-
-    const getPastAnswer = async (id: number) => {
-        setAnswerOpen(prev => !prev);
-        const answer = await getAnswers(id);
-        setAnswer(answer);
-    }
 
     const totalPages = Math.max(1, Math.ceil((data?.length ?? 0) / PAGE_SIZE));
+
+    // 페이지네이션을 위해 보여줄 목록
     const list = useMemo(() => {
         const start = (page - 1) * PAGE_SIZE;
         return (data ?? []).slice(start, start + PAGE_SIZE);
@@ -55,26 +122,8 @@ export default function PastQuestion({ data, isLoading, onClose }: Props) {
                         <p className="text-gray-500">답변한 질문이 아직 없어요.</p>
                     </div>
                 ) : (
-                    data.map((q) => (
-                        <div key={q.id} className="flex flex-col gap-4 rounded-lg bg-[#EFF1F0] p-4 cursor-pointer" onClick={() => getPastAnswer(q.id)}>
-                            <p className="font-gangwon text-[28px] text-black">Q. {q.question}</p>
-                            {answerOpen && answer && (
-                                <div className="flex flex-col gap-4">
-                                    {answer.map((item) => (
-                                        <div key={item.answerId} className="w-full h-[137px] rounded-2xl bg-white flex flex-col gap-4 p-4">
-                                            <div className="flex items-center gap-2 font-kccganpan text-lg text-primary-300">
-                                                <img src={item.profileUrl} className="size-11 rounded-full" />
-                                                <p>{item.nickname}</p>
-                                                <p className="text-sm text-[#ED9482]">{moment(item.createdAt).format("YYYY.MM.DD HH:MM")}</p>
-                                            </div>
-                                            <div className="w-full h-[50px] p-2 bg-[#EFF1F0] font-gangwon text-3xl text-dark-gray">
-                                                <p>A. {item.content}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                    list.map((q) => (
+                        <QuestionItem key={q.id} questionData={q} />
                     ))
                 )}
             </div>
