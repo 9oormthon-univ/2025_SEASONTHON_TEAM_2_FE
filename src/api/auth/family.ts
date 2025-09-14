@@ -188,14 +188,26 @@ const getProgressFamily = async () => {
   return res.data.data.percentage;
 };
 
-const validateFamilyCode = async (code: string) => {
+interface validateFamilyDetail {
+  data: {
+    familyName: string;
+    leaderName: string;
+    memberCount: number;
+    profileImageUrls: string[];
+  };
+  message: string;
+  success: boolean;
+}
+
+const validateFamilyCode = async (
+  code: string
+): Promise<validateFamilyDetail> => {
   try {
-    const response = await axiosInstance.get(`/family/verify`, {
+    const response = await axiosInstance.get(`/family/verify/detail`, {
       params: {
         code,
       },
     });
-    console.log(response.data);
     if (!response.data.success) {
       throw new Error(
         response.data.message || "유효하지 않은 가족 코드입니다."
