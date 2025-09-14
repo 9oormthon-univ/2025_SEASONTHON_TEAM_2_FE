@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { AuthUser } from "../../store/auth";
 import { Photo } from "../../assets/icons";
-import { modifyProfileImg } from "../../api/user";
+import { modifyNickname, modifyProfileImg } from "../../api/user";
 
 export type ColorKey = "green" | "pink" | "orange" | "blue" | "yellow";
 
@@ -74,12 +74,22 @@ function ProfileEditModalBody({
     if (!isOpen) return null;
 
     const onSubmit = async () => {
-        // console.log(preview);
-        // console.log(nickname);
-        if (selectedFile) {
-            modifyProfileImg(selectedFile);
+        try {
+            const promises = [];
+
+            if (nickname) {
+                promises.push(modifyNickname(nickname));
+            }
+            if (selectedFile) {
+                promises.push(modifyProfileImg(selectedFile));
+            }
+
+            await Promise.all(promises);
+
+            setEdit(false);
+        } catch (error) {
+            console.error("프로필 업데이트 실패 : ", error);
         }
-        // onClose();
     };
 
     if (!open) return null;

@@ -18,11 +18,22 @@ const getUserProfile = async (accessToken: string): Promise<AuthUser> => {
 };
 
 const modifyNickname = async (nickname: string) => {
-  const res = await axiosInstance.patch("/api/users/me/nickname", {
-    nickname,
-  });
-
-  console.log(res);
+  try {
+    const res = await axiosInstance.patch("/api/users/me/nickname", nickname);
+    if (res.data.success) {
+      alert("닉네임 수정을 완료했습니다. 잠시 후 로그아웃 됩니다.");
+    }
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      if (err.response) {
+        console.error("서버 응답 에러 데이터 : ", err.response.data.message);
+      } else if (err.request) {
+        console.error("요청 에러 : ", err.request);
+      } else {
+        console.error("알수없는 에러 : ", err);
+      }
+    }
+  }
 };
 
 const modifyProfileImg = async (profileImg: File) => {
