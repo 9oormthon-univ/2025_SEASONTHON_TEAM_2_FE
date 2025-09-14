@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 const WelcomeToast = ({ username }: { username: string }) => (
     <div className="flex justify-center items-center gap-2">
         <img src={EFL} alt="EverFlow_Character" />
-        <p>{username.slice(1)}님, 환영해요!</p>
+        <p className="text-primary-300">{username.slice(1)}님, 환영해요!</p>
     </div>
 );
 

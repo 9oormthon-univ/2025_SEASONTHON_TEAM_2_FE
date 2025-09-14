@@ -2,11 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { LinkIcon, PeoplesIcon, Xmark } from "../../assets/icons/home";
 import SectionHeader from "../common/SectionHeader";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createFamily, getFamilyInfo, joinFamily, editFamilyInfo, type IFamilyEditRequest } from '../../api/auth/family';
+import { getFamilyInfo, editFamilyInfo, type IFamilyEditRequest } from '../../api/auth/family';
 import { useState, useEffect } from 'react';
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
 import { CheckIcon } from "../../assets/icons";
+import { SuccessToast } from "../toast/SuccessToast";
+import { FailToast } from "../toast/FailToast";
+import type { AxiosError } from "axios";
 
 export default function FamilyManage() {
     const navigate = useNavigate();
@@ -20,15 +23,11 @@ export default function FamilyManage() {
         verificationAnswer: '',
     });
 
-    // 가족 생성 및 참여를 위한 상태 관리
-    const [newFamilyName, setNewFamilyName] = useState("");
-    const [inviteCode, setInviteCode] = useState("");
-
     // 1. 가족 정보 조회 API 호출
     const { data: familyInfo, isLoading, isError } = useQuery({
         queryKey: ['familyInfo'],
         queryFn: getFamilyInfo,
-        retry: (failureCount, error: any) => {
+        retry: (failureCount, error: AxiosError) => {
             if (error.response?.status === 404) return false;
             return failureCount < 3;
         },
@@ -49,54 +48,16 @@ export default function FamilyManage() {
     const { mutate: editFamilyMutation } = useMutation({
         mutationFn: editFamilyInfo,
         onSuccess: () => {
-            alert("가족 정보가 성공적으로 수정되었습니다.");
+            SuccessToast("가족 정보가 성공적으로 수정되었습니다.");
+
             queryClient.invalidateQueries({ queryKey: ['familyInfo'] });
             setIsEditing(false); // 수정 모드 종료
         },
         onError: (error) => {
             console.error("가족 정보 수정 실패:", error);
-            alert("수정에 실패했습니다. 다시 시도해주세요.");
+            FailToast("가족 정보 수정에 실패했습니다. 다시 시도해주세요.");
         }
     });
-
-    // 3. 가족 생성 API 호출 (POST)
-    const { mutate: createFamilyMutation } = useMutation({
-        mutationFn: createFamily,
-        onSuccess: () => {
-            console.log("가족 생성 성공!");
-            queryClient.invalidateQueries({ queryKey: ['familyInfo'] });
-        },
-        onError: (error) => { console.error("가족 생성 실패:", error); }
-    });
-
-    // 4. 가족 참여 API 호출 (POST)
-    const { mutate: joinFamilyMutation } = useMutation({
-        mutationFn: joinFamily,
-        onSuccess: () => {
-            console.log("가족 참여 성공!");
-            queryClient.invalidateQueries({ queryKey: ['familyInfo'] });
-        },
-        onError: (error) => { console.error("가족 참여 실패:", error); }
-    });
-
-
-    // --- 이벤트 핸들러 ---
-
-    const handleCreateFamily = () => {
-        if (!newFamilyName) {
-            alert("가족 이름을 입력해주세요.");
-            return;
-        }
-        createFamilyMutation(newFamilyName);
-    };
-
-    const handleJoinFamily = () => {
-        if (!inviteCode) {
-            alert("초대 코드를 입력해주세요.");
-            return;
-        }
-        joinFamilyMutation(inviteCode);
-    };
 
     const handleEditDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -123,7 +84,7 @@ export default function FamilyManage() {
         try {
             await navigator.clipboard.writeText(`${import.meta.env.VITE_DEPLOY_URL}/invite/${code}`);
             toast(
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex justify-center items-center gap-2">
                     <img src={CheckIcon} className="size-6" />
                     <span className="text-center font-semibold text-primary-300">초대링크를 복사했어요. 초대할 가족에게 공유해보세요.</span>
                 </div>
@@ -135,7 +96,6 @@ export default function FamilyManage() {
                     <span className="text-center font-semibold text-primary-300">초대링크 복사에 실패했습니다. 다시 시도해주세요.</span>
                 </div>
             )
-            alert('복사에 실패하였습니다');
         }
     };
 
@@ -157,7 +117,7 @@ export default function FamilyManage() {
                     </div>
 
                     {/* 본문: 가족 정보 표시 또는 수정 UI */}
-                    {familyInfo ? (
+                    {familyInfo && (
                         <div className="relative flex-1 p-8 grid grid-cols-2 gap-y-16">
                             {/* 가족 코드 영역 */}
                             <div className="flex flex-col gap-4 justify-center items-center">
@@ -198,6 +158,7 @@ export default function FamilyManage() {
                                         value={editData.familyName}
                                         onChange={handleEditDataChange}
                                         className="text-4xl text-center border-b-2 border-primary-200 focus:outline-none bg-gray-50 p-2 rounded-lg"
+                                        maxLength={8}
                                     />
                                 ) : (
                                     <p className="text-4xl">{familyInfo.familyName}</p>
@@ -220,6 +181,7 @@ export default function FamilyManage() {
                                                 onChange={handleEditDataChange}
                                                 className="flex-1 text-3xl text-[#A78974] border-b-2 border-primary-200 focus:outline-none bg-gray-50 p-2 rounded-lg"
                                                 placeholder="질문을 입력해주세요"
+                                                maxLength={20}
                                             />
                                         ) : (
                                             <span className="text-[#A78974]">{familyInfo.verificationQuestion}</span>
@@ -235,6 +197,7 @@ export default function FamilyManage() {
                                                 onChange={handleEditDataChange}
                                                 className="flex-1 text-3xl text-[#A78974] border-b-2 border-primary-200 focus:outline-none bg-gray-50 p-2 rounded-lg"
                                                 placeholder="답변을 입력해주세요"
+                                                maxLength={8}
                                             />
                                         ) : (
                                             <span className="text-[#A78974]">{familyInfo.verificationAnswer}</span>
@@ -259,20 +222,6 @@ export default function FamilyManage() {
                                     </button>
                                 </div>
                             )}
-                        </div>
-                    ) : (
-                        // 가족 정보 없을 때 UI
-                        <div className="flex flex-col items-center justify-center h-full gap-8">
-                            <h2 className="font-kccganpan text-3xl text-primary-300">아직 소속된 가족이 없어요!</h2>
-                            <p className="font-gangwon text-2xl">가족을 만들거나, 초대코드를 통해 참여해보세요.</p>
-                            <div className="flex gap-4">
-                                <input type="text" value={newFamilyName} onChange={(e) => setNewFamilyName(e.target.value)} placeholder="생성할 가족 이름 입력" className="border p-2 rounded-lg" />
-                                <button onClick={handleCreateFamily} className="bg-primary-100 text-white font-bold p-2 rounded-lg">가족 생성</button>
-                            </div>
-                            <div className="flex gap-4">
-                                <input type="text" value={inviteCode} onChange={(e) => setInviteCode(e.target.value)} placeholder="초대 코드 입력" className="border p-2 rounded-lg" />
-                                <button onClick={handleJoinFamily} className="bg-point-color-orange text-white font-bold p-2 rounded-lg">코드로 참여</button>
-                            </div>
                         </div>
                     )}
                 </div>
