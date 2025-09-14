@@ -13,6 +13,7 @@ import JoinPendingPage from "./pages/onboarding/JoinPendingPage";
 import FamilyBookshelfDetail from "./components/bookshelf/FamilyBookshelfDetail.tsx";
 import FamilyManage from "./components/home/FamilyManage.tsx";
 import NotificationsPage from "./pages/NotificationsPage";
+import FamilyInvitePage from "./pages/FamilyInvitePage";
 import PublicLayout from "./router/PublicLayout.tsx";
 import PrivateLayout from "./router/PrivateLayout.tsx";
 
@@ -49,6 +50,7 @@ export const router = createBrowserRouter([
     {
         element: <PrivateLayout />,
         children: [
+            { path: "/invite/:familyCode", element: <FamilyInvitePage /> },
             {
                 path: "/home",
                 element: <Home />,

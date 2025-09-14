@@ -4,7 +4,7 @@ import { useAuthStore } from '../store/auth';
 const PrivateLayout = () => {
     const { user } = useAuthStore();
 
-    if (!user) {
+    if (!user || user.role === "ROLE_GUEST") {
         return <Navigate to="/" replace />;
     }
 

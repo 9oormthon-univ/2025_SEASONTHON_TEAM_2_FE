@@ -4,7 +4,7 @@ import { useAuthStore } from '../store/auth';
 const PublicLayout = () => {
     const { user } = useAuthStore();
 
-    if (user) {
+    if (user?.role === "ROLE_USER") {
         return <Navigate to="/home" replace />;
     }
 

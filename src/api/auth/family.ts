@@ -11,13 +11,9 @@ export interface IFamilyJoinRequstResponse {
 }
 
 export interface IFamilyEditRequest {
-  success: boolean;
-  message: string;
-  data: {
-    familyName: string;
-    verificationQuestion: string;
-    verificationAnswer: string;
-  };
+  familyName: string;
+  verificationQuestion: string;
+  verificationAnswer: string;
 }
 
 const familyJoinRequest = async (
@@ -192,6 +188,46 @@ const getProgressFamily = async () => {
   return res.data.data.percentage;
 };
 
+// 가족 코드 유효성 검증 API
+interface IFamilyCodeValidationResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    familyName: string;
+    isValid: boolean;
+  };
+}
+
+const validateFamilyCode = async (
+  familyCode: string
+): Promise<IFamilyCodeValidationResponse> => {
+  try {
+    const response = await axiosInstance.post<IFamilyCodeValidationResponse>(
+      `/family/join/request`,
+      {
+        nickname: "str",
+        inviteCode: familyCode,
+      }
+    );
+    console.log("asd", response.data);
+
+    if (!response.data.success) {
+      throw new Error(
+        response.data.message || "유효하지 않은 가족 코드입니다."
+      );
+    }
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      const errorMessage =
+        error.response.data?.message || "유효하지 않은 가족 코드입니다.";
+      throw new Error(errorMessage);
+    }
+    throw new Error("요청 중 오류가 발생했습니다.");
+  }
+};
+
 export {
   familyJoinRequest,
   familyJoinComplete,
@@ -202,4 +238,5 @@ export {
   editFamilyInfo,
   getProgressFamily,
   familyCreate,
+  validateFamilyCode,
 };
