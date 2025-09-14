@@ -7,7 +7,7 @@ import NotificationPopover from "./notifications/NotificationPopover";
 import type { NotiItem } from "./notifications/NotificationPopover";
 import type { NotiPayload } from "./notifications/type";
 import axiosInstance from "../api/axiosInstance";
-import { useAuthStore, type AuthUser } from "../store/auth";
+import { useAuthStore } from "../store/auth";
 import UserProfileModal from "./modal/UserProfileModal";
 
 type Props = {

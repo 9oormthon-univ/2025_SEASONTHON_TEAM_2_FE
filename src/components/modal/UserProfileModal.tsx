@@ -1,32 +1,20 @@
 
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { AuthUser } from "../../store/auth";
-import { Photo } from "../../assets/icons";
 import { authLogout, modifyNickname, modifyProfileImg } from "../../api/user";
-
-export type ColorKey = "green" | "pink" | "orange" | "blue" | "yellow";
-
-export type AppointmentForm = {
-    nickname?: string;
-    profileImg?: string;
-};
 
 type ProfileEditModalProps = {
     isOpen: boolean;
     userInfo: AuthUser;
     onClose: () => void;
-    onLogout: () => void;
-    // onSubmit?: (data: AppointmentPayload) => void;
-    // familyCandidates?: string[];
 };
 
 function ProfileEditModalBody({
     isOpen,
     userInfo,
     onClose,
-    onLogout
 }: ProfileEditModalProps) {
     const [edit, setEdit] = useState(false);
     const [nickname, setNickname] = useState(userInfo?.nickname || "");
@@ -123,6 +111,7 @@ function ProfileEditModalBody({
                         accept="image/png, image/jpeg, image/webp, image/heic"
                         onChange={onImageChange}
                         className="hidden"
+                        disabled={!edit}
                     />
                     <label style={{ backgroundImage: preview ? `url(${preview})` : "none", opacity: edit ? "0.6" : "1" }} className="size-20 bg-no-repeat bg-center flex items-center justify-center cursor-pointer bg-cover rounded-full" htmlFor="profile_img" title="프로필 사진 변경" />
 
@@ -139,9 +128,14 @@ function ProfileEditModalBody({
 
                 <div className="flex items-center justify-end gap-2">
                     {edit ? (
-                        <button onClick={onSubmit} className="h-9 px-3 rounded-lg bg-[#EFF2EF] text-[#2A2F2A] text-sm" type="button">
-                            저장하기
-                        </button>
+                        <>
+                            <button onClick={onSubmit} className="h-9 px-3 rounded-lg bg-[#EFF2EF] text-[#2A2F2A] text-sm" type="button">
+                                저장하기
+                            </button>
+                            <button onClick={() => setEdit(false)} className="h-9 px-3 rounded-lg bg-[#EFF2EF] text-[#2A2F2A] text-sm" type="button">
+                                취소하기
+                            </button>
+                        </>
                     ) : (
                         <button onClick={handleEditProfile} className="h-9 px-3 rounded-lg bg-[#EFF2EF] text-[#2A2F2A] text-sm" type="button">
                             프로필 수정
