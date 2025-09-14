@@ -124,7 +124,6 @@ export default function MainHeader({ hasUnread, disableNotiPopover }: Props) {
             <UserProfileModal
                 isOpen={myOpen}
                 userInfo={user}
-                onLogout={() => { }}
                 onClose={() => setMyOpen(prev => !prev)}
             />
         </>
