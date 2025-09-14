@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import MainHeader from "../components/MainHeader";
 import FamilyMembersCard from "../components/home/FamilyMembersCard";
 import FamilyBookshelf from "../components/home/FamilyBookshelf";
@@ -23,6 +23,9 @@ export default function HomeLayout() {
     const username = user?.nickname || "";
     
     const [isLarge, setIsLarge] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
+
 
     useEffect(() => {
         if (username) {
@@ -30,9 +33,15 @@ export default function HomeLayout() {
         }
     }, [username]);
 
+    useEffect(() => {
+        if (location.state?.isLarge) {
+            setIsLarge(true);
+        }
+    }, [location.state]);
+
     return (
         // main 브랜치의 반응형 레이아웃 구조를 기반으로 병합
-        <div className="min-h-screen w-full bg-[#EBEDF0] overflow-x-hidden">
+        <div className="min-h-screen w-full bg-back-color overflow-x-hidden">
 
             {/* Desktop */}
             <div className="hidden lg:block pt-20">
@@ -48,7 +57,7 @@ export default function HomeLayout() {
 
             {/* Mobile */}
             <div className="block lg:hidden pt-18">
-                <MobileHeader />
+                <MobileHeader isLarge={isLarge} />
                 <div className="mx-auto w-full max-w-[430px]">
                     <div className="px-4 pt-4 pb-2 flex items-center justify-between">
                         {/* 사용자 이름이 동적으로 표시되도록 수정 */}
@@ -69,9 +78,10 @@ export default function HomeLayout() {
                     </div>
 
                     {!isLarge && (
+
                         <main className="px-4 py-4 space-y-5 leading-[1.5] overflow-y-auto pb-28">
                             <section>
-                                <MobileFamilyMembersCard />
+                                <MobileFamilyMembersCard isLarge={false} />
                                 <p className="mt-2 text-[#8E9AA6] text-[14px] font-normal text-right">
                                     * 가족 수정은 PC 환경에서 가능해요
                                 </p>
@@ -83,25 +93,30 @@ export default function HomeLayout() {
                     {isLarge && (
                         <main className="px-4 py-4 space-y-4">
                             <section className="space-y-3">
-                                <MobileFamilyMembersCard />
+                                <MobileFamilyMembersCard isLarge={true}/>
                             </section>
+                            <section className="grid grid-cols-2 gap-3 mb-3">
+                                <button className="h-15 rounded-2xl bg-[#CAE5CA] text-primary-300 text-[25px]">알림</button>
+                                <button className="h-15 rounded-2xl bg-[#CAE5CA] text-primary-300 text-[25px]">내정보</button>
+                            </section>
+
                             <section className="grid grid-cols-2 gap-3">
-                                <button className="h-14 rounded-2xl bg-[#CFE7D0] text-green-900 font-semibold">알림</button>
-                                <button className="h-14 rounded-2xl bg-[#CFE7D0] text-green-900 font-semibold">내정보</button>
-                                <button className="col-span-1 h-44 rounded-2xl bg-[#FFE2AA] text-[#8C6A2A] text-left p-4">
-                                    <div className="text-lg font-semibold">오늘의 질문</div>
-                                    <div className="mt-auto text-right">›</div>
+                                <button className="row-span-2 h-[510px] rounded-2xl bg-[#FFE7B7] text-[#A98A49] p-4"
+                                        onClick={() => navigate("/today")}>
+                                    <div className="text-[25px] font-normal">오늘의 질문</div>
                                 </button>
-                                <button className="col-span-1 h-44 rounded-2xl bg-[#CFE0FF] text-[#5C719F] text-left p-4">
-                                    <div className="text-lg font-semibold">가족 책장</div>
-                                    <div className="mt-auto text-right">›</div>
+
+                                <button className="rounded-2xl bg-[#CFE0FF] text-[#5C719F] p-4"
+                                        onClick={() => navigate("/book",{ state: { isLarge: true } })}>
+                                    <div className="text-[25px] font-normal">가족 책장</div>
                                 </button>
-                                <button className="col-span-1 h-40 rounded-2xl bg-[#FFC7C0] text-[#A05D54] text-left p-4">
-                                    <div className="text-lg font-semibold">메모장</div>
-                                    <div className="mt-auto text-right">›</div>
+
+                                <button className="rounded-2xl bg-[#FFC7C0] text-[#A05D54] p-4"
+                                        onClick={() => navigate("/memo",{ state: { isLarge: true } })}>
+                                    <div className="text-[25px] font-normal">메모장</div>
                                 </button>
-                                <div />
                             </section>
+
                         </main>
                     )}
                     

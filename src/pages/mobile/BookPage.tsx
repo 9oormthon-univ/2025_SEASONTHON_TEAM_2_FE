@@ -1,15 +1,30 @@
 import MobileNav from "../../components/mobile/MobileNav";
+import MobileHeader from "../../components/mobile/MobileHeader.tsx";
+import { useLocation } from "react-router-dom";
+import LargeBackButton from "../../components/mobile/LargeBackButton.tsx";
 
-type Props = {
-    isLarge: boolean;
-};
+export default function BookPage() {
+    const location = useLocation();
+    const isLarge = location.state?.isLarge ?? false;
 
-export default function BookPage({ isLarge }: Props) {
+
     return (
-        <div className="min-h-screen bg-[#EBEDF0] pb-20">
-            <div className="p-4">Book Page</div>
+        <div className="min-h-screen bg-back-color">
 
-            {!isLarge && <MobileNav />}
+            {!isLarge &&
+                (
+                    <div>
+                        <MobileHeader />
+                        <MobileNav />
+                    </div>
+                )}
+            {isLarge &&
+                (
+                    <div className="px-4 py-20">
+                        <MobileHeader isLarge={true} />
+                        <LargeBackButton/>
+                    </div>
+                )}
         </div>
     );
 }

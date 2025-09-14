@@ -14,7 +14,11 @@ type FamilyData = {
     members: FamilyMember[];
 };
 
-export default function MobileFamilyMembersCard() {
+type Props = {
+    isLarge: boolean;
+};
+
+export default function MobileFamilyMembersCard({isLarge}: Props) {
     const { data, isLoading, isError } = useQuery<FamilyData>({
         queryKey: ["my-family-members"],
         queryFn: getMyFamilyMembers,
@@ -27,13 +31,13 @@ export default function MobileFamilyMembersCard() {
 
     return (
         <section className="w-full">
-            <h3 className="text-[20px] font-semibold mb-2">우리 가족</h3>
+            <h3 className={isLarge ?"hidden":"text-[20px] font-semibold mb-2"}>우리 가족</h3>
 
-            <div className="rounded-2xl rounded-tl-none bg-white p-4">
+            <div className={isLarge ?"rounded-2xl bg-white p-4":"rounded-2xl rounded-tl-none bg-white p-4"}>
                 <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                         <img src={PeoplesIcon} alt="" className="w-6 h-6" />
-                        <span className="text-[20px] font-bold">{familyName}</span>
+                        <span className={isLarge ?"text-[25px] font-bold":"text-[20px] font-bold"}>{familyName}</span>
                     </div>
                 </div>
 
@@ -63,7 +67,7 @@ export default function MobileFamilyMembersCard() {
                                 ) : (
                                     <div className="w-14 h-14 rounded-full bg-gray-300" />
                                 )}
-                                <span className="text-[#567D57] font-pretendard font-semibold text-[18px] leading-none">
+                                <span className={isLarge ?"text-[#567D57] font-semibold text-[20px] leading-none": "text-[#567D57] font-semibold text-[18px] leading-none"}>
                   {m.nickname || " "}
                 </span>
                             </div>

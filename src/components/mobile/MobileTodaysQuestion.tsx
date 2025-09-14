@@ -32,7 +32,7 @@ function AnswerRow({a}: {
 
             </div>
 
-            <div className="rounded-lg bg-[#EBEDF0] px-3 py-2 text-[16px]">A. {a.content}</div>
+            <div className="rounded-lg bg-back-color px-3 py-2 text-[16px]">A. {a.content}</div>
         </article>
     );
 }
@@ -114,7 +114,7 @@ export default function MobileTodaysQuestion() {
                 {!isWriting && !hasMyAnswer && (
                     <button
                         onClick={() => setIsWriting(true)}
-                        className="w-full h-12 rounded-xl bg-[#ECF5F1] font-semibold text-[16px] text-green-900 mb-4"
+                        className="w-full h-10 rounded-xl font-semibold text-[16px] bg-primary-200 text-white mb-4"
                     >
                         답변하기
                     </button>
