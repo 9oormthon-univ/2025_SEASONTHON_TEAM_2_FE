@@ -7,9 +7,6 @@ import { useAuthStore } from "../store/auth";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 // 모든 요청을 보낼 때마다 자동으로 토큰을 헤더에 추가해주는 코드입니다.

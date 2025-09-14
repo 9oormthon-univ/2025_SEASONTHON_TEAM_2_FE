@@ -8,64 +8,12 @@ import type { NotiItem } from "./notifications/NotificationPopover";
 import type { NotiPayload } from "./notifications/type";
 import axiosInstance from "../api/axiosInstance";
 import { useAuthStore } from "../store/auth";
+import UserProfileModal from "./modal/UserProfileModal";
 
 type Props = {
     hasUnread?: boolean;
     disableNotiPopover?: boolean;
 };
-
-function MyPageModal({
-    open,
-    onClose,
-    avatarUrl,
-    onEditNickname,
-    onEditProfile,
-    onLogout,
-}: {
-    open: boolean;
-    onClose: () => void;
-    avatarUrl?: string;
-    onEditNickname?: () => void;
-    onEditProfile?: () => void;
-    onLogout?: () => void;
-}) {
-    if (!open) return null;
-    const handleNickname = () => (onEditNickname ? onEditNickname() : console.log("닉네임 수정"));
-    const handleProfile = () => (onEditProfile ? onEditProfile() : console.log("프로필 수정"));
-    const handleLogout = () => (onLogout ? onLogout() : console.log("로그아웃"));
-    return (
-        <div className="fixed inset-0 z-[999]">
-            <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-            <div className="absolute left-1/2 top-1/2 w-[560px] max-w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white shadow-2xl p-6">
-                <div className="flex items-center justify-between mb-5">
-                    <h2 className="text-xl font-semibold">마이페이지</h2>
-                    <button onClick={onClose} className="h-9 px-4 rounded-xl bg-[#EFF2EF] text-[#2A2F2A]" type="button">
-                        닫기
-                    </button>
-                </div>
-
-                <div className="flex items-center gap-4 mb-6">
-                    <div className="h-20 w-20 rounded-full overflow-hidden bg-[#D9D9D9]">
-                        {avatarUrl ? <img src={avatarUrl} alt="프로필" className="w-full h-full object-cover" /> : null}
-                    </div>
-                    <div className="text-sm text-[#7A7A7A]">계정 정보를 관리할 수 있어요.</div>
-                </div>
-
-                <div className="flex items-center justify-end gap-2">
-                    <button onClick={handleNickname} className="h-9 px-3 rounded-lg bg-[#EFF2EF] text-[#2A2F2A] text-sm" type="button">
-                        닉네임 수정
-                    </button>
-                    <button onClick={handleProfile} className="h-9 px-3 rounded-lg bg-[#EFF2EF] text-[#2A2F2A] text-sm" type="button">
-                        프로필 수정
-                    </button>
-                    <button onClick={handleLogout} className="h-9 px-3 rounded-lg bg-[#F3D7D7] text-[#D06666] text-sm" type="button">
-                        로그아웃
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-}
 
 type NotificationDTO = {
     notificationId: number;
@@ -112,6 +60,7 @@ export default function MainHeader({ hasUnread, disableNotiPopover }: Props) {
     const [items, setItems] = useState<NotiItem[]>([]);
     const { user } = useAuthStore();
     const user_profile = user?.profileUrl ?? "";
+
     useEffect(() => {
         getRecentNotifications()
             .then((dtos) => setItems(dtos.map(mapDtoToNotiItem)))
@@ -159,7 +108,7 @@ export default function MainHeader({ hasUnread, disableNotiPopover }: Props) {
                             </div>
                         </li>
 
-                        <li>
+                        <li className="flex items-center justify-center">
                             <button
                                 aria-label="내 프로필"
                                 onClick={() => setMyOpen(true)}
@@ -172,8 +121,11 @@ export default function MainHeader({ hasUnread, disableNotiPopover }: Props) {
                     </ul>
                 </div>
             </header>
-
-            <MyPageModal open={myOpen} onClose={() => setMyOpen(false)} avatarUrl={user_profile} />
+            <UserProfileModal
+                isOpen={myOpen}
+                userInfo={user}
+                onClose={() => setMyOpen(prev => !prev)}
+            />
         </>
     );
 }
