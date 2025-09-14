@@ -23,7 +23,7 @@ type NotificationDTO = {
 };
 
 const getRecentNotifications = async (): Promise<NotificationDTO[]> => {
-    const res = await axiosInstance.get<{ data: NotificationDTO[] }>('/api/notification/recent').then((r) => r.data);
+    const res = await axiosInstance.get<{ data: NotificationDTO[] }>('/api/notifications/recent').then((r) => r.data);
     return res.data ?? [];
 };
 
