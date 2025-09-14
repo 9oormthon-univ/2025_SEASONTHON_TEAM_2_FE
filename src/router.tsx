@@ -13,6 +13,10 @@ import JoinPendingPage from "./pages/onboarding/JoinPendingPage";
 import FamilyBookshelfDetail from "./components/bookshelf/FamilyBookshelfDetail.tsx";
 import FamilyManage from "./components/home/FamilyManage.tsx";
 import NotificationsPage from "./pages/NotificationsPage";
+import BookPage from "./pages/mobile/BookPage";
+import MemoPage from "./pages/mobile/MemoPage";
+import ProfilePage from "./pages/mobile/ProfilePage";
+
 
 export const router = createBrowserRouter([
     {
@@ -38,7 +42,8 @@ export const router = createBrowserRouter([
                 ]
             }
         ]
-    }, {
+    },
+    {
         path: "/home",
         element: <Home />,
         children: [
@@ -49,5 +54,10 @@ export const router = createBrowserRouter([
     },{
         path:"/notifications",
         element:<NotificationsPage/>
-    }
-])
+    },
+    { path: "/book", element: <BookPage isLarge={false}/> },
+    { path: "/memo", element: <MemoPage isLarge={false}/> },
+    { path: "/profile", element: <ProfilePage isLarge={false}/> },
+    { path:"/mobilenotifications", element:<NotificationsPage/>},
+
+]);
