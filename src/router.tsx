@@ -16,6 +16,9 @@ import NotificationsPage from "./pages/NotificationsPage";
 import FamilyInvitePage from "./pages/FamilyInvitePage";
 import PublicLayout from "./router/PublicLayout.tsx";
 import PrivateLayout from "./router/PrivateLayout.tsx";
+import BookPage from "./pages/mobile/BookPage";
+import MemoPage from "./pages/mobile/MemoPage";
+import ProfilePage from "./pages/mobile/ProfilePage";
 
 export const router = createBrowserRouter([
     {
@@ -63,7 +66,12 @@ export const router = createBrowserRouter([
             {
                 path: "/notifications",
                 element: <NotificationsPage />
-            }
+            },
+            // feature/mobile-ui 브랜치에서 추가된 모바일 페이지들을 PrivateLayout 하위에 추가
+            { path: "/book", element: <BookPage isLarge={false} /> },
+            { path: "/memo", element: <MemoPage isLarge={false} /> },
+            { path: "/profile", element: <ProfilePage isLarge={false} /> },
+            { path: "/mobilenotifications", element: <NotificationsPage /> },
         ]
     }
-])
+]);
