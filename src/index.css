@@ -58,6 +58,8 @@
   --color-label-red: #e11321;
   --color-label-purple: #9230cf;
   --color-label-orange: #e86400;
+
+  --color-back-color:#EFF1F0;
 }
 
 :root {
