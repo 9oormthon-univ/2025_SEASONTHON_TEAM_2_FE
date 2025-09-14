@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { AuthUser } from "../../store/auth";
 import { authLogout, modifyNickname, modifyProfileImg } from "../../api/user";
+import { FailToast } from "../toast/FailToast";
 
 type ProfileEditModalProps = {
     isOpen: boolean;
@@ -29,14 +30,14 @@ function ProfileEditModalBody({
 
         const allowedFileTypes = ["image/png", "image/jpeg", "image/webp", "image/heic"];
         if (!allowedFileTypes.includes(file.type)) {
-            alert("업로드 가능한 파일 형식은 PNG, JPG, JPEG, WEBP, HEIC 입니다.");
+            FailToast("업로드 가능한 파일 형식은 PNG, JPG, JPEG, WEBP, HEIC 입니다.");
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
             }
             return;
         }
         if (file.size > 10 * 1024 * 1024) {
-            alert("파일 크기는 10MB를 초과할 수 없습니다.");
+            FailToast("파일 크기는 10MB를 초과할 수 없습니다.");
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
             }

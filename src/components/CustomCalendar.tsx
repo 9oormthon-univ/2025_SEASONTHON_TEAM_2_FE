@@ -10,6 +10,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createAppointments, getAppointmentsMonth, getAppointmentsByDate, deleteAppointmentsById } from '../api/appointments';
 import type { AppointmentPayload } from '../api/appointments';
 import LoadingSpinner from './LoadingSpinner.tsx';
+import { SuccessToast } from './toast/SuccessToast.tsx';
+import { FailToast } from './toast/FailToast.tsx';
 
 // UI에 약속 목록을 표시하기 위한 데이터 타입
 interface UiAppointment {
@@ -98,26 +100,26 @@ const CustomCalendar = () => {
     const createAppointmentMutation = useMutation({
         mutationFn: createAppointments,
         onSuccess: () => {
-            alert("약속이 성공적으로 생성되었습니다. ✅");
+            SuccessToast("약속이 성공적으로 생성되었습니다.");
             queryClient.invalidateQueries({ queryKey: ['appointments'] });
             queryClient.invalidateQueries({ queryKey: ['dailyAppointments'] });
         },
         onError: (err) => {
             console.error("약속 생성 중 오류 발생:", err);
-            alert("약속 생성에 실패했습니다. 😥");
+            FailToast("약속 생성에 실패했습니다.");
         },
     });
 
     const deleteAppointmentMutation = useMutation({
         mutationFn: deleteAppointmentsById,
         onSuccess: () => {
-            alert("약속이 성공적으로 취소되었습니다.");
+            SuccessToast("약속이 성공적으로 취소되었습니다.");
             queryClient.invalidateQueries({ queryKey: ['appointments'] });
             queryClient.invalidateQueries({ queryKey: ['dailyAppointments'] });
         },
         onError: (error) => {
             console.error("약속 취소 중 오류 발생:", error);
-            alert("약속 취소에 실패했습니다.");
+            FailToast("약속 취소에 실패했습니다.");
         },
     });
 

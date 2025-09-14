@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useAuthStore, type AuthUser } from "../store/auth";
 import axiosInstance from "./axiosInstance";
+import { SuccessToast } from "../components/toast/SuccessToast";
 
 const getUserProfile = async (accessToken: string): Promise<AuthUser> => {
   const res = await axios
@@ -23,7 +24,7 @@ const modifyNickname = async (nickname: string) => {
       nickname,
     });
     if (res.data.success) {
-      alert("닉네임 수정을 완료했습니다. 잠시 후 로그아웃 됩니다.");
+      SuccessToast("닉네임 수정을 완료했습니다. 잠시 후 로그아웃 됩니다.");
       await authLogout();
     }
   } catch (err) {
@@ -50,7 +51,9 @@ const modifyProfileImg = async (profileImg: File) => {
       formData
     );
     if (res.data.success) {
-      alert("프로필 이미지 수정에 성공했습니다. 잠시 후 로그아웃 됩니다.");
+      SuccessToast(
+        "프로필 이미지 수정에 성공했습니다. 잠시 후 로그아웃 됩니다."
+      );
       await authLogout();
     }
   } catch (err) {
@@ -70,6 +73,7 @@ const authLogout = async () => {
   const res = await axiosInstance.post("/auth/logout");
   if (res.data.success) {
     //로그아웃 됐습니다 토스트
+    SuccessToast("성공적으로 로그아웃 되었습니다.");
     useAuthStore.getState().clear();
   }
 };
