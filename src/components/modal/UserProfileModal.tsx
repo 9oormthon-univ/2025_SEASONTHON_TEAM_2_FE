@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { AuthUser } from "../../store/auth";
 import { Photo } from "../../assets/icons";
-import { modifyNickname, modifyProfileImg } from "../../api/user";
+import { authLogout, modifyNickname, modifyProfileImg } from "../../api/user";
 
 export type ColorKey = "green" | "pink" | "orange" | "blue" | "yellow";
 
@@ -96,7 +96,12 @@ function ProfileEditModalBody({
     const handleEditProfile = () => {
         setEdit(true);
     };
-    const handleLogout = () => (onLogout ? onLogout() : console.log("로그아웃"));
+    const handleLogout = async () => {
+        const logOut = confirm("로그아웃 하시겠습니까?");
+        if (logOut) {
+            await authLogout();
+        }
+    };
 
     return (
         <div className="fixed inset-0 z-[999]">

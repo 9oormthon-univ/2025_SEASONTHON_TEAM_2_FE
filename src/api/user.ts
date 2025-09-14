@@ -19,9 +19,12 @@ const getUserProfile = async (accessToken: string): Promise<AuthUser> => {
 
 const modifyNickname = async (nickname: string) => {
   try {
-    const res = await axiosInstance.patch("/api/users/me/nickname", nickname);
+    const res = await axiosInstance.patch("/api/users/me/nickname", {
+      nickname,
+    });
     if (res.data.success) {
       alert("닉네임 수정을 완료했습니다. 잠시 후 로그아웃 됩니다.");
+      await authLogout();
     }
   } catch (err) {
     if (axios.isAxiosError(err)) {
@@ -37,7 +40,6 @@ const modifyNickname = async (nickname: string) => {
 };
 
 const modifyProfileImg = async (profileImg: File) => {
-  const { clear } = useAuthStore.getState();
   const formData = new FormData();
 
   formData.append("file", profileImg);
@@ -49,7 +51,7 @@ const modifyProfileImg = async (profileImg: File) => {
     );
     if (res.data.success) {
       alert("프로필 이미지 수정에 성공했습니다. 잠시 후 로그아웃 됩니다.");
-      clear();
+      await authLogout();
     }
   } catch (err) {
     if (axios.isAxiosError(err)) {
@@ -64,4 +66,12 @@ const modifyProfileImg = async (profileImg: File) => {
   }
 };
 
-export { getUserProfile, modifyNickname, modifyProfileImg };
+const authLogout = async () => {
+  const res = await axiosInstance.post("/auth/logout");
+  if (res.data.success) {
+    //로그아웃 됐습니다 토스트
+    useAuthStore.getState().clear();
+  }
+};
+
+export { getUserProfile, modifyNickname, modifyProfileImg, authLogout };
