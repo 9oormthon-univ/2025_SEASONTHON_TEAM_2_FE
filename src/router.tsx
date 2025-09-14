@@ -16,7 +16,10 @@ import NotificationsPage from "./pages/NotificationsPage";
 import FamilyInvitePage from "./pages/FamilyInvitePage";
 import PublicLayout from "./router/PublicLayout.tsx";
 import PrivateLayout from "./router/PrivateLayout.tsx";
-import RootLayout from "./router/RootLayout.tsx";
+import RootLayout from "./router/RootLayout.tsx"; 
+import BookPage from "./pages/mobile/BookPage"; 
+import MemoPage from "./pages/mobile/MemoPage"; 
+import ProfilePage from "./pages/mobile/ProfilePage"; 
 
 export const router = createBrowserRouter([
     {
@@ -67,9 +70,13 @@ export const router = createBrowserRouter([
                     {
                         path: "/notifications",
                         element: <NotificationsPage />
-                    }
+                    },
+                    { path: "/book", element: <BookPage isLarge={false} /> },
+                    { path: "/memo", element: <MemoPage isLarge={false} /> },
+                    { path: "/profile", element: <ProfilePage isLarge={false} /> },
+                    { path: "/mobilenotifications", element: <NotificationsPage /> },
                 ]
             }
         ]
     }
-])
+]);
