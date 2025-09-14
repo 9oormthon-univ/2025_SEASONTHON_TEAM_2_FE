@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useAuthStore, type AuthUser } from "../store/auth";
+import axiosInstance from "./axiosInstance";
 
 const getUserProfile = async (accessToken: string): Promise<AuthUser> => {
   const res = await axios
@@ -16,4 +17,40 @@ const getUserProfile = async (accessToken: string): Promise<AuthUser> => {
   return res.data;
 };
 
-export { getUserProfile };
+const modifyNickname = async (nickname: string) => {
+  const res = await axiosInstance.patch("/api/users/me/nickname", {
+    nickname,
+  });
+
+  console.log(res);
+};
+
+const modifyProfileImg = async (profileImg: File) => {
+  const { clear } = useAuthStore.getState();
+  const formData = new FormData();
+
+  formData.append("file", profileImg);
+
+  try {
+    const res = await axiosInstance.patch(
+      "/api/users/me/profileImage",
+      formData
+    );
+    if (res.data.success) {
+      alert("프로필 이미지 수정에 성공했습니다. 잠시 후 로그아웃 됩니다.");
+      clear();
+    }
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      if (err.response) {
+        console.error("서버 응답 에러 데이터 : ", err.response.data.message);
+      } else if (err.request) {
+        console.error("요청 에러 : ", err.request);
+      } else {
+        console.error("알수없는 에러 : ", err);
+      }
+    }
+  }
+};
+
+export { getUserProfile, modifyNickname, modifyProfileImg };
