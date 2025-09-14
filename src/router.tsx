@@ -16,53 +16,59 @@ import NotificationsPage from "./pages/NotificationsPage";
 import FamilyInvitePage from "./pages/FamilyInvitePage";
 import PublicLayout from "./router/PublicLayout.tsx";
 import PrivateLayout from "./router/PrivateLayout.tsx";
+import RootLayout from "./router/RootLayout.tsx";
 
 export const router = createBrowserRouter([
     {
-        element: <PublicLayout />,
+        element: <RootLayout />,
         children: [
-            { path: "/", element: <MainPage /> },
-            { path: "/invite/:familyCode", element: <FamilyInvitePage /> },
             {
-                path: "/auth",
-                element: (
-                    <div className="relative w-screen h-screen max-w-[1440px] m-auto">
-                        <Header />
-                        <Outlet />
-                    </div>
-                ),
+                element: <PublicLayout />,
                 children: [
-                    { path: "kakao/callback", element: <KakaoCallback /> },
+                    { path: "/", element: <MainPage /> },
+                    { path: "/invite/:familyCode", element: <FamilyInvitePage /> },
                     {
-                        path: "on-boarding",
+                        path: "/auth",
+                        element: (
+                            <div className="relative w-screen h-screen max-w-[1440px] m-auto">
+                                <Header />
+                                <Outlet />
+                            </div>
+                        ),
                         children: [
-                            { index: true, element: <IntroPage /> },
-                            { path: "terms", element: <TermsPage /> },
-                            { path: "user-info", element: <UserInfoPage /> },
-                            { path: "create-complete", element: <CreateCompletePage /> },
-                            { path: "join-question", element: <JoinQuestionPage /> },
-                            { path: "join-pending", element: <JoinPendingPage /> }
+                            { path: "kakao/callback", element: <KakaoCallback /> },
+                            {
+                                path: "on-boarding",
+                                children: [
+                                    { index: true, element: <IntroPage /> },
+                                    { path: "terms", element: <TermsPage /> },
+                                    { path: "user-info", element: <UserInfoPage /> },
+                                    { path: "create-complete", element: <CreateCompletePage /> },
+                                    { path: "join-question", element: <JoinQuestionPage /> },
+                                    { path: "join-pending", element: <JoinPendingPage /> }
+                                ]
+                            }
                         ]
                     }
                 ]
-            }
-        ]
-    },
-    {
-        element: <PrivateLayout />,
-        children: [
-            {
-                path: "/home",
-                element: <Home />,
-                children: [
-                    { index: true, element: <HomeIndex /> },
-                    { path: "books/:bookId", element: <FamilyBookshelfDetail /> },
-                    { path: "family/manage", element: <FamilyManage /> }
-                ]
             },
             {
-                path: "/notifications",
-                element: <NotificationsPage />
+                element: <PrivateLayout />,
+                children: [
+                    {
+                        path: "/home",
+                        element: <Home />,
+                        children: [
+                            { index: true, element: <HomeIndex /> },
+                            { path: "books/:bookId", element: <FamilyBookshelfDetail /> },
+                            { path: "family/manage", element: <FamilyManage /> }
+                        ]
+                    },
+                    {
+                        path: "/notifications",
+                        element: <NotificationsPage />
+                    }
+                ]
             }
         ]
     }

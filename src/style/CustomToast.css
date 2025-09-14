@@ -1,0 +1,17 @@
+/* custom-toast.css */
+.custom-welcome-toast {
+  text-align: center;
+  background-color: #ecf5f1 !important;
+  border: 1px solid #a3cfbb !important; /* primary-200 색상에 맞춰 조정 */
+  color: #333 !important; /* 글자색 */
+  border-radius: 4px !important; /* rounded-sm */
+  box-shadow: none !important; /* 기본 그림자 제거 */
+  width: fit-content !important;
+  height: 48px !important;
+  /* padding: 0 !important; */
+}
+
+/* 닫기 버튼 숨기기 (선택 사항) */
+.custom-welcome-toast .Toastify__close-button {
+  display: none;
+}

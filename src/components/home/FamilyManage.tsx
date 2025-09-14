@@ -5,6 +5,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createFamily, getFamilyInfo, joinFamily, editFamilyInfo, type IFamilyEditRequest } from '../../api/auth/family';
 import { useState, useEffect } from 'react';
 import LoadingSpinner from "../LoadingSpinner";
+import { toast } from "react-toastify";
+import { CheckIcon } from "../../assets/icons";
 
 export default function FamilyManage() {
     const navigate = useNavigate();
@@ -120,8 +122,19 @@ export default function FamilyManage() {
     const handleCopyClipBoard = async (code: string) => {
         try {
             await navigator.clipboard.writeText(`${import.meta.env.VITE_DEPLOY_URL}/invite/${code}`);
-            alert('클립보드에 초대 링크가 복사되었습니다.');
+            toast(
+                <div className="flex items-center justify-center gap-2">
+                    <img src={CheckIcon} className="size-6" />
+                    <span className="text-center font-semibold text-primary-300">초대링크를 복사했어요. 초대할 가족에게 공유해보세요.</span>
+                </div>
+            )
         } catch {
+            toast(
+                <div className="flex items-center justify-center gap-2">
+                    <img src={Xmark} className="size-6" />
+                    <span className="text-center font-semibold text-primary-300">초대링크 복사에 실패했습니다. 다시 시도해주세요.</span>
+                </div>
+            )
             alert('복사에 실패하였습니다');
         }
     };
@@ -163,7 +176,7 @@ export default function FamilyManage() {
                                 </div>
                                 {!isEditing && ( // 수정 모드 아닐 때만 복사 버튼 표시
                                     <div className="flex items-center justify-center bg-primary-100 w-[308px] h-[65px] border border-light-gray rounded-2xl relative">
-                                        <img src={LinkIcon} alt="link_icon" className="absolute left-11" />
+                                        <img src={LinkIcon} alt="link_icon" className="absolute left-1/9" />
                                         <button onClick={() => handleCopyClipBoard(familyInfo.familyCode)} className="font-bold text-xl text-white">
                                             초대 링크 복사하기
                                         </button>
