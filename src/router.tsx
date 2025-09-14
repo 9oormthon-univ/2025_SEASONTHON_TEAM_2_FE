@@ -22,6 +22,7 @@ export const router = createBrowserRouter([
         element: <PublicLayout />,
         children: [
             { path: "/", element: <MainPage /> },
+            { path: "/invite/:familyCode", element: <FamilyInvitePage /> },
             {
                 path: "/auth",
                 element: (
@@ -50,7 +51,6 @@ export const router = createBrowserRouter([
     {
         element: <PrivateLayout />,
         children: [
-            { path: "/invite/:familyCode", element: <FamilyInvitePage /> },
             {
                 path: "/home",
                 element: <Home />,

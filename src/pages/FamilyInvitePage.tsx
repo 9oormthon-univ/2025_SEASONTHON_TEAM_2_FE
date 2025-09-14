@@ -12,6 +12,10 @@ const FamilyInvitePage: React.FC = () => {
     const { user, accessToken } = useAuthStore();
     const [isValidating, setIsValidating] = useState(true);
 
+    const handleLoginSuccess = () => {
+        localStorage.setItem("postLoginRedirect", `/auth/on-boarding/user-info?type=JOIN&code=${familyCode}`);
+    }
+
     // 가족 코드 유효성 검증
     const { data: familyInfo, isLoading, error } = useQuery({
         queryKey: ['validateFamilyCode', familyCode],
@@ -25,7 +29,6 @@ const FamilyInvitePage: React.FC = () => {
             navigate('/');
             return;
         }
-
         // 로그인된 사용자인 경우
         if (user && accessToken) {
             // 이미 가족에 속해있는지 확인
@@ -44,37 +47,37 @@ const FamilyInvitePage: React.FC = () => {
         setIsValidating(false);
     }, [user, accessToken, familyCode, navigate]);
 
-    // 가족 코드가 유효하지 않은 경우
-    if (error) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="max-w-md w-full bg-white rounded-lg shadow-md p-6 text-center">
-                    <div className="text-red-500 text-6xl mb-4">❌</div>
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        유효하지 않은 초대 링크
-                    </h1>
-                    <p className="text-gray-600 mb-6">
-                        이 초대 링크가 만료되었거나 잘못된 링크입니다.
-                    </p>
-                    <button
-                        onClick={() => navigate('/')}
-                        className="w-full bg-primary-200 text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-300 transition-colors"
-                    >
-                        홈으로 돌아가기
-                    </button>
-                </div>
-            </div>
-        );
-    }
+    // //로그인이 안되어있을 경우
+    // if (error) {
+    //     return (
+    //         <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    //             <div className="max-w-md w-full bg-white rounded-lg shadow-md p-6 text-center">
+    //                 <div className="text-red-500 text-6xl mb-4">❌</div>
+    //                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
+    //                     {error.message}
+    //                 </h1>
+    //                 <p className="text-gray-600 mb-6">
+    //                     로그인을 한 후 다시 접속해주세요.
+    //                 </p>
+    //                 <button
+    //                     onClick={() => navigate('/')}
+    //                     className="w-full bg-primary-200 text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-300 transition-colors"
+    //                 >
+    //                     홈으로 돌아가기
+    //                 </button>
+    //             </div>
+    //         </div>
+    //     );
+    // }
 
-    // 로딩 중
-    if (isLoading || isValidating) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <LoadingSpinner text="초대 링크를 확인하는 중..." />
-            </div>
-        );
-    }
+    // // 로딩 중
+    // if (isLoading || isValidating) {
+    //     return (
+    //         <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    //             <LoadingSpinner text="초대 링크를 확인하는 중..." />
+    //         </div>
+    //     );
+    // }
 
     // 로그인되지 않은 사용자에게 로그인 유도
     return (
@@ -92,10 +95,7 @@ const FamilyInvitePage: React.FC = () => {
 
                 <div className="space-y-4">
                     <KakaoSocialBtn
-                        onSuccess={() => {
-                            // 로그인 성공 후 가족 참여 플로우로 이동
-                            navigate(`/auth/on-boarding/join-question?code=${familyCode}`);
-                        }}
+                        onSuccess={handleLoginSuccess}
                     />
 
                     <button

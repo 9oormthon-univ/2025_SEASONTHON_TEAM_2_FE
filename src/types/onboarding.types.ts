@@ -26,4 +26,5 @@ export interface StepProps {
 
 export interface Step1Props extends StepProps {
   type: TypeValue;
+  code: string;
 }
