@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
 import Card from "../common/Card";
 import SectionHeader from "../common/SectionHeader";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +10,7 @@ import {
     BookIcon,
 } from "../../assets/icons/home";
 import axiosInstance from "../../api/axiosInstance";
+import { useQuery } from "@tanstack/react-query";
 
 type BookshelfMember = {
     userId: number;
@@ -36,7 +36,6 @@ const COLOR_ICON_MAP: Record<BookshelfMember["shelfColor"], string> = {
 const fetchBookshelves = async (): Promise<Tile[]> => {
     try {
         const { data } = await axiosInstance.get<{ data: BookshelvesDTO }>('/api/home/bookshelves');
-
         const rows = data?.data?.members ?? [];
         return rows.map((m) => ({
             id: m.userId,
@@ -51,23 +50,11 @@ const fetchBookshelves = async (): Promise<Tile[]> => {
 
 export default function FamilyBookshelf() {
     const navigate = useNavigate();
-    const [tiles, setTiles] = useState<Tile[]>([]);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let alive = true;
-        (async () => {
-            const list = await fetchBookshelves();
-            if (!alive) return;
-            setTiles(list);
-            setLoading(false);
-        })();
-        return () => {
-            alive = false;
-        };
-    }, []);
-
-    const grid = useMemo(() => tiles, [tiles]);
+    const { data: books = [], isLoading } = useQuery({
+        queryKey: ['bookshelves'],
+        queryFn: fetchBookshelves
+    });
 
     return (
         <Card className="h-[556px] gap-6">
@@ -75,8 +62,8 @@ export default function FamilyBookshelf() {
 
             <div className="relative pb-40">
                 {/* 콘텐츠 */}
-                <div className="grid grid-cols-3 gap-y-10 gap-x-4">
-                    {loading ? (
+                <div className="grid grid-cols-3 grid-rows-2 gap-y-10 gap-x-4">
+                    {isLoading ? (
                         // 로딩 스켈레톤(간단)
                         Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="flex flex-col items-center gap-2">
@@ -84,27 +71,27 @@ export default function FamilyBookshelf() {
                                 <div className="h-5 w-24 rounded bg-[#E9ECEB] animate-pulse" />
                             </div>
                         ))
-                    ) : grid.length === 0 ? (
+                    ) : books.length === 0 ? (
                         <div className="col-span-3 text-center text-[#7A7A7A]">
                             표시할 책장이 없어요.
                         </div>
                     ) : (
-                        grid.map((t) => (
+                        books.map((book) => (
                             <button
-                                key={t.id}
+                                key={book.id}
                                 type="button"
-                                onClick={() => navigate(`/home/books/${t.id}`)}
+                                onClick={() => navigate(`/home/books/${book.id}`)}
                                 className="flex flex-col items-center gap-1 focus:outline-none"
-                                aria-label={`${t.nickname}의 책 열기`}
+                                aria-label={`${book.nickname}의 책 열기`}
                             >
-                                <img src={t.icon} alt="" className="block size-[100px]" />
-                                <p className="font-kccganpan text-[#567D57]">{t.nickname}의 책</p>
+                                <img src={book.icon} alt="" className="block size-[100px]" />
+                                <p className="font-kccganpan text-[#567D57]">{book.nickname}의 책</p>
                             </button>
                         ))
                     )}
                     <div className="absolute inset-x-0 top-1/3 h-2 bg-[#AD7849] rounded" />
                 </div>
-                <div className="absolute inset-x-0 top-2/3 h-2 bg-[#AD7849] rounded" />
+                {books.length > 3 && <div className="absolute inset-x-0 top-2/3 h-2 bg-[#AD7849] rounded" />}
             </div>
         </Card>
     );

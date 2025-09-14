@@ -84,7 +84,7 @@ const CreateFamilyFields: React.FC<{
 );
 
 
-export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type }) => {
+export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }) => {
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -92,7 +92,7 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type }) => {
 
     const [formData, setFormData] = useState({
         nickname: '',
-        familyNameOrCode: '',
+        familyNameOrCode: code,
         verificationQuestion: '',
         verificationAnswer: '',
     });

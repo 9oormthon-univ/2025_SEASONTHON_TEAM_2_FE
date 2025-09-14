@@ -188,40 +188,39 @@ const getProgressFamily = async () => {
   return res.data.data.percentage;
 };
 
-// 가족 코드 유효성 검증 API
-interface IFamilyCodeValidationResponse {
-  success: boolean;
-  message: string;
-  data?: {
+interface validateFamilyDetail {
+  data: {
     familyName: string;
-    isValid: boolean;
+    leaderName: string;
+    memberCount: number;
+    profileImageUrls: string[];
   };
+  message: string;
+  success: boolean;
 }
 
 const validateFamilyCode = async (
-  familyCode: string
-): Promise<IFamilyCodeValidationResponse> => {
+  code: string
+): Promise<validateFamilyDetail> => {
   try {
-    const response = await axiosInstance.post<IFamilyCodeValidationResponse>(
-      `/family/join/request`,
-      {
-        nickname: "str",
-        inviteCode: familyCode,
-      }
-    );
-    console.log("asd", response.data);
-
+    const response = await axiosInstance.get(`/family/verify/detail`, {
+      params: {
+        code,
+      },
+    });
     if (!response.data.success) {
       throw new Error(
         response.data.message || "유효하지 않은 가족 코드입니다."
       );
     }
-
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       const errorMessage =
         error.response.data?.message || "유효하지 않은 가족 코드입니다.";
+      // if (error.response.status === 401) {
+      //   window.location.href = "/";
+      // } 로그인 페이지로 보내야함
       throw new Error(errorMessage);
     }
     throw new Error("요청 중 오류가 발생했습니다.");

@@ -117,11 +117,11 @@ export default function FamilyManage() {
         setIsEditing(false);
     };
 
-    const handleCopyClipBoard = async (text: string) => {
+    const handleCopyClipBoard = async (code: string) => {
         try {
-            await navigator.clipboard.writeText(text);
-            alert('클립보드에 초대코드가 복사되었습니다.');
-        } catch (e) {
+            await navigator.clipboard.writeText(`${import.meta.env.VITE_DEPLOY_URL}/invite/${code}`);
+            alert('클립보드에 초대 링크가 복사되었습니다.');
+        } catch {
             alert('복사에 실패하였습니다');
         }
     };
@@ -165,7 +165,7 @@ export default function FamilyManage() {
                                     <div className="flex items-center justify-center bg-primary-100 w-[308px] h-[65px] border border-light-gray rounded-2xl relative">
                                         <img src={LinkIcon} alt="link_icon" className="absolute left-11" />
                                         <button onClick={() => handleCopyClipBoard(familyInfo.familyCode)} className="font-bold text-xl text-white">
-                                            초대 코드 복사하기
+                                            초대 링크 복사하기
                                         </button>
                                     </div>
                                 )}
