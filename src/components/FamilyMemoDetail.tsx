@@ -1,22 +1,56 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BookIcon, Xmark } from "../assets/icons/home";
-import { getFamilyInfo } from "../api/auth/family";
+import { getFamilyInfo, getFamilyMemo, saveFamilyMemo } from "../api/auth/family";
 import { NoteBG } from "../assets/icons";
-import axiosInstance from "../api/axiosInstance";
+import { useEffect, useState } from "react";
+import { SuccessToast } from "./toast/SuccessToast";
+import { FailToast } from "./toast/FailToast";
 
 const FamilyMemoDetail = () => {
+    const queryClient = useQueryClient();
+
     const { data: familyInfo } = useQuery({
         queryKey: ["familyInfo"],
-        queryFn: getFamilyInfo
+        queryFn: getFamilyInfo,
     });
 
     const { data: familyMemoData } = useQuery({
         queryKey: ["familyMemo"],
-        queryFn: async () => {
-            return await axiosInstance.get("/api/memo");
+        queryFn: getFamilyMemo,
+        initialData: {
+            content: "",
+            updatedAt: "",
+        },
+    });
+
+    const [memo, setMemo] = useState(familyMemoData.content);
+
+    useEffect(() => {
+        if (familyMemoData) {
+            setMemo(familyMemoData.content);
         }
-    })
-    console.log(familyMemoData);
+    }, [familyMemoData]);
+
+
+    const { mutate: saveMemoMutation, isPending: isSaving } = useMutation({
+        mutationFn: saveFamilyMemo,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["familyMemo"] });
+            SuccessToast("메모가 성공적으로 저장됐어요!");
+        },
+        onError: (error) => {
+            console.error("메모 저장 실패:", error);
+            FailToast("메모 저장에 실패했어요! 다시 시도해주세요.");
+        },
+    });
+
+    const handleMemoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setMemo(e.target.value);
+    };
+
+    const onSaveFamilyMemo = () => {
+        saveMemoMutation(memo);
+    };
 
     return (
         <div className="w-full h-[740px] bg-white rounded-2xl borde border-[#D3D3D3]">
@@ -53,22 +87,18 @@ const FamilyMemoDetail = () => {
 
                         <div className="px-8 pt-1 pb-6 flex-1 overflow-y-auto relative">
                             <textarea
+                                onChange={handleMemoChange}
+                                value={memo}
                                 className="w-full h-[700px] focus:outline-none font-gangwon text-[26px] text-dark-gray z-20 relative bg-transparent"
                                 style={{
                                     lineHeight: '51px',
                                     resize: 'none',
                                 }}
-                            >
-                                Netflix 아이디, 비밀번호 : minseo0217@naver.com / rockyminseo!
-
-                                엄마 - 책상 위 비타민, 유산균 챙겨먹기!!
-
-                                아빠 - 일 나갈 때 안방 화장대 위 선크림 꼭 바르기!!!
-                            </textarea>
+                            />
                         </div>
                     </div>
-                    <button className="absolute right-8 bottom-8 bg-primary-200 text-white font-bold text-2xl rounded-2xl w-[215px] h-[59px] flex items-center justify-center">
-                        저장하기
+                    <button disabled={isSaving} onClick={onSaveFamilyMemo} className="absolute right-8 bottom-8 bg-primary-200 text-white font-bold text-2xl rounded-2xl w-[215px] h-[59px] flex items-center justify-center">
+                        {isSaving ? "저장 중..." : "저장하기"}
                     </button>
                 </div>
             </div>

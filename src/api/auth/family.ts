@@ -195,6 +195,22 @@ const getProgressFamily = async () => {
   return res.data.data.percentage;
 };
 
+interface IFamliyMemo {
+  content: string;
+  updatedAt: string;
+}
+const getFamilyMemo = async (): Promise<IFamliyMemo> => {
+  const res = await axiosInstance.get("/api/memo");
+  console.log(res);
+  return res.data.data;
+};
+
+const saveFamilyMemo = async (content: string) => {
+  const res = await axiosInstance.patch("/api/memo", {
+    content,
+  });
+  console.log(res);
+};
 interface validateFamilyDetail {
   data: {
     familyName: string;
@@ -245,4 +261,6 @@ export {
   getProgressFamily,
   familyCreate,
   validateFamilyCode,
+  getFamilyMemo,
+  saveFamilyMemo,
 };
