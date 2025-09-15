@@ -3,25 +3,25 @@ import MainPage from "./pages/MainPage";
 import KakaoCallback from "./pages/KakaoCallback";
 import Header from "./components/Header";
 import Home from "./pages/Home";
-import HomeIndex from "./pages/HomeIndex";
 import IntroPage from "./pages/onboarding/IntroPage";
 import TermsPage from "./pages/onboarding/TermsPage";
 import UserInfoPage from "./pages/onboarding/UserInfoPage";
 import CreateCompletePage from "./pages/onboarding/CreateCompletePage";
 import JoinQuestionPage from "./pages/onboarding/JoinQuestionPage";
 import JoinPendingPage from "./pages/onboarding/JoinPendingPage";
-import FamilyBookshelfDetail from "./components/bookshelf/FamilyBookshelfDetail.tsx";
-import FamilyManage from "./components/home/FamilyManage.tsx";
 import NotificationsPage from "./pages/NotificationsPage";
 import FamilyInvitePage from "./pages/FamilyInvitePage";
 import PublicLayout from "./router/PublicLayout.tsx";
 import PrivateLayout from "./router/PrivateLayout.tsx";
-import RootLayout from "./router/RootLayout.tsx"; 
-import BookPage from "./pages/mobile/BookPage"; 
+import RootLayout from "./router/RootLayout.tsx";
 import MemoPage from "./pages/mobile/MemoPage"; 
 import ProfilePage from "./pages/mobile/ProfilePage";
 import LargeTodaysQuestionPage from "./pages/mobile/LargeTodaysQuestionPage.tsx";
 import MobileNotificationsPage from "./pages/mobile/MobileNotificationsPage.tsx";
+import HomeIndex from "./pages/HomeIndex.tsx";
+import FamilyBookshelfDetail from "./components/bookshelf/FamilyBookshelfDetail.tsx";
+import FamilyManage from "./components/home/FamilyManage.tsx";
+import BookPage from "./pages/mobile/BookPage.tsx";
 
 
 export const router = createBrowserRouter([
