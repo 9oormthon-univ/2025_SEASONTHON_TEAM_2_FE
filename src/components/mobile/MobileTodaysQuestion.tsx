@@ -107,7 +107,7 @@ export default function MobileTodaysQuestion() {
                     {topicLoading ? (
                         <p className="text-black text-base animate-pulse">질문을 불러오는 중…</p>
                     ) : (
-                        <p className="text-black text-[16px]">Q. {currentTopic?.question ?? "질문이 없습니다"}</p>
+                        <p className="text-black text-[17px]">Q. {currentTopic?.question ?? "질문이 없습니다"}</p>
                     )}
                 </div>
 
@@ -133,8 +133,8 @@ export default function MobileTodaysQuestion() {
                     }
                 }}
                 placeholder="답변을 입력해주세요"
-                rows={3}
-                className="w-full p-3 text-[16px] rounded-2xl bg-[#EFF1F0]"
+                rows={2}
+                className="w-full p-3 text-[17px] rounded-lg bg-back-color focus:outline-none"
             />
                         <div className="flex gap-2 mt-2">
                             <button

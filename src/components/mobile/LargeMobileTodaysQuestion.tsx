@@ -110,20 +110,35 @@ export default function LargeMobileTodaysQuestion() {
                         handleSubmit();
                     }
                 }}
-                rows={3}
-                className="w-full p-4 text-[18px] rounded-xl bg-back-color"/>
+                rows={2}
+                className="w-full p-4 text-[22px] rounded-xl bg-back-color focus:outline-none"/>
                     </div>
                 )}
 
                 {!hasMyAnswer && (
-                    <button
-                        onClick={() => (isWriting ? handleSubmit() : setIsWriting(true))}
-                        disabled={createMut.isPending || (isWriting && !text.trim())}
-                        className="w-full h-15 rounded-xl bg-[#FFE7B7] text-[#A98A49] text-[25px] font-semibold"
-                    >
-                        {isWriting ? (createMut.isPending ? "제출 중…" : "답변하기") : "답변하기"}
-                    </button>
+                    <div className="flex gap-2 mt-2">
+                        <button
+                            onClick={() => (isWriting ? handleSubmit() : setIsWriting(true))}
+                            disabled={createMut.isPending || (isWriting && !text.trim())}
+                            className="flex-1 h-14 rounded-xl bg-[#FFE7B7] text-[#A98A49] text-[25px] font-semibold"
+                        >
+                            {isWriting ? (createMut.isPending ? "제출 중…" : "답변하기") : "답변하기"}
+                        </button>
+
+                        {isWriting && (
+                            <button
+                                onClick={() => {
+                                    setIsWriting(false);
+                                    setText("");
+                                }}
+                                className="h-14 px-8 rounded-xl bg-back-color font-semibold text-[25px] text-gray-600"
+                            >
+                                취소
+                            </button>
+                        )}
+                    </div>
                 )}
+
 
                 <hr className="border-t border-[#F3D49B]/60 my-4" />
 
