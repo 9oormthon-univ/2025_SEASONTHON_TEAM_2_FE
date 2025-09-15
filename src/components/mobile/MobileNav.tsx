@@ -44,7 +44,7 @@ export default function MobileNav() {
                         to="/home"
                         aria-label="Home"
                         className={({ isActive }) =>
-                            `flex flex-col items-center ${isActive ? "bg-[#EBEDF0] rounded-xl p-2" : "p-2"}`
+                            `flex flex-col items-center ${isActive ? "bg-back-color rounded-xl p-2" : "p-2"}`
                         }
                         end
                     >
@@ -55,7 +55,7 @@ export default function MobileNav() {
                         to="/book"
                         aria-label="Book"
                         className={({ isActive }) =>
-                            `flex flex-col items-center ${isActive ? "bg-[#EBEDF0] rounded-xl p-2" : "p-2"}`
+                            `flex flex-col items-center ${isActive ? "bg-back-color rounded-xl p-2" : "p-2"}`
                         }
                     >
                         <img src={BookIcon} alt="Book" className="h-12 w-12" />
@@ -65,7 +65,7 @@ export default function MobileNav() {
                         to="/memo"
                         aria-label="Memo"
                         className={({ isActive }) =>
-                            `flex flex-col items-center ${isActive ? "bg-[#EBEDF0] rounded-xl p-2" : "p-2"}`
+                            `flex flex-col items-center ${isActive ? "bg-back-color rounded-xl p-2" : "p-2"}`
                         }
                     >
                         <img src={MemoIcon} alt="Memo" className="h-12 w-12" />
@@ -75,7 +75,7 @@ export default function MobileNav() {
                         to="/profile"
                         aria-label="Profile"
                         className={({ isActive }) =>
-                            `flex flex-col items-center ${isActive ? "bg-[#EBEDF0] rounded-xl p-2" : "p-2"}`
+                            `flex flex-col items-center ${isActive ? "bg-back-color rounded-xl p-2" : "p-2"}`
                         }
                     >
                         <img src={ProfileIcon} alt="Profile" className="h-12 w-12" />
