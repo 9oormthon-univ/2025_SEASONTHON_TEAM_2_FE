@@ -5,9 +5,11 @@ import { NoteBG } from "../assets/icons";
 import { useEffect, useState } from "react";
 import { SuccessToast } from "./toast/SuccessToast";
 import { FailToast } from "./toast/FailToast";
+import { useNavigate } from "react-router-dom";
 
 const FamilyMemoDetail = () => {
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     const { data: familyInfo } = useQuery({
         queryKey: ["familyInfo"],
@@ -53,7 +55,7 @@ const FamilyMemoDetail = () => {
     };
 
     return (
-        <div className="w-full h-[740px] bg-white rounded-2xl borde border-[#D3D3D3]">
+        <div className="w-[965px] h-[740px] bg-white rounded-2xl borde border-[#D3D3D3]">
             <div className="relative w-full h-full bg-transparent overflow-hidden">
                 <div className="m-2 rounded-2xl overflow-hidden flex flex-col z-[9999]">
                     <div className="px-6 pt-6 pb-3">
@@ -62,7 +64,7 @@ const FamilyMemoDetail = () => {
                                 <img src={BookIcon} alt="" className="w-7 h-7" />
                                 <h2 className="font-kccganpan text-[24px] text-[#49684A]">{familyInfo?.familyName} 가족 메모장</h2>
                             </div>
-                            <button onClick={() => { }}>
+                            <button onClick={() => { navigate("/home") }}>
                                 <img src={Xmark} className="size-5" />
                             </button>
                         </div>
@@ -72,20 +74,7 @@ const FamilyMemoDetail = () => {
                         backgroundImage: `url(${NoteBG})`
                     }}>
                         <img src={NoteBG} className="w-full absolute" />
-                        {/* <div
-                            className="w-[824px] h-full absolute inset-y-0 left-0 right-0 m-auto z-10 pointer-events-none bg-none"
-                            style={{
-                                backgroundImage: `repeating-linear-gradient(
-                to bottom,
-                transparent 0,
-                transparent 50px,
-                #B1B8C0 50px,
-                #B1B8C0 51px
-            )`,
-                            }}
-                        /> */}
-
-                        <div className="px-8 pt-1 pb-6 flex-1 overflow-y-auto relative">
+                        <div className="px-8 pt-8 pb-6 flex-1 overflow-y-auto relative">
                             <textarea
                                 onChange={handleMemoChange}
                                 value={memo}

@@ -7,6 +7,7 @@ const RootLayout = () => {
     <>
       <Outlet />
       <ToastContainer
+        limit={3}
         position="bottom-center"
         autoClose={5000}
         hideProgressBar={true}
