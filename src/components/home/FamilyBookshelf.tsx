@@ -124,7 +124,7 @@ export default function FamilyBookshelf({
         <Card className="h-[484px] gap-6">
             <SectionHeader icon={BookIcon} title="가족 책장" />
             <div className="relative pb-40">
-                <div className="grid grid-cols-3 grid-rows-2 gap-4">
+                <div className="grid grid-cols-3 grid-rows-2 gap-4 gap-y-8">
                     {isLoading ? (
                         Array.from({ length: 6 }).map((_, i) => (
                             <div
