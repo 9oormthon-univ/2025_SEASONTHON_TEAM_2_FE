@@ -212,11 +212,11 @@ export default function FamilyBookshelfDetailPage() {
                                     </p>
 
                                     {isEditable ? (
-                                        <textarea
+                                        <input
                                             value={it.answer ?? ""}
                                             onChange={(e) => updateAnswer(it.id, e.target.value)}
                                             placeholder="여기에 답변을 입력해 보세요"
-                                            className="w-full rounded-2xl bg-[#EFF1F0] min-h-[96px] p-4 text-[#4C505C] font-gangwon text-[30px] outline-none focus:ring-2 focus:ring-primary-200 resize-y"
+                                            className="w-full h-[64px] rounded-2xl bg-[#EFF1F0] p-4 text-[#4C505C] font-gangwon text-[26px] focus:outline-none"
                                         />
                                     ) : (
                                         <div className="rounded-2xl bg-[#EFF1F0] min-h-[64px] flex items-center px-4 text-[#4C505C] font-gangwon text-[26px]">

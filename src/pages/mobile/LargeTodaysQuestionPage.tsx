@@ -8,7 +8,7 @@ export default function LargeTodaysQuestionPage() {
 
         <div className="min-h-screen bg-back-color px-4 py-6">
             <MobileHeader isLarge={true}/>
-            <div className="mt-15">
+            <div className="mt-15 mx-auto w-full max-w-[430px]">
                 <LargeBackButton/>
 
                 <div className="mt-10">
