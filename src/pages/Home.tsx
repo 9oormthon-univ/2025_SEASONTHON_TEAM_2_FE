@@ -10,7 +10,6 @@ import MobileTodaysQuestion from "../components/mobile/MobileTodaysQuestion";
 import MobileFamilyMembersCard from "../components/mobile/MobileFamilyMembersCard.tsx";
 import MobileNav from "../components/mobile/MobileNav.tsx";
 import MobileHeader from "../components/mobile/MobileHeader.tsx";
-import { NoteIcon } from "../assets/icons/home/index.ts";
 import FamilyMemo from "../components/FamilyMemo.tsx";
 
 const WelcomeToast = ({ username }: { username: string }) => (
