@@ -222,7 +222,7 @@ const CustomCalendar = () => {
 
             <AppointmentDetailModal
                 isOpen={detailOpen}
-                id={viewingAppointmentId}
+                appointmentId={viewingAppointmentId}
                 onClose={handleCloseDetailModal}
                 onCancel={(id) => {
                     if (window.confirm("정말로 이 약속을 취소하시겠습니까?")) {

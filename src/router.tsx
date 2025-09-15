@@ -78,7 +78,7 @@ export const router = createBrowserRouter([
                     { path: "/memo", element: <MemoPage/> },
                     { path: "/profile", element: <ProfilePage isLarge={false} /> },
                     { path: "/mobile/notifications", element: <MobileNotificationsPage /> },
-                    { path:"/today", element: <LargeTodaysQuestionPage/>}
+                    { path:"/today", element: <LargeTodaysQuestionPage/>},
                 ]
             }
         ]

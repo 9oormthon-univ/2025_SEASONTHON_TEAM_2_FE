@@ -5,6 +5,7 @@ export type NotiItem = {
     kind: "약속" | "구성원" | "오늘의 질문";
     text: string;
     category?: "action" | "read";
+    link?: string | null;
     onAccept?: () => void;
     onReject?: () => void;
     cta?: { label: string; onClick: () => void }[];
