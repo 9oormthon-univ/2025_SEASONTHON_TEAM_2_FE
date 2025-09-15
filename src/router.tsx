@@ -21,6 +21,7 @@ import BookPage from "./pages/mobile/BookPage";
 import MemoPage from "./pages/mobile/MemoPage"; 
 import ProfilePage from "./pages/mobile/ProfilePage";
 import LargeTodaysQuestionPage from "./pages/mobile/LargeTodaysQuestionPage.tsx";
+import MobileNotificationsPage from "./pages/mobile/MobileNotificationsPage.tsx";
 
 
 export const router = createBrowserRouter([
@@ -76,7 +77,7 @@ export const router = createBrowserRouter([
                     { path: "/book", element: <BookPage/> },
                     { path: "/memo", element: <MemoPage/> },
                     { path: "/profile", element: <ProfilePage isLarge={false} /> },
-                    { path: "/mobilenotifications", element: <NotificationsPage /> },
+                    { path: "/mobile/notifications", element: <MobileNotificationsPage /> },
                     { path:"/today", element: <LargeTodaysQuestionPage/>}
                 ]
             }
