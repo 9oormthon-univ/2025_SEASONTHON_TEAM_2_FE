@@ -167,7 +167,14 @@ const createFamily = async (familyName: string) => {
   return res.data;
 };
 
-const getFamilyInfo = async () => {
+interface IFamilyInfo {
+  familyCode: string;
+  familyName: string;
+  verificationAnswer: string;
+  verificationQuestion: string;
+}
+
+const getFamilyInfo = async (): Promise<IFamilyInfo> => {
   // 👇 엔드포인트를 '/family/my'로 수정하고, 반환값을 res.data.data로 변경
   const res = await axiosInstance.get("/family/my");
   return res.data.data;

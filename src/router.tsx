@@ -16,11 +16,12 @@ import NotificationsPage from "./pages/NotificationsPage";
 import FamilyInvitePage from "./pages/FamilyInvitePage";
 import PublicLayout from "./router/PublicLayout.tsx";
 import PrivateLayout from "./router/PrivateLayout.tsx";
-import RootLayout from "./router/RootLayout.tsx"; 
-import BookPage from "./pages/mobile/BookPage"; 
-import MemoPage from "./pages/mobile/MemoPage"; 
+import RootLayout from "./router/RootLayout.tsx";
+import BookPage from "./pages/mobile/BookPage";
+import MemoPage from "./pages/mobile/MemoPage";
 import ProfilePage from "./pages/mobile/ProfilePage";
 import LargeTodaysQuestionPage from "./pages/mobile/LargeTodaysQuestionPage.tsx";
+import FamilyMemoDetail from "./components/FamilyMemoDetail.tsx";
 
 
 export const router = createBrowserRouter([
@@ -66,18 +67,19 @@ export const router = createBrowserRouter([
                         children: [
                             { index: true, element: <HomeIndex /> },
                             { path: "books/:bookId", element: <FamilyBookshelfDetail /> },
-                            { path: "family/manage", element: <FamilyManage /> }
+                            { path: "family/manage", element: <FamilyManage /> },
+                            { path: "family/memo", element: <FamilyMemoDetail /> },
                         ]
                     },
                     {
                         path: "/notifications",
                         element: <NotificationsPage />
                     },
-                    { path: "/book", element: <BookPage/> },
-                    { path: "/memo", element: <MemoPage/> },
+                    { path: "/book", element: <BookPage /> },
+                    { path: "/memo", element: <MemoPage /> },
                     { path: "/profile", element: <ProfilePage isLarge={false} /> },
                     { path: "/mobilenotifications", element: <NotificationsPage /> },
-                    { path:"/today", element: <LargeTodaysQuestionPage/>}
+                    { path: "/today", element: <LargeTodaysQuestionPage /> }
                 ]
             }
         ]
