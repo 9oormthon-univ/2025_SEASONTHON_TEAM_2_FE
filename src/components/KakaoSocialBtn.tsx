@@ -15,7 +15,7 @@ export default function KakaoSocialBtn({ onSuccess }: KakaoSocialBtnProps) {
     }
 
     return (
-        <button onClick={handleLogin} className="bg-[#FEE501] relative flex items-center justify-center  w-[300px] h-[45px] rounded-lg">
+        <button onClick={handleLogin} className="bg-[#FEE501] relative flex items-center justify-center  w-full h-[45px] rounded-lg">
             <img src={KakaoChatbubble} className="absolute left-3.5" />
             <p className="font-semibold text-[15px]">카카오 로그인</p>
         </button>
