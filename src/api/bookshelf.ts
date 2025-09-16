@@ -69,3 +69,24 @@ export const saveAnswersToServer = async ({
     items,
   });
 };
+
+export const createCustomQuestions = async (question: string) => {
+  try {
+    await axiosInstance.post("/api/bookshelf/custom-questions", {
+      question,
+    });
+  } catch (error) {
+    console.error("질문 생성 실패:", error);
+    throw error;
+  }
+};
+
+// 커스텀 질문 삭제
+export const deleteCustomQuestions = async (questionId: number) => {
+  try {
+    await axiosInstance.delete(`/api/bookshelf/custom-questions/${questionId}`);
+  } catch (error) {
+    console.error("질문 삭제 실패:", error);
+    throw error;
+  }
+};
