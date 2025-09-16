@@ -31,7 +31,7 @@ const AnswerCard = ({ answerData, myUserId, onEdit }: {
             <div className="flex items-center gap-2">
                 <img src={answerData.profileUrl} className="size-12 rounded-full" />
                 <p className="font-kccganpan text-primary-300 text-2xl">{answerData.nickname}</p>
-                <span className="font-kccganpan text-point-color-orange text-sm">{moment(answerData.createdAt).format("YYYY-MM-DD HH:MM")}</span>
+                <span className="font-kccganpan text-point-color-orange text-sm">{moment(answerData.createdAt).format("YYYY-MM-DD HH:mm")}</span>
             </div>
             {myUserId === answerData.userId && (
                 <button
@@ -155,7 +155,7 @@ const TodaysQuestion = () => {
                                     <p className="font-kccganpan text-primary-300 text-[24px]">오늘의 질문</p>
                                     {
                                         currentTopic && (
-                                            <span className="font-kccganpan text-point-color-orange">{diffDay(currentTopic.activeFrom, currentTopic?.activeUntil)}</span>
+                                            <span className="font-kccganpan text-point-color-orange">{diffDay(currentTopic?.activeUntil)}</span>
                                         )
                                     }
                                 </div>

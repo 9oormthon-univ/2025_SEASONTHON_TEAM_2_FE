@@ -16,7 +16,7 @@ type Answer = {
     profileUrl: string;
 };
 
-function AnswerRow({a}: {
+function AnswerRow({ a }: {
     a: Answer;
     isMine: boolean;
     onDelete?: (id: number) => void;
@@ -85,7 +85,7 @@ export default function MobileTodaysQuestion() {
         createMut.mutate({ topicId: currentTopic.id, content: text.trim() });
     };
 
-    const remaining = currentTopic ? diffDay(currentTopic.activeFrom, currentTopic.activeUntil) : "";
+    const remaining = currentTopic ? diffDay(currentTopic.activeUntil) : "";
 
     return (
         <section>
@@ -122,20 +122,20 @@ export default function MobileTodaysQuestion() {
 
                 {isWriting && (
                     <div className="mb-4">
-            <textarea
-                ref={inputRef}
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={(e) => {
-                    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                        e.preventDefault();
-                        handleSubmit();
-                    }
-                }}
-                placeholder="답변을 입력해주세요"
-                rows={2}
-                className="w-full p-3 text-[17px] rounded-lg bg-back-color focus:outline-none"
-            />
+                        <textarea
+                            ref={inputRef}
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            onKeyDown={(e) => {
+                                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                                    e.preventDefault();
+                                    handleSubmit();
+                                }
+                            }}
+                            placeholder="답변을 입력해주세요"
+                            rows={2}
+                            className="w-full p-3 text-[17px] rounded-lg bg-back-color focus:outline-none"
+                        />
                         <div className="flex gap-2 mt-2">
                             <button
                                 onClick={handleSubmit}
