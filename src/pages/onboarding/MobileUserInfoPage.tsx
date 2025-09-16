@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MobileHeader from "../../components/mobile/MobileHeader.tsx";
+import { familyJoinRequest } from "../../api/auth/family.ts";
+import { FailToast } from "../../components/toast/FailToast.tsx";
 
 export default function MobileUserInfoPage() {
     const [nickname, setNickname] = useState("");
@@ -9,16 +11,20 @@ export default function MobileUserInfoPage() {
 
     const isFormValid = nickname.trim() !== "" && familyCode.trim().length === 6;
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (isFormValid) {
-            navigate("/mobile/family-invite");
+        try {
+            if (isFormValid) {
+                await familyJoinRequest(nickname, familyCode);
+                navigate(`/mobile/family-invite?code=${familyCode}&nickname=${nickname}`);
+            }
+        } catch (err) {
+            FailToast(err instanceof Error ? err.message : "에러");
         }
-    };
 
-    const handleFamilyCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
-        setFamilyCode(value);
+        // if (isFormValid) {
+        //     navigate("/mobile/family-invite");
+        // }
     };
 
     return (
@@ -45,6 +51,7 @@ export default function MobileUserInfoPage() {
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
                             placeholder="닉네임"
+                            maxLength={5}
                             className="w-full rounded-2xl bg-back-color px-4 py-3 text-[22px] outline-none"
                         />
                     </div>
@@ -61,7 +68,7 @@ export default function MobileUserInfoPage() {
                             id="familyCode"
                             type="text"
                             value={familyCode}
-                            onChange={handleFamilyCodeChange}
+                            onChange={(e) => setFamilyCode(e.target.value)}
                             placeholder="000000"
                             inputMode="numeric"
                             maxLength={6}
@@ -77,11 +84,10 @@ export default function MobileUserInfoPage() {
                     type="submit"
                     onClick={handleSubmit}
                     disabled={!isFormValid}
-                    className={`w-full rounded-2xl text-white text-[20px] font-semibold py-4 mb-10 ${
-                        isFormValid
-                            ? "bg-primary-200 hover:opacity-90"
-                            : "bg-gray-300 cursor-not-allowed"
-                    }`}
+                    className={`w-full rounded-2xl text-white text-[20px] font-semibold py-4 mb-10 ${isFormValid
+                        ? "bg-primary-200 hover:opacity-90"
+                        : "bg-gray-300 cursor-not-allowed"
+                        }`}
                 >
                     다음
                 </button>

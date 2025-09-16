@@ -26,7 +26,6 @@ import BookPage from "./pages/mobile/BookPage.tsx";
 import MobileUserInfoPage from "./pages/onboarding/MobileUserInfoPage.tsx";
 import MobileFamilyInvitePage from "./pages/onboarding/MobileFamilyInvitePage.tsx";
 import FamilyMemoDetail from "./components/FamilyMemoDetail.tsx";
-import MobileOnboarding from "./pages/onboarding/MobileOnboarding.tsx";
 
 
 export const router = createBrowserRouter([
@@ -37,7 +36,7 @@ export const router = createBrowserRouter([
                 element: <PublicLayout />,
                 children: [
                     { path: "/", element: <MainPage /> },
-                    { path: "mobile/on-boarding", element: <MobileOnboarding/> },
+                    { path: "mobile/on-boarding", element: <IntroPage /> },
                     { path: "mobile/user-info", element: <MobileUserInfoPage /> },
                     { path: "mobile/family-invite", element: <MobileFamilyInvitePage /> },
 
@@ -88,7 +87,7 @@ export const router = createBrowserRouter([
                     { path: "/memo", element: <MemoPage /> },
                     { path: "/profile", element: <ProfilePage/> },
                     { path: "/mobile/notifications", element: <MobileNotificationsPage /> },
-                    { path:"/today", element: <LargeTodaysQuestionPage/>},
+                    { path: "/today", element: <LargeTodaysQuestionPage /> },
                 ]
             }
         ]

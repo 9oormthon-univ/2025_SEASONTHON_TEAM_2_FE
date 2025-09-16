@@ -9,16 +9,16 @@ type MobileHeaderProps = {
 };
 
 export default function MobileHeader({
-                                         isLarge = false,
-                                         hasUnread = false,
-                                     }: MobileHeaderProps) {
+    isLarge = false,
+    hasUnread = false,
+}: MobileHeaderProps) {
     const navigate = useNavigate();
 
     const computedHasUnread = hasUnread;
     const bellIcon = computedHasUnread ? BellActive : Bell;
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+        <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
             <div className="pt-[env(safe-area-inset-top)]" />
             <div className="h-14 max-h-14 flex items-center justify-between px-4">
                 <img src={EverflowHeaderLogo} alt="EVF" className="h-12 w-auto" />

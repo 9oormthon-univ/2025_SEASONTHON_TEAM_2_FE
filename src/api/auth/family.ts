@@ -108,7 +108,11 @@ const familyCreate = async (
 
 export interface IFamilyJoinCompleteResponse {
   code: string;
-  data: string;
+  data: {
+    correct: boolean;
+    exceeded: boolean;
+    status: string;
+  };
   message: string;
   success: boolean;
 }
@@ -249,7 +253,6 @@ const validateFamilyCode = async (
     throw new Error("요청 중 오류가 발생했습니다.");
   }
 };
-
 
 export {
   familyJoinRequest,
