@@ -4,7 +4,8 @@ import { getKakaoToken, loginToServer } from "../api/authKakao";
 import { getUserProfile } from "../api/user";
 
 export default function KakaoCallback() {
-    const code = new URL(document.location.toString()).searchParams.get('code') || "";
+    const code =
+        new URL(document.location.toString()).searchParams.get("code") || "";
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -16,8 +17,13 @@ export default function KakaoCallback() {
 
                 if (userInfo?.role === "ROLE_USER") {
                     navigate("/home");
+                } else {
+                    if (window.innerWidth <= 1023) {
+                        navigate("/mobile/on-boarding");
+                    } else {
+                        navigate("/auth/on-boarding");
+                    }
                 }
-                else navigate("/auth/on-boarding");
             } catch (error) {
                 console.error("로그인 처리 중 에러 발생:", error);
             }

@@ -1,13 +1,24 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MobileHeader from "../../components/mobile/MobileHeader.tsx";
 
 export default function MobileUserInfoPage() {
     const [nickname, setNickname] = useState("");
     const [familyCode, setFamilyCode] = useState("");
+    const navigate = useNavigate();
+
+    const isFormValid = nickname.trim() !== "" && familyCode.trim().length === 6;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("닉네임:", nickname, "가족코드:", familyCode);
+        if (isFormValid) {
+            navigate("/mobile/family-invite");
+        }
+    };
+
+    const handleFamilyCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
+        setFamilyCode(value);
     };
 
     return (
@@ -44,25 +55,33 @@ export default function MobileUserInfoPage() {
                             htmlFor="familyCode"
                             className="block mb-3 text-[22px] font-medium text-black"
                         >
-                            가족 코드
+                            가족 코드 (6자리 숫자)
                         </label>
                         <input
                             id="familyCode"
                             type="text"
                             value={familyCode}
-                            onChange={(e) => setFamilyCode(e.target.value)}
+                            onChange={handleFamilyCodeChange}
                             placeholder="000000"
+                            inputMode="numeric"
+                            maxLength={6}
                             className="w-full rounded-2xl bg-back-color px-4 py-3 text-[22px] outline-none tracking-widest"
                         />
                     </div>
                 </form>
             </div>
 
-            {/* 버튼을 항상 아래 */}
+            {/* 버튼 레이아웃 원래대로 */}
             <div className="px-6 pb-8">
                 <button
                     type="submit"
-                    className="w-full rounded-2xl bg-primary-200 text-white text-[20px] font-semibold py-4 mb-10"
+                    onClick={handleSubmit}
+                    disabled={!isFormValid}
+                    className={`w-full rounded-2xl text-white text-[20px] font-semibold py-4 mb-10 ${
+                        isFormValid
+                            ? "bg-primary-200 hover:opacity-90"
+                            : "bg-gray-300 cursor-not-allowed"
+                    }`}
                 >
                     다음
                 </button>
