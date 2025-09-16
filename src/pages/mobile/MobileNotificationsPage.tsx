@@ -9,6 +9,8 @@ import axiosInstance from "../../api/axiosInstance";
 import type { NotiItem } from "../../components/notifications/NotificationPopover";
 import MobileAppointmentModal from "../../components/mobile/MobileAppiontmentModal";
 
+import xmarkIcon from "../../assets/icons/home/Xmark.svg";
+
 type NotificationDTO = {
     notificationId: number;
     notificationType: string;
@@ -117,11 +119,13 @@ export default function MobileNotificationsPage() {
                                                 <span className="truncate">{n.text}</span>
                                                 <button
                                                     onClick={() => removeNotification(n.id)}
-                                                    className="ml-3 text-gray-400 hover:text-red-500 text-[20px] font-bold"
-                                                    aria-label="알림 삭제"
+                                                    className="h-12 w-12 rounded-full flex items-center justify-center hover:bg-[#E4E8E6]"
+                                                    type="button"
                                                 >
-                                                    ×
+                                                    <img src={xmarkIcon} alt="삭제" className="w-6 h-6" />
                                                 </button>
+
+
                                             </div>
                                         );
                                     }
@@ -150,6 +154,7 @@ export default function MobileNotificationsPage() {
                                 setList((prev) => prev.filter((n) => n.id !== id));
                                 setSelectedAppt(null);
                             }}
+                            isLarge={isLarge}
                         />
                     )}
                 </div>
@@ -157,11 +162,73 @@ export default function MobileNotificationsPage() {
 
             {/* 큰글씨 화면 */}
             {isLarge && (
-                <div className="px-4 py-20">
-                    <MobileHeader isLarge={true} />
-                    <LargeBackButton />
+                <div className="px-4 py-6">
+                    <div className="mt-15 mx-auto w-full max-w-[430px]">
+                        <MobileHeader isLarge={true} />
+                        <LargeBackButton />
+                        <h2 className="font-semibold text-[#49684A] text-[25px] py-3 mt-10">알림</h2>
+
+                        <div className="flex flex-col gap-4">
+                            {list.length === 0 ? (
+                                <div className="rounded-2xl border-[3px] border-[#CAE5CA] bg-white p-6 text-center text-[#7F8C85] text-[20px]">
+                                    알림이 없습니다.
+                                </div>
+                            ) : (
+                                list.map((n) => {
+                                    if (n.kind === "약속" && n.appointmentId) {
+                                        // 약속 알림
+                                        return (
+                                            <div
+                                                key={n.id}
+                                                className="rounded-2xl border-[5px] border-[#CAE5CA] bg-white px-6 py-5 flex items-center justify-between"
+                                            >
+                                                <p className="text-[22px] text-[#2A2F2A] truncate">{n.text}</p>
+                                                <button
+                                                    onClick={() => setSelectedAppt(n)}
+                                                    className="h-11 px-6 rounded-xl bg-primary-200 text-white text-[18px] font-pretendard"
+                                                >
+                                                    상세보기
+                                                </button>
+                                            </div>
+                                        );
+                                    }
+
+                                    if (n.category === "read") {
+                                        // 일반 읽기 알림
+                                        return (
+                                            <div
+                                                key={n.id}
+                                                className="rounded-2xl border-[5px] border-[#CAE5CA] bg-white px-6 py-5 flex items-center justify-between text-[#7F8C85] text-[22px]"
+                                            >
+                                                <span className="truncate">{n.text}</span>
+                                                <button
+                                                    onClick={() => removeNotification(n.id)}
+                                                    className="h-12 w-12 rounded-full flex items-center justify-center hover:bg-[#E4E8E6]"
+                                                    type="button"
+                                                >
+                                                    <img src={xmarkIcon} alt="삭제" className="w-6 h-6" />
+                                                </button>
+
+                                            </div>
+                                        );
+                                    }
+
+                                    // action인데 약속이 아닌 것
+                                    return (
+                                        <div
+                                            key={n.id}
+                                            className="rounded-2xl border-[5px] border-[#CAE5CA] bg-white px-6 py-5 text-[#7F8C85] text-[22px]"
+                                        >
+                                            모바일로 확인할 수 없어요
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
+
         </div>
     );
 }
