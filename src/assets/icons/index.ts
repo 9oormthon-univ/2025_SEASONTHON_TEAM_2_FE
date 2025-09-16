@@ -11,3 +11,4 @@ export { default as Tooltip } from "./Tooltip.svg";
 export { default as WarningIcon } from "./WarningIcon.svg";
 export { default as EFL } from "./EFL.svg";
 export { default as Photo } from "./photo.svg";
+export { default as NoteBG } from "./NoteBG.svg";

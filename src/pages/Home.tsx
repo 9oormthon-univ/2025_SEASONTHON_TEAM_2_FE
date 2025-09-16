@@ -10,18 +10,19 @@ import MobileTodaysQuestion from "../components/mobile/MobileTodaysQuestion";
 import MobileFamilyMembersCard from "../components/mobile/MobileFamilyMembersCard.tsx";
 import MobileNav from "../components/mobile/MobileNav.tsx";
 import MobileHeader from "../components/mobile/MobileHeader.tsx";
+import FamilyMemo from "../components/FamilyMemo.tsx";
 
 const WelcomeToast = ({ username }: { username: string }) => (
     <div className="flex justify-center items-center gap-2">
         <img src={EFL} alt="EverFlow_Character" />
-        <p className="text-primary-300">{username.slice(1)}님, 환영해요!</p>
+        <p className="text-primary-300">{username}님, 환영해요!</p>
     </div>
 );
 
 export default function HomeLayout() {
     const { user } = useAuthStore();
     const username = user?.nickname || "";
-    
+
     const [isLarge, setIsLarge] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
@@ -40,7 +41,6 @@ export default function HomeLayout() {
     }, [location.state]);
 
     return (
-        // main 브랜치의 반응형 레이아웃 구조를 기반으로 병합
         <div className="min-h-screen w-full bg-back-color overflow-x-hidden">
 
             {/* Desktop */}
@@ -50,6 +50,7 @@ export default function HomeLayout() {
                     <div className="flex flex-col gap-4">
                         <FamilyMembersCard />
                         <FamilyBookshelf />
+                        <FamilyMemo />
                     </div>
                     <Outlet />
                 </main>
@@ -93,7 +94,7 @@ export default function HomeLayout() {
                     {isLarge && (
                         <main className="px-4 py-4 space-y-4">
                             <section className="space-y-3">
-                                <MobileFamilyMembersCard isLarge={true}/>
+                                <MobileFamilyMembersCard isLarge={true} />
                             </section>
                             <section className="grid grid-cols-2 gap-3 mb-3">
                                 <button className="h-15 rounded-2xl bg-[#CAE5CA] text-primary-300 text-[25px]"
@@ -103,24 +104,24 @@ export default function HomeLayout() {
 
                             <section className="grid grid-cols-2 gap-3">
                                 <button className="row-span-2 h-[510px] rounded-2xl bg-[#FFE7B7] text-[#A98A49] p-4"
-                                        onClick={() => navigate("/today")}>
+                                    onClick={() => navigate("/today")}>
                                     <div className="text-[25px] font-normal">오늘의 질문</div>
                                 </button>
 
                                 <button className="rounded-2xl bg-[#CFE0FF] text-[#5C719F] p-4"
-                                        onClick={() => navigate("/book",{ state: { isLarge: true } })}>
+                                    onClick={() => navigate("/book", { state: { isLarge: true } })}>
                                     <div className="text-[25px] font-normal">가족 책장</div>
                                 </button>
 
                                 <button className="rounded-2xl bg-[#FFC7C0] text-[#A05D54] p-4"
-                                        onClick={() => navigate("/memo",{ state: { isLarge: true } })}>
+                                    onClick={() => navigate("/memo", { state: { isLarge: true } })}>
                                     <div className="text-[25px] font-normal">메모장</div>
                                 </button>
                             </section>
 
                         </main>
                     )}
-                    
+
                     {!isLarge && <MobileNav />}
                 </div>
             </div>

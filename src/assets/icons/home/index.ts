@@ -12,3 +12,4 @@ export { default as QMark } from "./Q_mark.svg";
 export { default as Heart } from "./Heart.svg";
 export { default as Xmark } from "./Xmark.svg";
 export { default as LinkIcon } from "./LinkIcon.svg";
+export { default as NoteIcon } from "./Note.svg";

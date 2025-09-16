@@ -49,10 +49,10 @@ const fetchBookshelves = async (): Promise<Tile[]> => {
 };
 
 export default function FamilyBookshelf({
-                                            onSelect,
-                                            compact = false,
-                                            selectedBookId,
-                                        }: {
+    onSelect,
+    compact = false,
+    selectedBookId,
+}: {
     onSelect?: (id: string) => void;
     compact?: boolean;
     selectedBookId?: string | null;
@@ -121,10 +121,10 @@ export default function FamilyBookshelf({
 
     //웹
     return (
-        <Card className="h-[556px] gap-6">
+        <Card className="h-[484px] gap-6">
             <SectionHeader icon={BookIcon} title="가족 책장" />
             <div className="relative pb-40">
-                <div className="grid grid-cols-3 grid-rows-2 gap-4">
+                <div className="grid grid-cols-3 grid-rows-2 gap-4 gap-y-8">
                     {isLoading ? (
                         Array.from({ length: 6 }).map((_, i) => (
                             <div
