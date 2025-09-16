@@ -72,7 +72,7 @@ export default function LargeMobileTodaysQuestion() {
         createMut.mutate({ topicId: currentTopic.id, content: text.trim() });
     };
 
-    const remaining = currentTopic ? diffDay(currentTopic.activeFrom, currentTopic.activeUntil) : "";
+    const remaining = currentTopic ? diffDay(currentTopic.activeUntil) : "";
 
     return (
         <section>
@@ -100,18 +100,18 @@ export default function LargeMobileTodaysQuestion() {
 
                 {isWriting && (
                     <div className="mb-3">
-            <textarea
-                ref={inputRef}
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={(e) => {
-                    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                        e.preventDefault();
-                        handleSubmit();
-                    }
-                }}
-                rows={2}
-                className="w-full p-4 text-[22px] rounded-xl bg-back-color focus:outline-none"/>
+                        <textarea
+                            ref={inputRef}
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            onKeyDown={(e) => {
+                                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                                    e.preventDefault();
+                                    handleSubmit();
+                                }
+                            }}
+                            rows={2}
+                            className="w-full p-4 text-[22px] rounded-xl bg-back-color focus:outline-none" />
                     </div>
                 )}
 
