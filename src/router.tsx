@@ -22,6 +22,8 @@ import HomeIndex from "./pages/HomeIndex.tsx";
 import FamilyBookshelfDetail from "./components/bookshelf/FamilyBookshelfDetail.tsx";
 import FamilyManage from "./components/home/FamilyManage.tsx";
 import BookPage from "./pages/mobile/BookPage.tsx";
+import MobileUserInfoPage from "./pages/onboarding/MobileUserInfoPage.tsx";
+import MobileFamilyInvitePage from "./pages/onboarding/MobileFamilyInvitePage.tsx";
 
 
 export const router = createBrowserRouter([
@@ -51,7 +53,11 @@ export const router = createBrowserRouter([
                                     { path: "user-info", element: <UserInfoPage /> },
                                     { path: "create-complete", element: <CreateCompletePage /> },
                                     { path: "join-question", element: <JoinQuestionPage /> },
-                                    { path: "join-pending", element: <JoinPendingPage /> }
+                                    { path: "join-pending", element: <JoinPendingPage /> },
+
+                                    { path: "mobile/user-info", element: <MobileUserInfoPage /> },
+                                    { path: "mobile/family-invite", element: <MobileFamilyInvitePage /> },
+
                                 ]
                             }
                         ]

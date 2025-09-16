@@ -36,7 +36,7 @@ type Props = {
     appointmentId: number | null;
     onClose: () => void;
     onCancel: (id: number) => void;
-    showCancel?: boolean; // ✅ 추가
+    showCancel?: boolean;
 };
 
 const COLOR_TOKEN: Record<ColorKey, string> = {
@@ -154,7 +154,7 @@ function Body({ isOpen, appointmentId, onClose, onCancel, showCancel = true }: P
                                 </div>
 
                                 <div className="flex items-center gap-3">
-                                    {showCancel && ( // ✅ 조건부로 노출
+                                    {showCancel && ( // 조건부로 노출
                                         <button
                                             type="button"
                                             onClick={() =>
