@@ -11,9 +11,7 @@ export default function KakaoCallback() {
         const handleLogin = async () => {
             try {
                 const idToken = await getKakaoToken(code);
-
                 const accessToken = await loginToServer(idToken);
-                //받은 액세스 토큰으로 유저 정보 가져오기
                 const userInfo = await getUserProfile(accessToken);
 
                 if (userInfo?.role === "ROLE_USER") {
@@ -22,8 +20,6 @@ export default function KakaoCallback() {
                 else navigate("/auth/on-boarding");
             } catch (error) {
                 console.error("로그인 처리 중 에러 발생:", error);
-                // 에러 발생 시 예외 처리 에러 페이지로 이동
-                // navigate("/error");
             }
         };
 
@@ -32,13 +28,16 @@ export default function KakaoCallback() {
         }
     }, [code, navigate]);
 
-
     return (
-        <div className="relative w-screen h-screen max-w-[1440px] m-auto">
-            <div className="h-full flex flex-col gap-2 text-center font-extrabold animate-pulse relative items-center justify-center">
-                <h1 className="text-primary-300 text-[40px] font-kccganpan">로그인 처리 중입니다...</h1>
-                <p className="text-primary-200 text-[28px] font-extrabold">잠시만 기다려주세요</p>
+        <div className="min-h-screen w-full bg-back-color flex items-center justify-center px-6">
+            <div className="w-full max-w-[430px] bg-white rounded-2xl shadow-md p-10 flex flex-col items-center text-center gap-4 animate-pulse">
+                <h1 className="text-primary-300 text-[24px] lg:text-[32px] font-kccganpan leading-snug">
+                    로그인 처리 중입니다...
+                </h1>
+                <p className="text-primary-200 text-[16px] lg:text-[20px] font-semibold">
+                    잠시만 기다려주세요
+                </p>
             </div>
         </div>
-    )
+    );
 }

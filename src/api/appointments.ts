@@ -111,3 +111,20 @@ export const deleteAppointmentsById = async (appointmentId: number) => {
     throw error;
   }
 };
+
+export const updateAppointmentStatus = async (
+    appointmentId: number,
+    status: "ACCEPTED" | "REJECTED"
+) => {
+  try {
+    const response = await axiosInstance.patch(
+        `/api/appointments/${appointmentId}/participant`,
+        { acceptStatus: status }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating appointment status:", error);
+    throw error;
+  }
+};
+

@@ -91,7 +91,7 @@ Node 버전: ≥ 20.19 (Vite 7 / plugin-react-swc)
 │  │  ├─ HomeIndex.tsx
 │  │  ├─ KakaoCallback.tsx
 │  │  ├─ MainPage.tsx
-│  │  └─ NotificationsPage.tsx
+│  │  └─ MobileNotificationsPage.tsx
 │  │
 │  ├─ style/
 │  │  └─ CustomeCalendar.css
