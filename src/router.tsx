@@ -15,7 +15,7 @@ import PublicLayout from "./router/PublicLayout.tsx";
 import PrivateLayout from "./router/PrivateLayout.tsx";
 import RootLayout from "./router/RootLayout.tsx";
 
-import MemoPage from "./pages/mobile/MemoPage"; 
+import MemoPage from "./pages/mobile/MemoPage";
 import ProfilePage from "./pages/mobile/ProfilePage";
 import LargeTodaysQuestionPage from "./pages/mobile/LargeTodaysQuestionPage.tsx";
 import MobileNotificationsPage from "./pages/mobile/MobileNotificationsPage.tsx";
@@ -26,6 +26,7 @@ import BookPage from "./pages/mobile/BookPage.tsx";
 import MobileUserInfoPage from "./pages/onboarding/MobileUserInfoPage.tsx";
 import MobileFamilyInvitePage from "./pages/onboarding/MobileFamilyInvitePage.tsx";
 import FamilyMemoDetail from "./components/FamilyMemoDetail.tsx";
+import MobileOnboarding from "./pages/onboarding/MobileOnboarding.tsx";
 
 
 export const router = createBrowserRouter([
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
                 element: <PublicLayout />,
                 children: [
                     { path: "/", element: <MainPage /> },
+                    { path: "mobile/on-boarding", element: <MobileOnboarding/> },
+                    { path: "mobile/user-info", element: <MobileUserInfoPage /> },
+                    { path: "mobile/family-invite", element: <MobileFamilyInvitePage /> },
+
                     { path: "/invite/:familyCode", element: <FamilyInvitePage /> },
                     {
                         path: "/auth",
@@ -56,10 +61,6 @@ export const router = createBrowserRouter([
                                     { path: "create-complete", element: <CreateCompletePage /> },
                                     { path: "join-question", element: <JoinQuestionPage /> },
                                     { path: "join-pending", element: <JoinPendingPage /> },
-
-                                    { path: "mobile/user-info", element: <MobileUserInfoPage /> },
-                                    { path: "mobile/family-invite", element: <MobileFamilyInvitePage /> },
-
                                 ]
                             }
                         ]
