@@ -27,10 +27,10 @@ export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
         mutationFn: () => familyJoinComplete(code!, answer),
         onSuccess: (data) => {
             // API 호출이 성공했을 때의 로직
-            if (data.success) {
-                navigate("/home"); // 답변이 맞았을 경우 홈으로 이동
-            } else {
+            if (data.data.status === "INVALID_VERIFICATION_ANSWER") {
                 goToNextStep(STEP.JOIN_PENDING);
+            } else {
+                navigate("/home"); // 답변이 맞았을 경우 홈으로 이동
             }
         },
     });
