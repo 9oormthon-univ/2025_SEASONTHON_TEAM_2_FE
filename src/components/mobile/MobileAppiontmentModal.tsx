@@ -10,10 +10,12 @@ export default function MobileAppointmentModal({
                                                    noti,
                                                    onClose,
                                                    onHandled,
+                                                   isLarge = false,
                                                }: {
     noti: NotiItemWithAppointment;
     onClose: () => void;
     onHandled: (id: number) => void;
+    isLarge?: boolean;
 }) {
     const [detail, setDetail] = useState<AppointmentDetail | null>(null);
     const [loading, setLoading] = useState(true);
@@ -44,21 +46,27 @@ export default function MobileAppointmentModal({
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-             onClick={(e) => {
-                 if (e.target === e.currentTarget) onClose();
-             }}
-        >
-            <div className="w-[90%] bg-white rounded-2xl p-6 relative">
+            onClick={(e) => {
+                if (e.target === e.currentTarget) onClose();}}>
+            <div
+                className={`w-[90%] bg-white rounded-2xl p-6 relative ${
+                    isLarge ? "border-[5px] border-[#CAE5CA]" : ""
+                }`}>
                 {/* 약속이름 */}
-                <h2 className="text-[20px] font-semibold text-[#49684A] mb-4">
+                <h2 className={`font-semibold text-[#49684A] mb-4 ${
+                        isLarge ? "text-[28px]" : "text-[20px]"}`}>
                     {detail.appointmentName}
                 </h2>
 
                 {/* 상세 내용 */}
-                <div className="space-y-3 text-[16px] text-gray-700 mb-6">
+                <div className={`space-y-3 text-gray-700 mb-6 ${
+                        isLarge ? "text-[20px]" : "text-[16px]"
+                    }`}>
                     <p>
                         <span className="font-semibold">To.</span>{" "}
-                        {detail.participants?.length > 0 ? detail.participants.join(", ") : "없음"}
+                        {detail.participants?.length > 0
+                            ? detail.participants.join(", ")
+                            : "없음"}
                     </p>
                     <p>
                         <span className="font-semibold">장소:</span> {detail.location}
@@ -77,48 +85,66 @@ export default function MobileAppointmentModal({
                         })}
                     </p>
                     {detail.content && (
-                        <p className="italic text-gray-600">“{detail.content}”</p>
+                        <p
+                            className={`italic text-gray-600 ${
+                                isLarge ? "text-[18px]" : "text-[14px]"
+                            }`}
+                        >
+                            “{detail.content}”
+                        </p>
                     )}
                     <p>
-                        <span className="font-semibold">From.</span> {detail.proposeUserName}
+                        <span className="font-semibold">From.</span>{" "}
+                        {detail.proposeUserName}
                     </p>
                 </div>
 
-                {/* 수락거절버튼 */}
+                {/* 수락/거절 버튼 */}
                 <div className="flex justify-start gap-3 mt-4">
                     <button
                         onClick={async () => {
                             if (!detail.appointmentId) return;
                             try {
-                                await updateAppointmentStatus(detail.appointmentId, "REJECTED");
+                                await updateAppointmentStatus(
+                                    detail.appointmentId,
+                                    "REJECTED"
+                                );
                                 console.log("거절 완료");
                                 onHandled(noti.id);
                             } catch (err) {
                                 console.error("거절 실패:", err);
                             }
                         }}
-                        className="h-10 px-5 rounded-xl bg-red-100 text-red-500"
-                    >
+                        className={`rounded-xl bg-red-100 text-red-500 ${
+                            isLarge
+                                ? "h-14 px-8 text-[18px]"
+                                : "h-10 px-5 text-[15px]"
+                        }`}>
                         거절
                     </button>
                     <button
                         onClick={async () => {
                             if (!detail.appointmentId) return;
                             try {
-                                await updateAppointmentStatus(detail.appointmentId, "ACCEPTED");
+                                await updateAppointmentStatus(
+                                    detail.appointmentId,
+                                    "ACCEPTED"
+                                );
                                 console.log("수락 완료");
                                 onHandled(noti.id);
                             } catch (err) {
                                 console.error("수락 실패:", err);
                             }
                         }}
-                        className="h-10 px-5 rounded-xl bg-[#7FAB83] text-white"
-                    >
+                        className={`rounded-xl bg-[#7FAB83] text-white ${
+                            isLarge
+                                ? "h-14 px-8 text-[18px]"
+                                : "h-10 px-5 text-[15px]"
+                        }`}>
                         수락
                     </button>
                 </div>
             </div>
         </div>
-
     );
 }
