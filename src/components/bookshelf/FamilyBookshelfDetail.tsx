@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
@@ -93,7 +93,7 @@ export default function FamilyBookshelfDetailPage() {
     }, [data]);
 
     // 답변 자동 저장 로직
-    const doServerSave = async () => {
+    const doServerSave = useCallback(async () => {
         if (!isEditable || !dirtyRef.current || savingRef.current) {
             return;
         }
@@ -113,7 +113,7 @@ export default function FamilyBookshelfDetailPage() {
         } finally {
             savingRef.current = false;
         }
-    };
+    }, [entries, isEditable]);
 
     // 3초마다 자동 저장 실행
     useEffect(() => {
@@ -122,7 +122,7 @@ export default function FamilyBookshelfDetailPage() {
             void doServerSave();
         }, 3000);
         return () => clearInterval(iv);
-    }, [isEditable, entries]);
+    }, [isEditable, entries, doServerSave]);
 
     const updateAnswer = (id: number, val: string) => {
         setEntries((prev) => prev.map((e) => (e.id === id ? { ...e, answer: val } : e)));

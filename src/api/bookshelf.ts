@@ -22,7 +22,6 @@ export const getMyBookshelf = async (): Promise<MyBookshelfDTO> => {
     const response = await axiosInstance.get<ApiResponse<MyBookshelfDTO>>(
       "/api/bookshelf/me"
     );
-    console.log(response.data.data);
     return response.data.data;
   } catch (error) {
     console.error("내 책장 정보를 가져오는 중 오류 발생:", error);
