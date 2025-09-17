@@ -152,6 +152,7 @@ const familyJoinComplete = async (
 
 interface IFamilyMyMembers {
   familyName: string;
+  creator: boolean;
   members: {
     nickname: string;
     profileUrl: string;
