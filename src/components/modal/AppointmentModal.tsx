@@ -181,7 +181,7 @@ function AppointmentModalBody({
 
     return (
         <div
-            className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-[1px] flex items-center justify-start p-4 sm:p-6"
+            className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-[1px] p-4 sm:p-6 flex justify-center"
             onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
             role="dialog"
             aria-modal="true"
@@ -198,7 +198,7 @@ function AppointmentModalBody({
                                 가족 구성원 중 약속을 신청할 사람을 선택해주세요.
                             </h2>
                             <div className="flex items-center gap-5 mb-4">
-                                {familyMemebers?.members.map((member) => {
+                                {familyMemebers?.members.slice(1).map((member) => {
                                     const selectMember = form.members.includes(member.id);
                                     return (
                                         <button
