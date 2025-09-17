@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { LinkIcon, PeoplesIcon, Xmark } from "../../assets/icons/home";
 import SectionHeader from "../common/SectionHeader";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getFamilyInfo, editFamilyInfo, type IFamilyEditRequest } from '../../api/auth/family';
+import { getFamilyInfo, editFamilyInfo, type IFamilyEditRequest, getMyFamilyMembers } from '../../api/auth/family';
 import { useState, useEffect } from 'react';
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
@@ -10,7 +10,6 @@ import { CheckIcon } from "../../assets/icons";
 import { SuccessToast } from "../toast/SuccessToast";
 import { FailToast } from "../toast/FailToast";
 import type { AxiosError } from "axios";
-
 export default function FamilyManage() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -31,6 +30,12 @@ export default function FamilyManage() {
             if (error.response?.status === 404) return false;
             return failureCount < 3;
         },
+    });
+
+    //가족 대표가 누구인지 알기 위한 데이터
+    const { data: familyMembers } = useQuery({
+        queryKey: ["my-family-members"],
+        queryFn: getMyFamilyMembers,
     });
 
     // familyInfo 데이터가 로드되면 editData state를 초기화
@@ -214,13 +219,15 @@ export default function FamilyManage() {
                                 </div>
                             )}
 
-                            {/* 수정 모드 아닐 때 '수정하기' 버튼 (하단 우측) */}
-                            {!isEditing && (
-                                <div className="absolute bottom-6 right-6">
-                                    <button onClick={() => setIsEditing(true)} className="bg-primary-100 hover:bg-primary-200 text-white font-bold py-2 px-6 rounded-lg">
-                                        수정하기
-                                    </button>
-                                </div>
+                            {familyMembers && familyMembers.creator && (
+                                /* 수정 모드 아닐 때 '수정하기' 버튼 (하단 우측) */
+                                !isEditing && (
+                                    <div className="absolute bottom-6 right-6">
+                                        <button onClick={() => setIsEditing(true)} className="bg-primary-100 hover:bg-primary-200 text-white font-bold py-2 px-6 rounded-lg">
+                                            수정하기
+                                        </button>
+                                    </div>
+                                )
                             )}
                         </div>
                     )}

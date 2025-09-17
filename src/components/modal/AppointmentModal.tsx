@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react"; // [수정] useRef import 추가
 import { createPortal } from "react-dom";
 import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 import { getMyFamilyMembers } from "../../api/auth/family";
 import type { AppointmentPayload } from "../../api/appointments";
+import { FailToast } from "../toast/FailToast";
 
 export type ColorKey = "green" | "pink" | "orange" | "blue" | "yellow";
 
@@ -42,7 +43,15 @@ function AppointmentModalBody({
     onClose,
     onSubmit,
 }: AppointmentModalProps) {
-    const today = useMemo(() => moment().format("YYYY-MM-DD HH:MM"), []);
+    const today = useMemo(() => moment().format("YYYY-MM-DD"), []);
+    const nowForInput = useMemo(() => moment().format("YYYY-MM-DDTHH:mm"), []);
+
+    // --- [수정] 포커스를 위한 ref 생성 ---
+    const titleInputRef = useRef<HTMLInputElement>(null);
+    const locationInputRef = useRef<HTMLInputElement>(null);
+    const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
+    // ---
+
     const { data: familyMemebers } = useQuery({
         queryKey: ["my-family-members"],
         queryFn: getMyFamilyMembers
@@ -52,9 +61,9 @@ function AppointmentModalBody({
         members: [],
         mode: "single",
         date: defaultDate ?? today,
-        time: "00:00",
-        startDate: defaultDate ?? today,
-        endDate: defaultDate ?? today,
+        time: "09:00",
+        startDate: moment(defaultDate ?? today).format("YYYY-MM-DDTHH:mm"),
+        endDate: moment(defaultDate ?? today).add(1, 'hour').format("YYYY-MM-DDTHH:mm"),
         title: "",
         location: "",
         color: "green",
@@ -65,8 +74,22 @@ function AppointmentModalBody({
         if (!isOpen) return;
         const prev = document.body.style.overflow;
         document.body.style.overflow = "hidden";
+
         const d = defaultDate ?? today;
-        setForm((p) => ({ ...p, date: d, startDate: d, endDate: d, members: [], title: "", location: "", content: "" }));
+        const startDateTime = moment(d).format("YYYY-MM-DDTHH:mm");
+        const endDateTime = moment(d).add(1, 'hour').format("YYYY-MM-DDTHH:mm");
+
+        setForm((p) => ({
+            ...p,
+            date: d,
+            time: "09:00",
+            startDate: startDateTime,
+            endDate: endDateTime,
+            members: [],
+            title: "",
+            location: "",
+            content: ""
+        }));
         return () => { document.body.style.overflow = prev; };
     }, [isOpen, defaultDate, today]);
 
@@ -89,17 +112,57 @@ function AppointmentModalBody({
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        // --- [수정] 검증 로직에 focus() 호출 추가 ---
+        if (form.members.length === 0) {
+            FailToast("가족 구성원을 1명 이상 선택해주세요.");
+            return;
+        }
+        if (!form.title.trim()) {
+            FailToast("약속 이름을 입력해주세요.");
+            titleInputRef.current?.focus(); // 약속 이름 input으로 포커스
+            return;
+        }
+        if (!form.location.trim()) {
+            FailToast("약속 장소를 입력해주세요.");
+            locationInputRef.current?.focus(); // 약속 장소 input으로 포커스
+            return;
+        }
+        if (!form.content.trim()) {
+            FailToast("편지 내용을 작성해주세요.");
+            contentTextareaRef.current?.focus(); // 편지 내용 textarea로 포커스
+            return;
+        }
+
+        const now = moment();
         let startTime: string;
         let endTime: string;
-        const format = 'YYYY-MM-DD HH:mm'; //날짜 데이터 포맷
+        const serverFormat = 'YYYY-MM-DD HH:mm';
 
         if (form.mode === 'single') {
-            const dateTime = moment(`${form.date} ${form.time}`).format(format);
+            const selectedDateTime = moment(`${form.date} ${form.time}`);
+            if (!selectedDateTime.isAfter(now)) {
+                FailToast("약속 날짜는 현재 시간보다 이후로 설정해야 합니다.");
+                return;
+            }
+            const dateTime = selectedDateTime.format(serverFormat);
             startTime = dateTime;
             endTime = dateTime;
+
         } else { // 'range' mode
-            startTime = moment(form.startDate).startOf('day').format(format);
-            endTime = moment(form.endDate).endOf('day').format(format);
+            const selectedStartDate = moment(form.startDate);
+            const selectedEndDate = moment(form.endDate);
+
+            if (!selectedStartDate.isAfter(now)) {
+                FailToast("약속 시작 시간은 현재 시간보다 이후여야 합니다.");
+                return;
+            }
+            if (selectedStartDate.isAfter(selectedEndDate)) {
+                FailToast("시작 시간은 종료 시간보다 이전이어야 합니다.");
+                return;
+            }
+
+            startTime = selectedStartDate.format(serverFormat);
+            endTime = selectedEndDate.format(serverFormat);
         }
 
         const serverData: AppointmentPayload = {
@@ -191,6 +254,7 @@ function AppointmentModalBody({
                                     <input
                                         type="date"
                                         value={form.date}
+                                        min={today}
                                         onChange={(e) => setForm((p) => ({ ...p, date: e.target.value }))}
                                         className="h-11 px-3 rounded-2xl font-pretendard border border-light-gray bg-[#FFFCFA]"
                                     />
@@ -204,14 +268,23 @@ function AppointmentModalBody({
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
                                     <input
-                                        type="date"
+                                        type="datetime-local"
                                         value={form.startDate}
-                                        onChange={(e) => setForm((p) => ({ ...p, startDate: e.target.value }))}
+                                        min={nowForInput}
+                                        onChange={(e) => {
+                                            const newStartDate = e.target.value;
+                                            if (moment(newStartDate).isAfter(form.endDate)) {
+                                                setForm((p) => ({ ...p, startDate: newStartDate, endDate: newStartDate }));
+                                            } else {
+                                                setForm((p) => ({ ...p, startDate: newStartDate }));
+                                            }
+                                        }}
                                         className="h-11 px-3 rounded-2xl font-pretendard border border-light-gray bg-[#FFFCFA]"
                                     />
                                     <input
-                                        type="date"
+                                        type="datetime-local"
                                         value={form.endDate}
+                                        min={form.startDate}
                                         onChange={(e) => setForm((p) => ({ ...p, endDate: e.target.value }))}
                                         className="h-11 px-3 rounded-2xl font-pretendard border border-light-gray bg-[#FFFCFA]"
                                     />
@@ -222,6 +295,7 @@ function AppointmentModalBody({
                                 <div>
                                     <label className="block mb-3 font-kccganpan text-[18px]">약속 이름</label>
                                     <input
+                                        ref={titleInputRef} // [수정] ref 연결
                                         placeholder="엄마와 데이트"
                                         value={form.title}
                                         onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
@@ -231,6 +305,7 @@ function AppointmentModalBody({
                                 <div>
                                     <label className="block mb-3 font-kccganpan text-[18px]">어디서 만나나요?</label>
                                     <input
+                                        ref={locationInputRef} // [수정] ref 연결
                                         placeholder="서울대공원"
                                         value={form.location}
                                         onChange={(e) => setForm((p) => ({ ...p, location: e.target.value }))}
@@ -277,6 +352,7 @@ function AppointmentModalBody({
                             <div className="mb-4">
                                 <label className="block mb-3 font-kccganpan text-[18px]">약속 신청 편지를 작성하세요</label>
                                 <textarea
+                                    ref={contentTextareaRef} // [수정] ref 연결
                                     placeholder="편지 내용을 작성해주세요"
                                     value={form.content}
                                     onChange={(e) => setForm((p) => ({ ...p, content: e.target.value }))}

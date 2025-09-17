@@ -4,7 +4,7 @@ import { Heart, QMark } from "../../assets/icons/home";
 import SectionHeader from "../common/SectionHeader";
 import ProgressBar from "./ProgressBar";
 import PastQuestion from "./PastQuestion";
-import { getAnswers, getCurrentTopic, getPastTopics, modifyMyAnswer } from "../../api/home/topics";
+import { answerCurrentTopic, getCurrentTopic, getCurrentTopicAnswer, getPastTopics, modifyMyAnswer } from "../../api/home/topics";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { diffDay } from "../../lib/util";
 import moment from "moment";
@@ -66,8 +66,7 @@ const TodaysQuestion = () => {
 
     const { data: answerData, isLoading: answerLoading } = useQuery({
         queryKey: ["answers", currentTopic?.id],
-        queryFn: () => getAnswers(currentTopic!.id),
-        enabled: !!currentTopic?.id
+        queryFn: getCurrentTopicAnswer
     });
 
     const { data: pastTopicsData, isLoading: pastDataLoading } = useQuery({
@@ -80,6 +79,17 @@ const TodaysQuestion = () => {
         queryKey: ["percentage"],
         queryFn: getProgressFamily
     });
+
+    const createMut = useMutation({
+        mutationFn: (payload: { topicId: number; content: string }) =>
+            answerCurrentTopic(payload.topicId, payload.content),
+        onSuccess: async () => {
+            setText("");
+            setIsWriting(false);
+            await queryClient.invalidateQueries({ queryKey: ["answerData", currentTopic?.id] });
+        },
+    });
+
 
     const { mutate: submitAnswer, isPending: isSubmitting } = useMutation({
         mutationFn: (newAnswer: string) => modifyMyAnswer(currentTopic!.id, newAnswer),
@@ -114,6 +124,7 @@ const TodaysQuestion = () => {
     const handleSubmit = () => {
         if (!currentTopic || text.trim() === "" || isSubmitting) return;
         submitAnswer(text);
+        createMut.mutate({ topicId: currentTopic.id, content: text.trim() });
     };
 
     const handleAction = () => {
@@ -133,7 +144,7 @@ const TodaysQuestion = () => {
 
 
     return (
-        <div className="flex flex-col gap-4 h-[750px]">
+        <div className="flex flex-col gap-4 max-h-[739px]">
             {view === "today" && !isWriting && (
                 <Card className="h-[128px] flex flex-col justify-around">
                     <SectionHeader title="우리 가족이 이만큼 가까워졌어요!" icon={Heart} />
@@ -143,7 +154,7 @@ const TodaysQuestion = () => {
                 </Card>
             )}
 
-            <Card className={`${(isWriting || view === "history") ? "h-[735px]" : "h-[595px]"} flex flex-col min-h-0 overflow-hidden transition-[height]`}>
+            <Card className={`${(isWriting || view === "history") ? "h-[739px]" : "h-[600px]"} flex flex-col min-h-0 overflow-hidden transition-[height]`}>
                 {view === "history" ? (
                     <PastQuestion data={pastTopicsData || []} isLoading={pastDataLoading} onClose={() => setView("today")} />
                 ) : (
