@@ -36,7 +36,7 @@ export const getCurrentTopicAnswer = async (): Promise<IGetAnswerReponse[]> => {
 export interface IGetAnswerReponse {
   answerId: number;
   content: string;
-  createdAt: string;
+  respondedAt: string;
   nickname: string;
   profileUrl: string;
   topicId: number;

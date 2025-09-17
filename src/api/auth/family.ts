@@ -206,7 +206,6 @@ interface IFamliyMemo {
 }
 const getFamilyMemo = async (): Promise<IFamliyMemo> => {
   const res = await axiosInstance.get("/api/memo");
-  console.log(res);
   return res.data.data;
 };
 

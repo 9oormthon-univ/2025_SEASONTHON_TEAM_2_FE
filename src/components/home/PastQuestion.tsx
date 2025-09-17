@@ -12,7 +12,7 @@ interface IGetAnswersByID {
     answerId: number;
     profileUrl: string;
     nickname: string;
-    createdAt: string;
+    respondedAt: string;
     content: string;
 }
 
@@ -62,7 +62,7 @@ function QuestionItem({ questionData }: QuestionItemProps) {
                                 <div className="flex items-center gap-2 font-kccganpan text-lg text-primary-300 flex-wrap">
                                     <img src={item.profileUrl} className="size-11 rounded-full" alt={`${item.nickname} 프로필`} />
                                     <p>{item.nickname}</p>
-                                    <p className="text-sm text-[#ED9482]">{moment(item.createdAt).format("YYYY.MM.DD HH:mm")}</p>
+                                    <p className="text-sm text-[#ED9482]">{moment(item.respondedAt).format("YYYY.MM.DD HH:mm")}</p>
                                 </div>
                                 <div className="w-full min-h-[50px] p-2 bg-[#EFF1F0] font-gangwon text-3xl text-dark-gray break-words">
                                     <p>A. {item.content}</p>

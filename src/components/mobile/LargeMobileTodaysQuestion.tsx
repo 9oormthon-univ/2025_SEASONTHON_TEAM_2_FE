@@ -8,7 +8,7 @@ import { useAuthStore } from "../../store/auth";
 type Answer = {
     answerId: number;
     content: string;
-    createdAt: string;
+    respondedAt: string;
     nickname: string;
     topicId: number;
     userId: number;

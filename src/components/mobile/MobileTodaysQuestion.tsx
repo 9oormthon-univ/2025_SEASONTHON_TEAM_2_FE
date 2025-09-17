@@ -9,7 +9,7 @@ import { useAuthStore } from "../../store/auth";
 type Answer = {
     answerId: number;
     content: string;
-    createdAt: string;
+    respondedAt: string;
     nickname: string;
     topicId: number;
     userId: number;
@@ -27,7 +27,7 @@ function AnswerRow({ a }: {
                 <img src={a.profileUrl} className="h-8 w-8 rounded-full object-cover" />
                 <div className="font-bold">{a.nickname}</div>
                 <div className="text-[#E4572E] text-[12px] ml-2">
-                    {moment(a.createdAt).format("YYYY.MM.DD. HH:mm")}
+                    {moment(a.respondedAt).format("YYYY.MM.DD. HH:mm")}
                 </div>
 
             </div>

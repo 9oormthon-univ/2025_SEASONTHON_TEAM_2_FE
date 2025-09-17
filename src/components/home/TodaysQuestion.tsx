@@ -17,7 +17,7 @@ const AnswerCard = ({ answerData, myUserId, onEdit }: {
     answerData: {
         answerId: number;
         content: string;
-        createdAt: string;
+        respondedAt: string;
         nickname: string;
         topicId: number;
         userId: number;
@@ -31,7 +31,7 @@ const AnswerCard = ({ answerData, myUserId, onEdit }: {
             <div className="flex items-center gap-2">
                 <img src={answerData.profileUrl} className="size-12 rounded-full" />
                 <p className="font-kccganpan text-primary-300 text-2xl">{answerData.nickname}</p>
-                <span className="font-kccganpan text-point-color-orange text-sm">{moment(answerData.createdAt).format("YYYY-MM-DD HH:mm")}</span>
+                <span className="font-kccganpan text-point-color-orange text-sm">{moment(answerData.respondedAt).format("YYYY-MM-DD HH:mm")}</span>
             </div>
             {myUserId === answerData.userId && (
                 <button
