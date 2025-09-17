@@ -2,7 +2,7 @@ export default function ProgressBar({ percentage }: { percentage: number }) {
     const clampedPercentage = Math.max(0, Math.min(100, percentage));
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-full max-w-[500px]">
             <div
                 className="w-[41px] h-[16px] absolute mb-2 -top-8 transform -translate-x-1/2"
                 style={{ left: `${clampedPercentage}%` }}

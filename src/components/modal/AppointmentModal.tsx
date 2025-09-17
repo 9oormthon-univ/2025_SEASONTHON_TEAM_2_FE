@@ -6,6 +6,7 @@ import { getMyFamilyMembers } from "../../api/auth/family";
 import type { AppointmentPayload } from "../../api/appointments";
 import { FailToast } from "../toast/FailToast";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { useAuthStore } from "../../store/auth";
 
 export type ColorKey = "green" | "pink" | "orange" | "blue" | "yellow";
 
@@ -45,6 +46,7 @@ function AppointmentModalBody({
     onSubmit,
 }: AppointmentModalProps) {
     const [showAnimation, setShowAnimation] = useState(false);
+    const { user } = useAuthStore.getState();
 
     const today = useMemo(() => moment().format("YYYY-MM-DD"), []);
     const nowForInput = useMemo(() => moment().format("YYYY-MM-DDTHH:mm"), []);
@@ -210,7 +212,7 @@ function AppointmentModalBody({
                                     가족 구성원 중 약속을 신청할 사람을 선택해주세요.
                                 </h2>
                                 <div className="flex items-center gap-5 mb-4">
-                                    {familyMemebers?.members.slice(1).map((member) => {
+                                    {familyMemebers?.members.filter((member) => member.id !== user?.userId).map((member) => {
                                         const selectMember = form.members.includes(member.id);
                                         return (
                                             <button
