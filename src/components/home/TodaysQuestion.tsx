@@ -4,7 +4,7 @@ import { Heart, QMark } from "../../assets/icons/home";
 import SectionHeader from "../common/SectionHeader";
 import ProgressBar from "./ProgressBar";
 import PastQuestion from "./PastQuestion";
-import { getAnswers, getCurrentTopic, getPastTopics, modifyMyAnswer } from "../../api/home/topics";
+import { answerCurrentTopic, getCurrentTopic, getCurrentTopicAnswer, getPastTopics, modifyMyAnswer } from "../../api/home/topics";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { diffDay } from "../../lib/util";
 import moment from "moment";
@@ -66,8 +66,7 @@ const TodaysQuestion = () => {
 
     const { data: answerData, isLoading: answerLoading } = useQuery({
         queryKey: ["answers", currentTopic?.id],
-        queryFn: () => getAnswers(currentTopic!.id),
-        enabled: !!currentTopic?.id
+        queryFn: getCurrentTopicAnswer
     });
 
     const { data: pastTopicsData, isLoading: pastDataLoading } = useQuery({
@@ -80,6 +79,17 @@ const TodaysQuestion = () => {
         queryKey: ["percentage"],
         queryFn: getProgressFamily
     });
+
+    const createMut = useMutation({
+        mutationFn: (payload: { topicId: number; content: string }) =>
+            answerCurrentTopic(payload.topicId, payload.content),
+        onSuccess: async () => {
+            setText("");
+            setIsWriting(false);
+            await queryClient.invalidateQueries({ queryKey: ["answerData", currentTopic?.id] });
+        },
+    });
+
 
     const { mutate: submitAnswer, isPending: isSubmitting } = useMutation({
         mutationFn: (newAnswer: string) => modifyMyAnswer(currentTopic!.id, newAnswer),
@@ -113,7 +123,8 @@ const TodaysQuestion = () => {
 
     const handleSubmit = () => {
         if (!currentTopic || text.trim() === "" || isSubmitting) return;
-        submitAnswer(text);
+        // submitAnswer(text);
+        createMut.mutate({ topicId: currentTopic.id, content: text.trim() });
     };
 
     const handleAction = () => {

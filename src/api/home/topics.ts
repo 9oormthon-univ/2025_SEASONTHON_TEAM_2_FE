@@ -24,8 +24,16 @@ export const getCurrentTopic = async (): Promise<ICurrentTopicResponse> => {
   return response.data.data;
 };
 
+// 오늘의 질문에 대한 가족 답변
+export const getCurrentTopicAnswer = async (): Promise<IGetAnswerReponse[]> => {
+  const response = await axiosInstance.get<{ data: IGetAnswerReponse[] }>(
+    "/api/home/topics/active/answers"
+  );
+  return response.data.data;
+};
+
 // 답변 목록 API 응답 원본 타입
-export interface IGetAnswersByID {
+export interface IGetAnswerReponse {
   answerId: number;
   content: string;
   createdAt: string;
@@ -38,9 +46,9 @@ export interface IGetAnswersByID {
 // 2. 특정 질문에 대한 답변 목록 가져오기
 export const getAnswers = async (
   topicId: number
-): Promise<IGetAnswersByID[]> => {
-  const response = await axiosInstance.get<{ data: IGetAnswersByID[] }>(
-    `/api/topics/${topicId}/answers`
+): Promise<IGetAnswerReponse[]> => {
+  const response = await axiosInstance.get<{ data: IGetAnswerReponse[] }>(
+    `/api/topics/${topicId}/answers/family`
   );
   return response.data.data || [];
 };
