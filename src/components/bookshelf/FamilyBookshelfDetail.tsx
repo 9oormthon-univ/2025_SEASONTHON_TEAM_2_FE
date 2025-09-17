@@ -15,7 +15,7 @@ type Entry = { id: number; question: string; answer?: string };
 // 날짜 포맷 함수
 const fmt = (iso?: string) => {
     if (!iso) return "-";
-    return moment(new Date(iso)).format("YYYY-MM-DD HH:MM:SS");
+    return moment(new Date(iso)).format("YYYY-MM-DD HH:mm:ss");
 };
 
 const useCreateCustomQuestion = () => {
