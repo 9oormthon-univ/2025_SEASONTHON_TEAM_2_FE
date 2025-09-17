@@ -1,9 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { MagicWand } from "../../assets/icons";
 import type { IFamilyData } from "../../pages/onboarding/CreateCompletePage";
+import { useAuthStore } from "../../store/auth";
+import { useEffect } from "react";
 
 export const CreateSuccessPage = ({ familyData }: { familyData: IFamilyData }) => {
     const navigate = useNavigate();
+    const { setFamilyCode } = useAuthStore.getState();
+
+    useEffect(() => {
+        setFamilyCode(familyData.familyCode);
+    }, [familyData.familyCode, setFamilyCode]);
 
     return (
         <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-8">
