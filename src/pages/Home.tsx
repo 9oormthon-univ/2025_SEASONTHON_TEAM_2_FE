@@ -97,14 +97,14 @@ export default function HomeLayout() {
                                 <MobileFamilyMembersCard isLarge={true} />
                             </section>
                             <section className="grid grid-cols-2 gap-3 mb-3">
-                                <button className="h-15 rounded-2xl bg-[#CAE5CA] text-primary-300 text-[25px]"
+                                <button className="h-25 rounded-2xl bg-[#CAE5CA] text-primary-300 text-[25px]"
                                         onClick={()=>navigate("/mobile/notifications",{ state: { isLarge: true } })}>알림</button>
-                                <button className="h-15 rounded-2xl bg-[#CAE5CA] text-primary-300 text-[25px]"
+                                <button className="h-25 rounded-2xl bg-[#CAE5CA] text-primary-300 text-[25px]"
                                         onClick={()=>navigate("/profile",{ state: { isLarge: true } })}>내정보</button>
                             </section>
 
                             <section className="grid grid-cols-2 gap-3">
-                                <button className="row-span-2 h-[510px] rounded-2xl bg-[#FFE7B7] text-[#A98A49] p-4"
+                                <button className="row-span-2 h-[450px] rounded-2xl bg-[#FFE7B7] text-[#A98A49] p-4"
                                     onClick={() => navigate("/today")}>
                                     <div className="text-[25px] font-normal">오늘의 질문</div>
                                 </button>

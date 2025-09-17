@@ -84,7 +84,7 @@ export default function MobileNotificationsPage() {
                     <MobileHeader />
                     <div className="flex flex-col mx-auto w-full max-w-[430px] px-4 pt-20">
                         <div className="flex flex-col gap-3 pb-24">
-                            <h2 className="font-semibold text-[20px] py-3">알림</h2>
+                            <h2 className="font-semibold text-[20px] text-center py-3">알림 목록</h2>
                             {list.length === 0 ? (
                                 <div className="rounded-2xl bg-white p-5 text-center text-[#7F8C85] text-[17px]">
                                     알림이 없습니다.
@@ -160,13 +160,12 @@ export default function MobileNotificationsPage() {
                 </div>
             )}
 
-            {/* 큰글씨 화면 */}
             {isLarge && (
                 <div className="px-4 py-6">
                     <div className="mt-15 mx-auto w-full max-w-[430px]">
                         <MobileHeader isLarge={true} />
                         <LargeBackButton />
-                        <h2 className="font-semibold text-[#49684A] text-[25px] py-3 mt-10">알림</h2>
+                        <h2 className="font-semibold text-center text-[#49684A] text-[25px] py-3 mt-10">알림 목록</h2>
 
                         <div className="flex flex-col gap-4">
                             {list.length === 0 ? (
@@ -176,17 +175,15 @@ export default function MobileNotificationsPage() {
                             ) : (
                                 list.map((n) => {
                                     if (n.kind === "약속" && n.appointmentId) {
-                                        // 약속 알림
                                         return (
                                             <div
                                                 key={n.id}
-                                                className="rounded-2xl border-[5px] border-[#CAE5CA] bg-white px-6 py-5 flex items-center justify-between"
-                                            >
+                                                className="rounded-2xl border-[5px] border-[#CAE5CA] bg-white px-6 py-5 flex items-center justify-between">
                                                 <p className="text-[22px] text-[#2A2F2A] truncate">{n.text}</p>
+                                                {/*나중에 확인해야됨!*/}
                                                 <button
                                                     onClick={() => setSelectedAppt(n)}
-                                                    className="h-11 px-6 rounded-xl bg-primary-200 text-white text-[18px] font-pretendard"
-                                                >
+                                                    className="h-11 w-35 px-5 text-center rounded-xl bg-primary-200 text-white text-[20px] font-pretendard">
                                                     상세보기
                                                 </button>
                                             </div>
@@ -194,7 +191,6 @@ export default function MobileNotificationsPage() {
                                     }
 
                                     if (n.category === "read") {
-                                        // 일반 읽기 알림
                                         return (
                                             <div
                                                 key={n.id}
@@ -208,12 +204,10 @@ export default function MobileNotificationsPage() {
                                                 >
                                                     <img src={xmarkIcon} alt="삭제" className="w-6 h-6" />
                                                 </button>
-
                                             </div>
                                         );
                                     }
 
-                                    // action인데 약속이 아닌 것
                                     return (
                                         <div
                                             key={n.id}
@@ -226,8 +220,21 @@ export default function MobileNotificationsPage() {
                             )}
                         </div>
                     </div>
+
+                    {selectedAppt && selectedAppt.appointmentId && (
+                        <MobileAppointmentModal
+                            noti={selectedAppt}
+                            onClose={() => setSelectedAppt(null)}
+                            onHandled={(id) => {
+                                setList((prev) => prev.filter((n) => n.id !== id));
+                                setSelectedAppt(null);
+                            }}
+                            isLarge={isLarge}
+                        />
+                    )}
                 </div>
             )}
+
 
         </div>
     );

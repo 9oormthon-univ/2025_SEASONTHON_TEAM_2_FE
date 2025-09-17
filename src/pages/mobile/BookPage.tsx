@@ -37,7 +37,7 @@ export default function BookPage() {
                         <MobileHeader />
                         <div className="flex flex-col mx-auto w-full max-w-[430px]">
                             <div className="px-4 pt-20">
-                                <h2 className="font-semibold text-[20px] py-3">가족책자</h2>
+                                <h2 className="font-semibold text-[20px] py-3">가족 책장</h2>
 
                                 <FamilyBookshelf onSelect={setSelectedBookId} compact selectedBookId={selectedBookId}/>
                             </div>

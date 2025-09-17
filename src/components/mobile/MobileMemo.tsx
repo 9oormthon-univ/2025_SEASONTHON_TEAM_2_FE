@@ -59,8 +59,8 @@ export default function MobileMemo({ isLarge = false }: MobileMemoProps) {
 
     return (
         <div
-            className={`w-full max-w-[430px] mx-auto bg-white rounded-2xl rounded-tl-none mb-20 ${
-                isLarge ? "border-[8px] border-[#FFBCB4] h-[630px]" : "h-[600px]"
+            className={`w-full max-w-[430px] mx-auto bg-white rounded-2xl rounded-tl-none mb-20 pb-8 ${
+                isLarge ? "border-[8px] border-[#FFBCB4]" : "h-[600px]"
             }`}
         >
             <MobileHeader />
@@ -75,9 +75,19 @@ export default function MobileMemo({ isLarge = false }: MobileMemoProps) {
                     onChange={handleMemoChange}
                     value={memo}
                     placeholder="가족 메모를 입력하세요..."
-                    className={`w-full h-[430px] rounded-lg py-2 px-6 text-dark-gray focus:outline-none resize-none
-                    bg-[#FFFAEB] [background-image:repeating-linear-gradient(to_bottom,#FFFAEB_0px,#FFFAEB_42px,#555555_43px)] bg-left-top leading-[42px]
-                    ${isLarge ? "text-[22px] [background-size:80%_44px] font-normal" : "text-[20px] [background-size:80%_43px] font-gangwon"}`}/>
+                    onInput={(e) => {
+                        const target = e.currentTarget;
+                        target.style.height = "auto"; // 초기화
+                        target.style.height = `${target.scrollHeight}px`; // 내용에 맞춰 늘림
+                    }}
+                    className={`w-full min-h-[400px] rounded-lg py-2 px-6 text-dark-gray focus:outline-none resize-none
+        bg-[#FFFAEB] [background-image:repeating-linear-gradient(to_bottom,#FFFAEB_0px,#FFFAEB_42px,#555555_43px)]
+        bg-left-top leading-[44px]
+        ${isLarge ? "text-[22px] [background-size:80%_44px] font-normal" : "text-[20px] [background-size:80%_43px] font-gangwon"}`}
+                />
+
+
+
             </div>
 
             <div className="px-4">

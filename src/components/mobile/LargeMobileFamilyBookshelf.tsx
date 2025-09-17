@@ -34,7 +34,7 @@ export default function LargeMobileFamilyBookshelf({
 
     return (
         <div>
-            <p className="text-[25px] mb-3 font-semibold text-[#577297]">가족 책장</p>
+            <p className="text-[25px] mb-3 font-semibold px-2 text-[#577297]">가족 책장</p>
             <div className="flex gap-3">
                 {isLoading
                     ? Array.from({ length: 4 }).map((_, i) => (

@@ -32,7 +32,7 @@ export default function NotificationPopover({ items, visible }: Props) {
                     list.map((n) => (
                         <div
                             key={n.id}
-                            className="rounded-2xl bg-[#EFF1F0] px-3 py-2 cursor-pointer hover:bg-[#E4E8E6] transition"
+                            className="rounded-lg bg-[#EFF1F0] px-3 py-2 cursor-pointer hover:bg-[#E4E8E6] transition"
                         >
                             <div className="text-[#A1ADA1] text-[14px] font-pretendard mb-1">
                                 {n.kind} 알림
