@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TYPE, type Step1Props } from "../../types/onboarding.types";
-import { familyCreate} from '../../api/auth/family';
+import { familyCreate, familyJoinRequest } from '../../api/auth/family';
 import MobileUserInfoPage from '../../pages/onboarding/MobileUserInfoPage';
 import { OptionIconGreen } from "../../assets/icons/home";
 
@@ -83,7 +83,7 @@ const CreateFamilyFields: React.FC<{
     </section>
 );
 
-export const InputUserInfo: React.FC<Step1Props> = ({type, code }) => {
+export const InputUserInfo: React.FC<Step1Props> = ({ type, code }) => {
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -113,12 +113,15 @@ export const InputUserInfo: React.FC<Step1Props> = ({type, code }) => {
         try {
             if (type === TYPE.CREATE) {
                 await familyCreate(formData);
-
                 localStorage.setItem("nickname", formData.nickname);
 
                 navigate("/auth/on-boarding/create-complete", {
                     state: { nickname: formData.nickname }
                 });
+            } else if (type === TYPE.JOIN) {
+                await familyJoinRequest(formData.nickname, formData.familyName);
+
+                navigate(`/auth/on-boarding/join-question?code=${formData.familyName}&nickname=${formData.nickname}`);
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
@@ -128,13 +131,8 @@ export const InputUserInfo: React.FC<Step1Props> = ({type, code }) => {
         }
     };
 
-
     const currentFamilyConfig = familyInputConfig[type];
     const submitButtonText = type === TYPE.CREATE ? "생성하기" : "다음";
-
-    localStorage.setItem("nickname", formData.nickname);
-    console.log("DEBUG nickname saved:", formData.nickname);
-
 
     return (
         <>
@@ -195,8 +193,8 @@ export const InputUserInfo: React.FC<Step1Props> = ({type, code }) => {
                 </footer>
             </div>
 
+            {/* 모바일 페이지 */}
             <MobileUserInfoPage />
-
         </>
     );
 };

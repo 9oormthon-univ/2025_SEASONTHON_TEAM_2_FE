@@ -32,7 +32,6 @@ export default function CreateCompletePage() {
                 if (res.data.success) {
                     setFamilyData(prev => ({
                         ...res.data.data,
-                        // 🚀 닉네임은 절대 덮어쓰지 말고 유지
                         nickname: prev.nickname || stateNickname,
                     }));
                 }
