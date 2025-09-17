@@ -188,7 +188,7 @@ export default function FamilyBookshelfDetailPage() {
     const savedAt = data?.lastUpdatedAt ? fmt(data.lastUpdatedAt) : "-";
 
     return (
-        <div className="w-full ">
+        <div className="w-full">
             <div className="relative w-full h-full bg-transparent overflow-hidden">
                 <img src={BookshelfBg} alt="" className="absolute w-full h-full object-cover z-10 pointer-events-none" />
                 <div className="absolute inset-6 bg-[#EFF1F0] m-2 rounded-2xl overflow-hidden flex flex-col z-20">
