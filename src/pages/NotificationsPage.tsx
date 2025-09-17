@@ -25,6 +25,8 @@ export default function NotificationsPage() {
 
     const [selectedApptId, setSelectedApptId] = useState<number | null>(null);
     const [selectedRequestId, setSelectedRequestId] = useState<number | null>(null);
+    const hasReadNotis = list.some((n) => n.category === "read");
+
 
     useEffect(() => {
         getUnreadNotifications()
@@ -36,15 +38,6 @@ export default function NotificationsPage() {
             })
             .catch((e) => console.error("알림 불러오기 실패:", e));
     }, []);
-
-    const handleMarkAllRead = async () => {
-        try {
-            await readAllNotifications();
-            setList((prev) => prev.filter((n) => n.category === "action"));
-        } catch (e) {
-            console.error("모두 읽기 실패", e);
-        }
-    };
 
     const handleDismissRead = async (id: number) => {
         try {
@@ -95,12 +88,25 @@ export default function NotificationsPage() {
         }
     };
 
+    const handleMarkAllRead = async () => {
+        try {
+            if (!hasReadNotis) return; // 읽을 알림 없으면 실행 안 함
+
+            await readAllNotifications();
+            // 읽기 알람만 제거
+            setList((prev) => prev.filter((n) => n.category === "action"));
+        } catch (e) {
+            console.error("모두 읽기 실패", e);
+        }
+    };
+
+
     return (
-        <div className="relative w-screen h-screen max-w-[1440px] pt-35 m-auto flex items-center justify-center px-14 bg-back-color">
+        <div className="relative w-screen min-h-screen max-w-[1400px] mx-auto bg-back-color pt-18.5">
             <MainHeader hasUnread={list.length > 0} disableNotiPopover />
 
-            <main className="grid grid-cols-[1fr_360px] grid-rows-[750px] gap-4 p-10 w-full">
-                <section className="bg-white rounded-2xl border border-light-gray p-5 mt-1.5 flex flex-col min-h-0">
+            <main className="gap-4 p-10 flex w-full">
+                <section className="bg-white w-[950px] rounded-2xl border border-light-gray p-5 mt-1.5 flex flex-col min-h-0">
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                             <img src={bellIcon} alt="" className="w-8 h-8 ml-6" />
@@ -109,8 +115,13 @@ export default function NotificationsPage() {
                             </span>
                         </div>
                         <button
-                            className="h-8 px-3 rounded-lg text-primary-300 text-[19px] font-semibold font-pretendard mr-5"
+                            className={`h-8 px-3 rounded-lg text-[19px] font-semibold font-pretendard mr-5 ${
+                                hasReadNotis
+                                    ? "text-primary-300 cursor-pointer hover:underline"
+                                    : "text-gray-400 cursor-not-allowed"
+                            }`}
                             onClick={handleMarkAllRead}
+                            disabled={!hasReadNotis}
                             type="button"
                         >
                             모두 읽기
@@ -212,7 +223,9 @@ export default function NotificationsPage() {
                         )}
                     </div>
                 </section>
-                <CustomCalendar />
+                <div className="w-[360px] flex-shrink-0 mt-1.5">
+                    <CustomCalendar />
+                </div>
             </main>
 
             {/* 약속 상세 모달 */}
