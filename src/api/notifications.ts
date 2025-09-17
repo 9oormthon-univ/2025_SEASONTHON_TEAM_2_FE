@@ -6,8 +6,8 @@ interface ApiResponse<T> {
 
 export interface NotificationDTO {
   notificationId: number;
-  notificationType: string;
-  contentText: string;
+  notificationType: string; // ex) "APPOINTMENT_REQUEST", "APPOINTMENT_ACCEPTED" ...
+  contentText: string;       // ex) "OOO님이 약속을 신청했어요", "OOO님이 약속을 수락했어요"
   link?: string;
 }
 
@@ -40,17 +40,25 @@ export const mapKind = (t: string): NotiKind => {
 
 /** category 매핑 */
 export const mapCategory = (t: string, content?: string): NotiCategory => {
-  const actionTypes = ["APPOINTMENT", "APPT", "약속알림", "REQUEST", "ACTION"];
-  if (actionTypes.some((key) => t.includes(key))) return "action";
+  // 약속 알림 처리
+  if (t.includes("APPOINTMENT") || t.includes("APPT") || t.includes("약속")) {
+    // "신청" 들어간 약속 → action
+    if (content?.includes("신청")) {
+      return "action";
+    }
+    // "수락/거절" 등 결과 알림 → read
+    return "read";
+  }
 
+  // 구성원 알림 처리
   if (t.includes("MEMBER") || t.includes("구성원")) {
-    // 가입 요청/실패 같은 경우 → 액션 알림
-    if (content?.includes("가입 요청") || content?.includes("실패")) {
+    if (content?.includes("가입 요청") || content?.includes("승인 요청")) {
       return "action";
     }
     return "read";
   }
 
+  // 기본은 read
   return "read";
 };
 
@@ -90,7 +98,6 @@ export const mapDtoToNotiItem = (dto: NotificationDTO): NotiItem => {
     requestId,
   };
 };
-
 
 /** 최근 알림 */
 export const getRecentNotifications = async (): Promise<NotificationDTO[]> => {
