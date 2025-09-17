@@ -28,7 +28,7 @@ export default function MobileUserInfoPage() {
     };
 
     return (
-        <div className="w-full min-h-screen max-w-[430px] mx-auto bg-white flex flex-col">
+        <div className="lg:hidden w-full min-h-screen max-w-[430px] mx-auto bg-white flex flex-col">
             <MobileHeader />
 
             <div className="flex-1 px-6 pt-10">
