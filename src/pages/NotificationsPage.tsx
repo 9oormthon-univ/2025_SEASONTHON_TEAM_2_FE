@@ -93,8 +93,7 @@ export default function NotificationsPage() {
             if (!hasReadNotis) return; // 읽을 알림 없으면 실행 안 함
 
             await readAllNotifications();
-            // 읽기 알람만 제거
-            setList((prev) => prev.filter((n) => n.category === "action"));
+            setList((prev) => prev.filter((n) => n.category !== "read"));
         } catch (e) {
             console.error("모두 읽기 실패", e);
         }

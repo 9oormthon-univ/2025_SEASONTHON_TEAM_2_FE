@@ -2,13 +2,13 @@ import { STEP, type StepProps } from "../../types/onboarding.types"
 
 export const TermsAndConfitions: React.FC<StepProps> = ({ goToNextStep }) => {
     return (
-        <div className="flex min-h-screen flex-col justify-between p-8 sm:p-16 md:p-28">
+        <div className="flex min-h-screen flex-col justify-between px-8 sm:px-16 md:px-28 pb-20 pt-35 w-full max-w-[1000px] mx-auto">
             <main>
-                <div className="flex flex-col gap-4">
-                    <h1 className="font-kccganpan text-4xl text-primary-300">
-                        서비스 이용 약관 상세보기 페이지입니다.
+                <div className="flex flex-col gap-6">
+                    <h1 className="text-2xl font-semibold text-center text-primary-300">
+                        서비스 이용 약관 상세보기 페이지
                     </h1>
-                    <div className="overflow-scroll p-5 w-[627px] h-[525px] bg-white border border-light-gray rounded-2xl">
+                    <div className="overflow-scroll p-5 w-full h-[465px] bg-white border border-light-gray rounded-2xl">
                         <div className="text-sm leading-relaxed">
                             <h3 className="font-bold text-lg mb-4">서비스 이용약관</h3>
 
@@ -128,14 +128,14 @@ export const TermsAndConfitions: React.FC<StepProps> = ({ goToNextStep }) => {
                         </div>
                     </div>
                 </div>
-
             </main>
-            <footer className="flex flex-wrap justify-center gap-4 self-center sm:self-end z-50">
+
+            <footer className="flex flex-wrap justify-center gap-4 self-center sm:self-end z-50 mt-10">
                 <button
                     onClick={() => {
                         goToNextStep(STEP.START);
                     }}
-                    className="h-[90px] w-[250px] shrink-0 rounded-lg bg-primary-200 text-2xl font-semibold text-white transition-opacity hover:opacity-90"
+                    className="h-[80px] w-[250px] shrink-0 rounded-2xl bg-primary-200 text-2xl font-semibold text-white transition-opacity hover:opacity-90"
                 >
                     뒤로가기
                 </button>

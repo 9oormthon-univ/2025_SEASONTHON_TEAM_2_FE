@@ -34,8 +34,23 @@ const mapKind = (t: string): NotiItem["kind"] => {
     return "구성원";
 };
 
-const mapCategory = (t: string, link?: string): NotiItem["category"] =>
-    t === "APPOINTMENT" || t === "APPT" || !!link ? "action" : "read";
+const mapCategory = (t: string, content?: string): NotiItem["category"] => {
+    if (t.includes("APPOINTMENT") || t.includes("APPT") || t.includes("약속")) {
+        if (content?.includes("신청")) {
+            return "action";
+        }
+        return "read";
+    }
+
+    if (t.includes("MEMBER") || t.includes("구성원")) {
+        if (content?.includes("가입 요청") || content?.includes("승인 요청")) {
+            return "action";
+        }
+        return "read";
+    }
+
+    return "read";
+};
 
 export default function MobileNotificationsPage() {
     const location = useLocation();
@@ -62,7 +77,7 @@ export default function MobileNotificationsPage() {
                         id: dto.notificationId,
                         kind,
                         text: dto.contentText,
-                        category: mapCategory(dto.notificationType, dto.link),
+                        category: mapCategory(dto.notificationType, dto.contentText),
                         appointmentId,
                     };
                 });

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { CreateSuccessPage } from "../../components/onboarding";
 import axiosInstance from "../../api/axiosInstance";
 
@@ -7,25 +8,40 @@ export interface IFamilyData {
     familyName: string;
     verificationAnswer: string;
     verificationQuestion: string;
+    nickname?: string;
 }
 
 export default function CreateCompletePage() {
+    const location = useLocation();
+    const stateNickname = (location.state as { nickname?: string })?.nickname
+        ?? localStorage.getItem("nickname")
+        ?? "";
+
     const [familyData, setFamilyData] = useState<IFamilyData>({
         familyCode: '',
         familyName: '',
         verificationAnswer: '',
-        verificationQuestion: ''
+        verificationQuestion: '',
+        nickname: stateNickname, // 처음부터 값 세팅
     });
 
     useEffect(() => {
         const getMyFamily = async () => {
-            await axiosInstance('/family/my').then((res) => {
+            try {
+                const res = await axiosInstance('/family/my');
                 if (res.data.success) {
-                    setFamilyData(res.data.data);
+                    setFamilyData(prev => ({
+                        ...res.data.data,
+                        // 🚀 닉네임은 절대 덮어쓰지 말고 유지
+                        nickname: prev.nickname || stateNickname,
+                    }));
                 }
-            })
-        }
+            } catch (e) {
+                console.error("가족 정보 불러오기 실패:", e);
+            }
+        };
         getMyFamily();
-    })
+    }, [stateNickname]);
+
     return <CreateSuccessPage familyData={familyData} />;
 }

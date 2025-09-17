@@ -53,42 +53,48 @@ export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
 
     if (isQuestionError) {
         return (
-            <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-8">
-                <main className="w-full max-w-xl">
-                    <div className="flex flex-col items-center gap-4 font-kccganpan">
-                        <div className="text-4xl text-center flex flex-col gap-2">
-                            <span className="text-center text-nowrap text-point-color-orange">가족 검증 질문을 불러오는 데 실패했습니다!</span>
-                            <p>브라우저를 새로고침해주세요!</p>
-                        </div>
+            <div className="flex min-h-screen w-full flex-col items-center justify-center p-8">
+                <main className="w-full max-w-[1000px] mx-auto">
+                    <div className="flex flex-col items-center gap-4 font-kccganpan text-4xl text-center">
+                        <span className="text-point-color-orange">
+                            가족 검증 질문을 불러오는 데 실패했습니다!
+                        </span>
+                        <p>브라우저를 새로고침해주세요!</p>
                     </div>
                 </main>
             </div>
-        )
+        );
     }
 
     if (isQuestionLoading) {
         return (
-            <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-8">
-                <main className="w-full max-w-xl">
+            <div className="flex min-h-screen w-full flex-col items-center justify-center p-8">
+                <main className="w-full max-w-[1000px] mx-auto">
                     <div className="flex flex-col items-center gap-4 font-kccganpan">
                         <h1 className="mb-2 text-4xl">
-                            <span className="text-center text-primary-300 animate-pulse">가족 검증 질문을 불러오고 있어요!</span>
+                            <span className="text-primary-300 animate-pulse">
+                                가족 검증 질문을 불러오고 있어요!
+                            </span>
                         </h1>
                     </div>
                 </main>
             </div>
-        )
+        );
     }
 
     return (
-        <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-8">
-            <main className="w-full max-w-xl">
-                <div className="flex flex-col gap-4 font-kccganpan absolute left-32 top-1/4 w-2xl">
-                    <div className="mb-2">
-                        <p className="text-nowrap text-4xl">
-                            <span className="text-primary-300">Q. 질문 : </span>{questionData?.data.verificationQuestion || "우리 가족 구성원은 모두 몇 명 인가요?"}
-                        </p>
-                    </div>
+        <div className="flex min-h-screen w-full flex-col items-center p-8">
+            <main className="flex flex-col justify-between w-full max-w-[1000px] flex-1 py-20">
+                {/* 질문 & 입력 */}
+                <div className="flex flex-col gap-6 pt-15">
+                    <p className="text-3xl">
+                        <span className="text-primary-300 font-kccganpan">Q. 질문 : </span>
+                        <span className="font-semibold text-2xl">
+                            {questionData?.data.verificationQuestion ||
+                                "우리 가족 구성원은 모두 몇 명 인가요?"}
+                        </span>
+                    </p>
+
                     <div>
                         <input
                             id="answer"
@@ -97,7 +103,7 @@ export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
                             maxLength={20}
                             value={answer}
                             onChange={(e) => setAnswer(e.target.value)}
-                            className="h-[90px] w-full rounded-2xl border border-light-gray bg-white p-5 pl-8 text-2xl text-black"
+                            className="h-[80px] w-[600px] rounded-2xl border border-light-gray bg-white p-5 pl-8 text-2xl text-black focus:outline-none"
                         />
                         {submitError && (
                             <p className="mt-2 pl-2 font-gangwon text-2xl font-bold text-red-500">
@@ -106,23 +112,27 @@ export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
                         )}
                     </div>
                 </div>
-            </main>
 
-            <footer className="absolute bottom-10 w-full max-w-7xl px-4">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center font-gangwon text-3xl">
-                        <img src={MagicWand} className="mr-2 size-6" alt="Magic Wand Icon" />
-                        <p>질문을 맞추면 바로 가입되며, 3회 이상 틀리면 가입 대기 상태로 전환됩니다.</p>
+                {/* 안내 + 버튼 */}
+                <footer className="mt-16">
+                    <div className="flex flex-wrap items-center justify-between gap-6">
+                        <div className="flex items-center font-gangwon text-2xl">
+                            <img src={MagicWand} className="mr-2 size-6" alt="Magic Wand Icon" />
+                            <p>
+                                질문을 맞추면 바로 가입되며,{" "}
+                                <span className="font-semibold">3회 이상 틀리면</span> 가입 대기 상태로 전환됩니다.
+                            </p>
+                        </div>
+                        <button
+                            onClick={handleAnswerSubmit}
+                            disabled={isSubmitting}
+                            className="h-[80px] w-[250px] shrink-0 rounded-2xl bg-primary-200 text-2xl font-bold text-white transition-colors hover:bg-primary-100 disabled:cursor-not-allowed disabled:bg-gray-400"
+                        >
+                            {isSubmitting ? "확인 중..." : "입장하기"}
+                        </button>
                     </div>
-                    <button
-                        onClick={handleAnswerSubmit}
-                        disabled={isSubmitting}
-                        className="h-[90px] w-[250px] shrink-0 rounded-2xl bg-primary-200 text-2xl font-bold text-white transition-colors hover:bg-primary-100 disabled:cursor-not-allowed disabled:bg-gray-400"
-                    >
-                        {isSubmitting ? "확인 중..." : "입장하기"}
-                    </button>
-                </div>
-            </footer>
+                </footer>
+            </main>
         </div>
     );
 };

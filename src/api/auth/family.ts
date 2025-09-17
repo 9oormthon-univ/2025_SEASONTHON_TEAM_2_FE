@@ -47,17 +47,12 @@ const familyJoinRequest = async (
 
 interface IFamilyCreateData {
   nickname: string;
-  familyNameOrCode: string;
+  familyName: string;
   verificationQuestion: string;
   verificationAnswer: string;
 }
 
-interface IFamilyCreateData {
-  nickname: string;
-  familyNameOrCode: string; // UI 상태와 관련된 이름
-  verificationQuestion: string;
-  verificationAnswer: string;
-}
+export type { IFamilyCreateData };
 
 // API 성공 시 응답 데이터 타입 (예시)
 interface IFamilyCreateResponse {
@@ -75,19 +70,12 @@ interface IFamilyCreateResponse {
  * @returns 성공 시 API 응답 데이터를, 실패 시 에러를 throw 합니다.
  */
 const familyCreate = async (
-  formData: IFamilyCreateData
+    formData: IFamilyCreateData
 ): Promise<IFamilyCreateResponse> => {
-  const payload = {
-    nickname: formData.nickname,
-    familyName: formData.familyNameOrCode,
-    verificationQuestion: formData.verificationQuestion,
-    verificationAnswer: formData.verificationAnswer,
-  };
-
   try {
     const response = await axiosInstance.post<IFamilyCreateResponse>(
-      "/family/create",
-      payload
+        "/family/create",
+        formData
     );
 
     if (!response.data.success) {
@@ -98,13 +86,13 @@ const familyCreate = async (
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       const errorMessage =
-        error.response.data?.message || "서버 요청 중 오류가 발생했습니다.";
+          error.response.data?.message || "서버 요청 중 오류가 발생했습니다.";
       throw new Error(errorMessage);
     }
-
     throw new Error("알 수 없는 오류가 발생했습니다.");
   }
 };
+
 
 export interface IFamilyJoinCompleteResponse {
   code: string;
