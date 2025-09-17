@@ -1,26 +1,25 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-// 1️⃣ AuthUser 타입: 순수 유저 데이터만 남깁니다.
 export type AuthUser = {
   userId: number;
   email: string;
-  familyCode: string;
   nickname: string;
   profileUrl: string;
   role: "ROLE_USER" | "ROLE_GUEST";
 } | null;
 
-// 2️⃣ AuthState 타입: 스토어의 전체 상태를 정의합니다. 여기에 UI 상태를 추가합니다.
 type AuthState = {
   accessToken: string | null;
   user: AuthUser;
   refreshToken: string | null;
-  welcomeToastShown: boolean; // ✅ UI 상태는 여기에 위치
+  familyCode: string | null;
+  welcomeToastShown: boolean;
   setRefreshToken: (token: string | null) => void;
   setAccessToken: (token: string | null) => void;
-  setUser: (user: AuthUser) => void;
-  setWelcomeToastShown: (shown: boolean) => void; // ✅ Setter도 여기에 위치
+  setUser: (user: AuthUser & { familyCode?: string }) => void;
+  setWelcomeToastShown: (shown: boolean) => void;
+  setFamilyCode: (code: string | null) => void;
   clear: () => void;
 };
 
@@ -30,19 +29,34 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       user: null,
       refreshToken: null,
+      familyCode: null,
       welcomeToastShown: false,
 
       setRefreshToken: (token) => set({ refreshToken: token }),
       setAccessToken: (token) => set({ accessToken: token }),
 
-      setUser: (user) => set({ user, welcomeToastShown: false }),
+      setUser: (userWithFamilyCode) => {
+        if (userWithFamilyCode) {
+          const { familyCode, ...userWithoutFamilyCode } = userWithFamilyCode;
+          set({
+            user: userWithoutFamilyCode,
+            familyCode: familyCode || null,
+            welcomeToastShown: false,
+          });
+        } else {
+          set({ user: null, familyCode: null, welcomeToastShown: false });
+        }
+      },
 
       setWelcomeToastShown: (shown) => set({ welcomeToastShown: shown }),
+      setFamilyCode: (code) => set({ familyCode: code }),
+
       clear: () =>
         set({
           refreshToken: null,
           accessToken: null,
           user: null,
+          familyCode: null,
           welcomeToastShown: false,
         }),
     }),
@@ -54,6 +68,7 @@ export const useAuthStore = create<AuthState>()(
         refreshToken: state.refreshToken,
         accessToken: state.accessToken,
         user: state.user,
+        familyCode: state.familyCode,
         welcomeToastShown: state.welcomeToastShown,
       }),
     }
