@@ -110,7 +110,7 @@ export const getUnreadNotifications = async (): Promise<NotificationDTO[]> => {
 
 /** 모두 읽음 처리 */
 export const readAllNotifications = async (): Promise<string | undefined> => {
-  const response = await axiosInstance.get<{ message?: string }>(
+  const response = await axiosInstance.patch<{ message?: string }>(
       "/api/notifications/read-all"
   );
   return response.data?.message;
