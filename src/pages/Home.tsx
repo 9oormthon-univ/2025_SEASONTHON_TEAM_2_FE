@@ -20,19 +20,22 @@ const WelcomeToast = ({ username }: { username: string }) => (
 );
 
 export default function HomeLayout() {
-    const { user } = useAuthStore();
+    const { user, welcomeToastShown, setWelcomeToastShown } = useAuthStore();
     const username = user?.nickname || "";
 
     const [isLarge, setIsLarge] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
-
     useEffect(() => {
-        if (username) {
-            toast(<WelcomeToast username={username} />);
+        if (username && !welcomeToastShown) {
+            toast(<WelcomeToast username={username} />, {
+                toastId: 'welcome-toast',
+            });
+
+            setWelcomeToastShown(true);
         }
-    }, [username]);
+    }, [username, welcomeToastShown, setWelcomeToastShown]);
 
     useEffect(() => {
         if (location.state?.isLarge) {
@@ -98,9 +101,9 @@ export default function HomeLayout() {
                             </section>
                             <section className="grid grid-cols-2 gap-3 mb-3">
                                 <button className="h-25 rounded-2xl bg-[#CAE5CA] text-primary-300 text-[25px]"
-                                        onClick={()=>navigate("/mobile/notifications",{ state: { isLarge: true } })}>알림</button>
+                                    onClick={() => navigate("/mobile/notifications", { state: { isLarge: true } })}>알림</button>
                                 <button className="h-25 rounded-2xl bg-[#CAE5CA] text-primary-300 text-[25px]"
-                                        onClick={()=>navigate("/profile",{ state: { isLarge: true } })}>내정보</button>
+                                    onClick={() => navigate("/profile", { state: { isLarge: true } })}>내정보</button>
                             </section>
 
                             <section className="grid grid-cols-2 gap-3">
