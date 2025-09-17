@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import MobileHeader from "../../components/mobile/MobileHeader.tsx";
 import { familyJoinRequest } from "../../api/auth/family.ts";
 import { FailToast } from "../../components/toast/FailToast.tsx";
 
 export default function MobileUserInfoPage() {
+    const [searchParams] = useSearchParams();
+    const code = searchParams.get("code") as string;
     const [nickname, setNickname] = useState("");
-    const [familyCode, setFamilyCode] = useState("");
+    const [familyCode, setFamilyCode] = useState(code ?? "");
     const navigate = useNavigate();
 
     const isFormValid = nickname.trim() !== "" && familyCode.trim().length === 6;
