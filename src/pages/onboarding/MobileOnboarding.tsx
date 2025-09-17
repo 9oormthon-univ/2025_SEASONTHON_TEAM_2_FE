@@ -15,7 +15,7 @@ export default function MobileOnboarding() {
 
     return (
         <div className="w-full min-h-screen max-w-[430px] mx-auto bg-white flex flex-col">
-            <MobileHeader />
+            <MobileHeader isLarge={true}/>
 
             <div className="justify-center flex-1 px-6 pt-10">
                 <div className="flex flex-col mb-10">

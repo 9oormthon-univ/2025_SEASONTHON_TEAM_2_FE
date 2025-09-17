@@ -31,7 +31,7 @@ export default function MobileUserInfoPage() {
 
     return (
         <div className="lg:hidden w-full min-h-screen max-w-[430px] mx-auto bg-white flex flex-col">
-            <MobileHeader />
+            <MobileHeader isLarge={true}/>
 
             <div className="flex-1 px-6 pt-10">
                 <h2 className="text-center text-[25px] font-semibold mb-14 mt-20">
