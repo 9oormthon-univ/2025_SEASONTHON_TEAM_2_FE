@@ -10,7 +10,7 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 const FamilyInvitePage: React.FC = () => {
     const { familyCode } = useParams<{ familyCode: string }>();
     const navigate = useNavigate();
-    const { user, accessToken } = useAuthStore();
+    const { user, accessToken, familyCode: userFamilyCode } = useAuthStore();
 
     const handleLoginSuccess = () => {
         localStorage.setItem("postLoginRedirect", `/auth/on-boarding/user-info?type=JOIN&code=${familyCode}`);
@@ -32,7 +32,7 @@ const FamilyInvitePage: React.FC = () => {
         // 로그인된 사용자인 경우
         if (user && accessToken) {
             // 이미 가족에 속해있는지 확인
-            if (user.familyCode) {
+            if (userFamilyCode) {
                 // 이미 가족에 속해있으면 홈으로 리다이렉트
                 navigate('/home');
                 return;
@@ -42,7 +42,7 @@ const FamilyInvitePage: React.FC = () => {
             navigate(`/auth/on-boarding/join-question?code=${familyCode}`);
             return;
         }
-    }, [user, accessToken, familyCode, navigate]);
+    }, [user, accessToken, familyCode, navigate, userFamilyCode]);
 
     // 올바르지 않은 가족 코드일 경우
     if (error) {

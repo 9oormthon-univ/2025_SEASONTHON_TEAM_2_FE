@@ -124,7 +124,6 @@ const familyJoinComplete = async (
         response.data.message || "가족 참여 완료에 실패했습니다."
       );
     }
-
     return response.data;
   } catch (error) {
     // Axios 에러인 경우 서버가 보낸 구체적인 에러 메시지(예: 정답 불일치)를 전달

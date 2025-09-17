@@ -4,9 +4,12 @@ import { familyJoinComplete, familyJoinRequest } from "../../api/auth/family";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { FailToast } from "../toast/FailToast";
+import { useAuthStore } from "../../store/auth";
 
 export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
     const [searchParams] = useSearchParams();
+    const { setFamilyCode } = useAuthStore.getState();
     const navigate = useNavigate();
     const code = searchParams.get("code");
     const nickname = searchParams.get("nickname");
@@ -26,12 +29,21 @@ export const JoinQuestion: React.FC<StepProps> = ({ goToNextStep }) => {
     } = useMutation({
         mutationFn: () => familyJoinComplete(code!, answer),
         onSuccess: (data) => {
-            if (data.data.status === "INVALID_VERIFICATION_ANSWER") {
-                goToNextStep(STEP.JOIN_PENDING);
-            } else {
+            if (data.data.correct) {
+                setFamilyCode(code);
                 navigate("/home");
             }
+            else if (data.data.exceeded) {
+                goToNextStep(STEP.JOIN_PENDING);
+            }
+            else {
+                FailToast("답변이 틀렸습니다. 다시 시도해주세요.");
+            }
         },
+        onError: (error) => {
+            console.error("Mutation 에러:", error);
+            FailToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
+        }
     });
 
     const handleAnswerSubmit = () => {

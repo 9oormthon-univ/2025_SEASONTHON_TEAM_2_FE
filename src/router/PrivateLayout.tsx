@@ -2,9 +2,9 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 
 const PrivateLayout = () => {
-    const { user } = useAuthStore();
+    const { user, familyCode } = useAuthStore();
 
-    if (!user || user.role === "ROLE_GUEST") {
+    if (!user || !familyCode) {
         return <Navigate to="/" replace />;
     }
 

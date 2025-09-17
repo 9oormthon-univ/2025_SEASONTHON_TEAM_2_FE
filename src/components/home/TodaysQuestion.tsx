@@ -66,7 +66,8 @@ const TodaysQuestion = () => {
 
     const { data: answerData, isLoading: answerLoading } = useQuery({
         queryKey: ["answers", currentTopic?.id],
-        queryFn: getCurrentTopicAnswer
+        queryFn: () => getCurrentTopicAnswer(),
+        enabled: !!currentTopic,
     });
 
     const { data: pastTopicsData, isLoading: pastDataLoading } = useQuery({
@@ -80,18 +81,23 @@ const TodaysQuestion = () => {
         queryFn: getProgressFamily
     });
 
-    const createMut = useMutation({
+    // 답변 생성을 위한 Mutation
+    const createAnswerMutation = useMutation({
         mutationFn: (payload: { topicId: number; content: string }) =>
             answerCurrentTopic(payload.topicId, payload.content),
-        onSuccess: async () => {
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["answers", currentTopic?.id] });
             setText("");
             setIsWriting(false);
-            await queryClient.invalidateQueries({ queryKey: ["answerData", currentTopic?.id] });
+        },
+        onError: (error) => {
+            console.error("답변 생성 실패:", error);
+            FailToast("답변 제출에 실패했습니다. 다시 시도해주세요.");
         },
     });
 
-
-    const { mutate: submitAnswer, isPending: isSubmitting } = useMutation({
+    // 답변 수정을 위한 Mutation
+    const updateAnswerMutation = useMutation({
         mutationFn: (newAnswer: string) => modifyMyAnswer(currentTopic!.id, newAnswer),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["answers", currentTopic?.id] });
@@ -99,11 +105,12 @@ const TodaysQuestion = () => {
             setIsWriting(false);
         },
         onError: (error) => {
-            console.error("답변 제출 실패:", error);
-            FailToast("다시 한 번 답변을 제출해주세요.");
+            console.error("답변 수정 실패:", error);
+            FailToast("답변 수정에 실패했습니다. 다시 시도해주세요.");
         }
     });
 
+    // 내가 작성한 답변이 있는지 여부를 확인하는 memoized 값
     const hasMyAnswer = useMemo(() => {
         if (!answerData || !myUserId) return false;
         return answerData.some(answer => answer.userId === myUserId);
@@ -113,6 +120,7 @@ const TodaysQuestion = () => {
         if (isWriting) inputRef.current?.focus();
     }, [isWriting]);
 
+    // '수정하기' 버튼 클릭 시
     const handleEdit = () => {
         const myAnswer = answerData?.find(answer => answer.userId === myUserId);
         if (myAnswer) {
@@ -122,9 +130,16 @@ const TodaysQuestion = () => {
     }
 
     const handleSubmit = () => {
-        if (!currentTopic || text.trim() === "" || isSubmitting) return;
-        submitAnswer(text);
-        createMut.mutate({ topicId: currentTopic.id, content: text.trim() });
+        const content = text.trim();
+        if (!currentTopic || content === "") return;
+
+        if (hasMyAnswer) {
+            // 이미 답변이 존재하므로 '수정' 로직을 실행
+            updateAnswerMutation.mutate(content);
+        } else {
+            // 답변이 없으므로 '생성' 로직을 실행
+            createAnswerMutation.mutate({ topicId: currentTopic.id, content });
+        }
     };
 
     const handleAction = () => {
@@ -141,6 +156,8 @@ const TodaysQuestion = () => {
             handleSubmit();
         }
     };
+
+    const isSubmitting = createAnswerMutation.isPending || updateAnswerMutation.isPending;
 
 
     return (
@@ -204,7 +221,7 @@ const TodaysQuestion = () => {
 
                             <button
                                 onClick={handleAction}
-                                disabled={hasMyAnswer && !isWriting}
+                                disabled={(hasMyAnswer && !isWriting) || isSubmitting}
                                 className="font-pretendard w-full h-[48px] text-[20px] bg-primary-200 text-white rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
                             >
                                 {isWriting ? (isSubmitting ? "제출 중..." : "제출하기") : (hasMyAnswer ? "답변 완료!" : "답변하기")}
