@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { STEP, TYPE, type Step1Props } from "../../types/onboarding.types";
 import { familyCreate, familyJoinRequest } from '../../api/auth/family';
-import { OptionIcon } from '../../assets/icons';
 import MobileUserInfoPage from '../../pages/onboarding/MobileUserInfoPage';
+import {OptionIconGreen} from "../../assets/icons/home";
 
 interface InputFieldProps {
     id: string;
@@ -19,7 +19,7 @@ interface InputFieldProps {
 
 const InputField: React.FC<InputFieldProps> = ({ id, label, placeholder, maxLength, helperText, value, onChange, type = 'text', name }) => (
     <div className="flex flex-col gap-4">
-        <label htmlFor={id} className="pl-2 font-kccganpan text-4xl text-primary-300">
+        <label htmlFor={id} className="pl-2 font-kccganpan text-3xl text-primary-300">
             {label}
         </label>
         <input
@@ -30,9 +30,9 @@ const InputField: React.FC<InputFieldProps> = ({ id, label, placeholder, maxLeng
             maxLength={maxLength}
             value={value}
             onChange={onChange}
-            className="h-[90px] w-[540px] rounded-2xl border border-light-gray bg-white p-5 pl-8 text-2xl text-light-gray"
+            className="h-[80px] w-[540px] rounded-2xl border border-light-gray bg-white p-5 pl-8 text-2xl text-black focus:outline-none"
         />
-        <p className="pl-2 font-gangwon text-2xl">{helperText}</p>
+        <p className="pl-2 font-gangwon text-[26px]">{helperText}</p>
     </div>
 );
 
@@ -59,7 +59,7 @@ const CreateFamilyFields: React.FC<{
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }> = ({ formData, onChange }) => (
     <section>
-        <p className="mb-4 font-kccganpan text-3xl text-primary-200">이어서, 가족 검증 질문을 작성해주세요</p>
+        <p className="mb-4 font-kccganpan text-2xl text-primary-200">이어서, 가족 검증 질문을 작성해주세요</p>
         <InputField
             id="verificationQuestion"
             name="verificationQuestion"
@@ -133,13 +133,10 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }
 
     return (
         <>
-            <div className="hidden relative lg:flex min-h-screen w-full flex-col items-center justify-center px-32 py-48">
-                <main className="flex w-full max-w-[1440px] flex-wrap justify-center gap-x-24 gap-y-16">
-                    {/* 왼쪽 섹션 */}
-                    <section className={`
-                flex flex-col gap-16 
-                ${type === TYPE.JOIN ? 'absolute top-1/4 left-16' : ''}
-                `}>
+            <div className="hidden lg:flex min-h-screen w-full flex-col items-center justify-center px-12 py-20">
+                <main className="w-full max-w-[1000px] flex flex-col gap-12">
+                    {/* Step 1*/}
+                    <section className="flex flex-col gap-10 pt-15">
                         <InputField
                             id="nickname"
                             name="nickname"
@@ -163,7 +160,8 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }
                         />
                     </section>
 
-                    {type === TYPE.CREATE && (
+                    {/* Step 2 */}
+                    {type === TYPE.CREATE && formData.nickname && formData.familyNameOrCode && (
                         <CreateFamilyFields
                             formData={formData}
                             onChange={handleInputChange}
@@ -171,21 +169,22 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }
                     )}
                 </main>
 
-                <footer className="absolute bottom-10 w-full max-w-7xl px-4">
-                    <div className="flex flex-wrap items-center justify-between gap-4">
+                {/* Footer */}
+                <footer className="w-full max-w-[1000px] mt-12">
+                    <div className="flex items-center justify-between gap-6">
                         <div className="flex items-center">
-                            <img src={OptionIcon} className="size-6" alt="옵션 아이콘" />
-                            <p className="ml-2 font-gangwon text-3xl">
+                            <img src={OptionIconGreen} className="size-6" alt="옵션 아이콘" />
+                            <p className="ml-2 font-gangwon text-2xl">
                                 가족명과 가족 검증 질문은 추후 홈화면 &gt; 가족설정에서{" "}
                                 <span className="text-point-color-orange">수정할 수 있어요.</span>
                             </p>
                         </div>
                         <div className="flex flex-col items-end">
-                            {error && <p className="mb-2 text-red-500 font-bold">{error}</p>}
+                            {error && <p className="mb-2 px-5 text-red-500 font-bold">{error}</p>}
                             <button
                                 onClick={handleSubmit}
-                                disabled={isLoading}
-                                className="h-[90px] w-[250px] shrink-0 rounded-2xl border-2 border-primary-300 bg-[#ECF5F1] text-2xl font-bold text-primary-300 transition-colors hover:bg-primary-100 disabled:cursor-not-allowed disabled:bg-gray-300"
+                                disabled={isLoading || !formData.nickname || !formData.familyNameOrCode}
+                                className="h-[80px] w-[220px] rounded-2xl bg-primary-200 text-xl font-semibold text-white transition-opacity hover:opacity-90 disabled:bg-gray-300"
                             >
                                 {isLoading ? '처리 중...' : submitButtonText}
                             </button>
@@ -193,6 +192,7 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }
                     </div>
                 </footer>
             </div>
+
             <MobileUserInfoPage />
         </>
     );
