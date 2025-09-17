@@ -27,7 +27,7 @@ export default function ProfilePage() {
                     <MobileHeader />
                     <div className="flex flex-col mx-auto w-full max-w-[430px]">
                         <div className="px-4 pt-20">
-                            <h2 className="font-semibold text-[20px] py-3">프로필</h2>
+                            <h2 className="font-semibold text-[20px] py-3">마이페이지</h2>
                             <MobileProfile
                                 userInfo={userInfo}
                                 familyName={familyInfo?.familyName}
@@ -57,7 +57,7 @@ export default function ProfilePage() {
                                 isLarge={true}
                             />
                             <p className="mt-2 text-gray-500 text-[20px]">
-                                * 본인 사진 수정은 컴퓨터에서 가능해요.
+                                * 사진 및 닉네임 수정은 컴퓨터에서 가능해요.
                             </p>
                         </div>
                     </div>
