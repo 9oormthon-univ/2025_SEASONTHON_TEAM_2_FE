@@ -144,7 +144,7 @@ const TodaysQuestion = () => {
 
 
     return (
-        <div className="flex flex-col gap-4 h-[750px]">
+        <div className="flex flex-col gap-4">
             {view === "today" && !isWriting && (
                 <Card className="h-[128px] flex flex-col justify-around">
                     <SectionHeader title="우리 가족이 이만큼 가까워졌어요!" icon={Heart} />
@@ -154,7 +154,7 @@ const TodaysQuestion = () => {
                 </Card>
             )}
 
-            <Card className={`${(isWriting || view === "history") ? "h-[735px]" : "h-[595px]"} flex flex-col min-h-0 overflow-hidden transition-[height]`}>
+            <Card className={`${(isWriting || view === "history") ? "h-[815px]" : "h-[673px]"} flex flex-col min-h-0 overflow-hidden transition-[height]`}>
                 {view === "history" ? (
                     <PastQuestion data={pastTopicsData || []} isLoading={pastDataLoading} onClose={() => setView("today")} />
                 ) : (
