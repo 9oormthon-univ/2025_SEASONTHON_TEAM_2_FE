@@ -6,7 +6,7 @@ export default function MobileJoinPending() {
 
     return (
         <div className="w-full min-h-screen max-w-[430px] mx-auto bg-white flex flex-col">
-            <MobileHeader />
+            <MobileHeader isLarge={true}/>
 
             {/* 메인 콘텐츠 */}
             <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">

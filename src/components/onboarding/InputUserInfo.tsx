@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { STEP, TYPE, type Step1Props } from "../../types/onboarding.types";
-import { familyCreate, familyJoinRequest } from '../../api/auth/family';
-import { OptionIcon } from '../../assets/icons';
+import { TYPE, type Step1Props } from "../../types/onboarding.types";
+import { familyCreate} from '../../api/auth/family';
 import MobileUserInfoPage from '../../pages/onboarding/MobileUserInfoPage';
+import { OptionIconGreen } from "../../assets/icons/home";
 
 interface InputFieldProps {
     id: string;
@@ -19,7 +19,7 @@ interface InputFieldProps {
 
 const InputField: React.FC<InputFieldProps> = ({ id, label, placeholder, maxLength, helperText, value, onChange, type = 'text', name }) => (
     <div className="flex flex-col gap-4">
-        <label htmlFor={id} className="pl-2 font-kccganpan text-4xl text-primary-300">
+        <label htmlFor={id} className="pl-2 font-kccganpan text-3xl text-primary-300">
             {label}
         </label>
         <input
@@ -30,12 +30,11 @@ const InputField: React.FC<InputFieldProps> = ({ id, label, placeholder, maxLeng
             maxLength={maxLength}
             value={value}
             onChange={onChange}
-            className="h-[90px] w-[540px] rounded-2xl border border-light-gray bg-white p-5 pl-8 text-2xl text-light-gray"
+            className="h-[80px] w-[540px] rounded-2xl border border-light-gray bg-white p-5 pl-8 text-2xl text-black focus:outline-none"
         />
-        <p className="pl-2 font-gangwon text-2xl">{helperText}</p>
+        <p className="pl-2 font-gangwon text-[26px]">{helperText}</p>
     </div>
 );
-
 
 const familyInputConfig = {
     [TYPE.CREATE]: {
@@ -59,7 +58,7 @@ const CreateFamilyFields: React.FC<{
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }> = ({ formData, onChange }) => (
     <section>
-        <p className="mb-4 font-kccganpan text-3xl text-primary-200">이어서, 가족 검증 질문을 작성해주세요</p>
+        <p className="mb-4 font-kccganpan text-2xl text-primary-200">이어서, 가족 검증 질문을 작성해주세요</p>
         <InputField
             id="verificationQuestion"
             name="verificationQuestion"
@@ -84,8 +83,7 @@ const CreateFamilyFields: React.FC<{
     </section>
 );
 
-
-export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }) => {
+export const InputUserInfo: React.FC<Step1Props> = ({type, code }) => {
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -93,14 +91,14 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }
 
     const [formData, setFormData] = useState({
         nickname: '',
-        familyNameOrCode: code,
+        familyName: code ?? '',
         verificationQuestion: '',
         verificationAnswer: '',
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        if (name === 'familyNameOrCode' && type === TYPE.JOIN) {
+        if (name === 'familyName' && type === TYPE.JOIN) {
             const numericValue = value.replace(/[^0-9]/g, '');
             setFormData(prev => ({ ...prev, [name]: numericValue }));
         } else {
@@ -115,10 +113,12 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }
         try {
             if (type === TYPE.CREATE) {
                 await familyCreate(formData);
-                goToNextStep(STEP.CREATE_COMPLETE);
-            } else { // TYPE.JOIN
-                await familyJoinRequest(formData.nickname, formData.familyNameOrCode);
-                navigate(`/auth/on-boarding/join-question?code=${formData.familyNameOrCode}&nickname=${formData.nickname}`);
+
+                localStorage.setItem("nickname", formData.nickname);
+
+                navigate("/auth/on-boarding/create-complete", {
+                    state: { nickname: formData.nickname }
+                });
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
@@ -128,18 +128,19 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }
         }
     };
 
+
     const currentFamilyConfig = familyInputConfig[type];
     const submitButtonText = type === TYPE.CREATE ? "생성하기" : "다음";
 
+    localStorage.setItem("nickname", formData.nickname);
+    console.log("DEBUG nickname saved:", formData.nickname);
+
+
     return (
         <>
-            <div className="hidden relative lg:flex min-h-screen w-full flex-col items-center justify-center px-32 py-48">
-                <main className="flex w-full max-w-[1440px] flex-wrap justify-center gap-x-24 gap-y-16">
-                    {/* 왼쪽 섹션 */}
-                    <section className={`
-                flex flex-col gap-16 
-                ${type === TYPE.JOIN ? 'absolute top-1/4 left-16' : ''}
-                `}>
+            <div className="hidden lg:flex min-h-screen w-full flex-col items-center justify-center px-12 py-20">
+                <main className="w-full max-w-[1000px] flex flex-col gap-12">
+                    <section className="flex flex-col gap-10 pt-15">
                         <InputField
                             id="nickname"
                             name="nickname"
@@ -151,19 +152,19 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }
                             onChange={handleInputChange}
                         />
                         <InputField
-                            id="familyNameOrCode"
-                            name="familyNameOrCode"
+                            id="familyName"
+                            name="familyName"
                             label={currentFamilyConfig.label}
                             type={currentFamilyConfig.type}
                             placeholder={currentFamilyConfig.placeholder}
                             maxLength={currentFamilyConfig.maxLength}
                             helperText={currentFamilyConfig.helperText}
-                            value={formData.familyNameOrCode}
+                            value={formData.familyName}
                             onChange={handleInputChange}
                         />
                     </section>
 
-                    {type === TYPE.CREATE && (
+                    {type === TYPE.CREATE && formData.nickname && formData.familyName && (
                         <CreateFamilyFields
                             formData={formData}
                             onChange={handleInputChange}
@@ -171,21 +172,21 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }
                     )}
                 </main>
 
-                <footer className="absolute bottom-10 w-full max-w-7xl px-4">
-                    <div className="flex flex-wrap items-center justify-between gap-4">
+                <footer className="w-full max-w-[1000px] mt-12">
+                    <div className="flex items-center justify-between gap-6">
                         <div className="flex items-center">
-                            <img src={OptionIcon} className="size-6" alt="옵션 아이콘" />
-                            <p className="ml-2 font-gangwon text-3xl">
+                            <img src={OptionIconGreen} className="size-6" alt="옵션 아이콘" />
+                            <p className="ml-2 font-gangwon text-2xl">
                                 가족명과 가족 검증 질문은 추후 홈화면 &gt; 가족설정에서{" "}
                                 <span className="text-point-color-orange">수정할 수 있어요.</span>
                             </p>
                         </div>
                         <div className="flex flex-col items-end">
-                            {error && <p className="mb-2 text-red-500 font-bold">{error}</p>}
+                            {error && <p className="mb-2 px-5 text-red-500 font-bold">{error}</p>}
                             <button
                                 onClick={handleSubmit}
-                                disabled={isLoading}
-                                className="h-[90px] w-[250px] shrink-0 rounded-2xl border-2 border-primary-300 bg-[#ECF5F1] text-2xl font-bold text-primary-300 transition-colors hover:bg-primary-100 disabled:cursor-not-allowed disabled:bg-gray-300"
+                                disabled={isLoading || !formData.nickname || !formData.familyName}
+                                className="h-[80px] w-[220px] rounded-2xl bg-primary-200 text-xl font-semibold text-white transition-opacity hover:opacity-90 disabled:bg-gray-300"
                             >
                                 {isLoading ? '처리 중...' : submitButtonText}
                             </button>
@@ -193,7 +194,9 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }
                     </div>
                 </footer>
             </div>
+
             <MobileUserInfoPage />
+
         </>
     );
 };
