@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { STEP, TYPE, type Step1Props } from "../../types/onboarding.types";
 import { familyCreate, familyJoinRequest } from '../../api/auth/family';
 import { OptionIcon } from '../../assets/icons';
+import MobileUserInfoPage from '../../pages/onboarding/MobileUserInfoPage';
 
 interface InputFieldProps {
     id: string;
@@ -131,65 +132,68 @@ export const InputUserInfo: React.FC<Step1Props> = ({ goToNextStep, type, code }
     const submitButtonText = type === TYPE.CREATE ? "생성하기" : "다음";
 
     return (
-        <div className="relative flex min-h-screen w-full flex-col items-center justify-center px-32 py-48">
-            <main className="flex w-full max-w-[1440px] flex-wrap justify-center gap-x-24 gap-y-16">
-                {/* 왼쪽 섹션 */}
-                <section className={`
+        <>
+            <div className="hidden relative lg:flex min-h-screen w-full flex-col items-center justify-center px-32 py-48">
+                <main className="flex w-full max-w-[1440px] flex-wrap justify-center gap-x-24 gap-y-16">
+                    {/* 왼쪽 섹션 */}
+                    <section className={`
                 flex flex-col gap-16 
                 ${type === TYPE.JOIN ? 'absolute top-1/4 left-16' : ''}
                 `}>
-                    <InputField
-                        id="nickname"
-                        name="nickname"
-                        label="먼저 닉네임을 설정해주세요!"
-                        placeholder="귀여운막내"
-                        maxLength={5}
-                        helperText="최대 5글자, 추후 수정이 가능해요."
-                        value={formData.nickname}
-                        onChange={handleInputChange}
-                    />
-                    <InputField
-                        id="familyNameOrCode"
-                        name="familyNameOrCode"
-                        label={currentFamilyConfig.label}
-                        type={currentFamilyConfig.type}
-                        placeholder={currentFamilyConfig.placeholder}
-                        maxLength={currentFamilyConfig.maxLength}
-                        helperText={currentFamilyConfig.helperText}
-                        value={formData.familyNameOrCode}
-                        onChange={handleInputChange}
-                    />
-                </section>
+                        <InputField
+                            id="nickname"
+                            name="nickname"
+                            label="먼저 닉네임을 설정해주세요!"
+                            placeholder="귀여운막내"
+                            maxLength={5}
+                            helperText="최대 5글자, 추후 수정이 가능해요."
+                            value={formData.nickname}
+                            onChange={handleInputChange}
+                        />
+                        <InputField
+                            id="familyNameOrCode"
+                            name="familyNameOrCode"
+                            label={currentFamilyConfig.label}
+                            type={currentFamilyConfig.type}
+                            placeholder={currentFamilyConfig.placeholder}
+                            maxLength={currentFamilyConfig.maxLength}
+                            helperText={currentFamilyConfig.helperText}
+                            value={formData.familyNameOrCode}
+                            onChange={handleInputChange}
+                        />
+                    </section>
 
-                {type === TYPE.CREATE && (
-                    <CreateFamilyFields
-                        formData={formData}
-                        onChange={handleInputChange}
-                    />
-                )}
-            </main>
+                    {type === TYPE.CREATE && (
+                        <CreateFamilyFields
+                            formData={formData}
+                            onChange={handleInputChange}
+                        />
+                    )}
+                </main>
 
-            <footer className="absolute bottom-10 w-full max-w-7xl px-4">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center">
-                        <img src={OptionIcon} className="size-6" alt="옵션 아이콘" />
-                        <p className="ml-2 font-gangwon text-3xl">
-                            가족명과 가족 검증 질문은 추후 홈화면 &gt; 가족설정에서{" "}
-                            <span className="text-point-color-orange">수정할 수 있어요.</span>
-                        </p>
+                <footer className="absolute bottom-10 w-full max-w-7xl px-4">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div className="flex items-center">
+                            <img src={OptionIcon} className="size-6" alt="옵션 아이콘" />
+                            <p className="ml-2 font-gangwon text-3xl">
+                                가족명과 가족 검증 질문은 추후 홈화면 &gt; 가족설정에서{" "}
+                                <span className="text-point-color-orange">수정할 수 있어요.</span>
+                            </p>
+                        </div>
+                        <div className="flex flex-col items-end">
+                            {error && <p className="mb-2 text-red-500 font-bold">{error}</p>}
+                            <button
+                                onClick={handleSubmit}
+                                disabled={isLoading}
+                                className="h-[90px] w-[250px] shrink-0 rounded-2xl border-2 border-primary-300 bg-[#ECF5F1] text-2xl font-bold text-primary-300 transition-colors hover:bg-primary-100 disabled:cursor-not-allowed disabled:bg-gray-300"
+                            >
+                                {isLoading ? '처리 중...' : submitButtonText}
+                            </button>
+                        </div>
                     </div>
-                    <div className="flex flex-col items-end">
-                        {error && <p className="mb-2 text-red-500 font-bold">{error}</p>}
-                        <button
-                            onClick={handleSubmit}
-                            disabled={isLoading}
-                            className="h-[90px] w-[250px] shrink-0 rounded-2xl border-2 border-primary-300 bg-[#ECF5F1] text-2xl font-bold text-primary-300 transition-colors hover:bg-primary-100 disabled:cursor-not-allowed disabled:bg-gray-300"
-                        >
-                            {isLoading ? '처리 중...' : submitButtonText}
-                        </button>
-                    </div>
-                </div>
-            </footer>
-        </div>
+                </footer>
+            </div>
+            <MobileUserInfoPage />
+        </>
     );
 };
