@@ -191,7 +191,7 @@ export default function FamilyBookshelfDetailPage() {
         <div className="w-full h-[740px]">
             <div className="relative w-full h-full bg-transparent overflow-hidden">
                 <img src={BookshelfBg} alt="" className="absolute w-full h-full object-cover z-10 pointer-events-none" />
-                <div className="absolute inset-6 bg-[#EFF1F0] m-2 rounded-2xl overflow-hidden flex flex-col z-[9999]">
+                <div className="absolute inset-6 bg-back-color m-2 rounded-2xl overflow-hidden flex flex-col z-11">
                     <div className="px-6 pt-6 pb-3">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
