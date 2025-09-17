@@ -56,6 +56,7 @@ const FamilyMemoDetail = () => {
 
     return (
         <div className="w-[965px] h-[740px] bg-white rounded-2xl border border-light-gray">
+
             <div className="relative w-full h-full bg-transparent overflow-hidden">
                 <div className="m-2 rounded-2xl overflow-hidden flex flex-col z-[9999]">
                     <div className="px-6 pt-6 pb-3">
