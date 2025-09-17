@@ -100,7 +100,7 @@ const TodaysQuestion = () => {
         },
         onError: (error) => {
             console.error("답변 제출 실패:", error);
-            FailToast("답변 제출에 실패했습니다.");
+            FailToast("다시 한 번 답변을 제출해주세요.");
         }
     });
 
