@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useAuthStore } from '../store/auth';
+import BellIcon from '../assets/icons/home/Bell.svg';
 
 const useSSE = () => {
     const { accessToken } = useAuthStore.getState();
@@ -36,10 +37,16 @@ const useSSE = () => {
 
                 const message = notificationData.contentText || '새로운 알림이 도착했습니다!';
                 console.log('🔔 Toast message content:', message);
-                toast.info(message);
+                toast(
+                    () => (
+                        <div className="flex items-center gap-3 font-pretendard">
+                        <img src={BellIcon} alt="알림" className="w-6 h-6" />
+                <p className="text-sm text-black">{message}</p>
+                    </div>
+            )
+            );
 
             } catch (error) {
-                // JSON 파싱에 실패한 경우 (최초 연결 메시지 등)
                 if (event.data.includes('EventStream Created')) {
                     return;
                 }
@@ -47,7 +54,6 @@ const useSSE = () => {
             }
         };
 
-        // "sse"라는 이름으로 오는 이벤트를 수신하도록 설정합니다.
         eventSource.addEventListener('sse', handleSseMessage);
 
         eventSource.onerror = (error) => {
@@ -55,7 +61,6 @@ const useSSE = () => {
             eventSource.close();
         };
 
-        // 컴포넌트 정리 시 이벤트 리스너도 함께 제거해줍니다.
         return () => {
             eventSource.removeEventListener('sse', handleSseMessage);
             eventSource.close();
