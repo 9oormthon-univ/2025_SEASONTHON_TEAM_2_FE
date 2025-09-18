@@ -2,6 +2,8 @@
 
 [2025 kakao X groom 시즌톤] 2팀 [ Everflow ] 프론트 레포지토리
 
+![Image](https://github.com/user-attachments/assets/7eee9319-e1f0-4633-91a0-8b86d3455606)
+
 # EverFlow
 
 **가족 간 소통과 추억을 기록하는 디지털 가족 책장 플랫폼**
