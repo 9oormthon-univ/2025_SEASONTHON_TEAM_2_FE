@@ -2,9 +2,16 @@ import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "../style/CustomToast.css";
 import useSSE from '../hooks/useSSE.tsx';
+import NotificationModal from '../components/modal/NotificationModal.tsx';
+import {useState} from "react"; // NotificationModal 경로 확인 필요
+
 
 const RootLayout = () => {
-    useSSE();
+    const [isNotificationModalOpen, setNotificationModalOpen] = useState(false);
+
+    useSSE(() => {
+        setNotificationModalOpen(true);
+    });
 
   return (
     <>
@@ -23,6 +30,10 @@ const RootLayout = () => {
         theme="light"
         toastClassName="custom-welcome-toast"
       />
+        <NotificationModal
+            isOpen={isNotificationModalOpen}
+            onClose={() => setNotificationModalOpen(false)}
+        />
     </>
   );
 };
