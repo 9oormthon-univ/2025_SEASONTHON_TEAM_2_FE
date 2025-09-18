@@ -4,6 +4,7 @@ import { TYPE, type Step1Props } from "../../types/onboarding.types";
 import { familyCreate, familyJoinRequest } from '../../api/auth/family';
 import MobileUserInfoPage from '../../pages/onboarding/MobileUserInfoPage';
 import { OptionIconGreen } from "../../assets/icons/home";
+import { FailToast } from '../toast/FailToast';
 
 interface InputFieldProps {
     id: string;
@@ -87,7 +88,6 @@ export const InputUserInfo: React.FC<Step1Props> = ({ type, code }) => {
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
         nickname: '',
@@ -108,7 +108,6 @@ export const InputUserInfo: React.FC<Step1Props> = ({ type, code }) => {
 
     const handleSubmit = async () => {
         setIsLoading(true);
-        setError(null);
 
         try {
             if (type === TYPE.CREATE) {
@@ -124,7 +123,7 @@ export const InputUserInfo: React.FC<Step1Props> = ({ type, code }) => {
                 navigate(`/auth/on-boarding/join-question?code=${formData.familyName}&nickname=${formData.nickname}`);
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
+            FailToast(err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.");
             console.error("API Error:", err);
         } finally {
             setIsLoading(false);
@@ -180,7 +179,6 @@ export const InputUserInfo: React.FC<Step1Props> = ({ type, code }) => {
                             </p>
                         </div>
                         <div className="flex flex-col items-end">
-                            {error && <p className="mb-2 px-5 text-red-500 font-bold">{error}</p>}
                             <button
                                 onClick={handleSubmit}
                                 disabled={isLoading || !formData.nickname || !formData.familyName}
