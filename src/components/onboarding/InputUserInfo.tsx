@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TYPE, type Step1Props } from "../../types/onboarding.types";
 import { familyCreate, familyJoinRequest } from '../../api/auth/family';
-import MobileUserInfoPage from '../../pages/onboarding/MobileUserInfoPage';
 import { OptionIconGreen } from "../../assets/icons/home";
+import MobileUserInfoPage from '../../pages/onboarding/MobileUserInfoPage';
 import { FailToast } from '../toast/FailToast';
 
 interface InputFieldProps {
@@ -18,11 +18,11 @@ interface InputFieldProps {
     name: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ id, label, placeholder, maxLength, helperText, value, onChange, type = 'text', name }) => (
+const InputField: React.FC<InputFieldProps> = ({
+                                                   id, label, placeholder, maxLength, helperText, value, onChange, type = 'text', name
+                                               }) => (
     <div className="flex flex-col gap-4">
-        <label htmlFor={id} className="pl-2 font-kccganpan text-3xl text-primary-300">
-            {label}
-        </label>
+        <label htmlFor={id} className="pl-2 font-kccganpan text-3xl text-primary-300">{label}</label>
         <input
             id={id}
             name={name}
@@ -31,7 +31,7 @@ const InputField: React.FC<InputFieldProps> = ({ id, label, placeholder, maxLeng
             maxLength={maxLength}
             value={value}
             onChange={onChange}
-            className="h-[80px] w-[540px] rounded-2xl border border-light-gray bg-white p-5 pl-8 text-2xl text-black focus:outline-none"
+            className="h-[80px] w-[540px] rounded-2xl border border-light-gray bg-white p-5 text-2xl"
         />
         <p className="pl-2 font-gangwon text-[26px]">{helperText}</p>
     </div>
@@ -43,52 +43,20 @@ const familyInputConfig = {
         type: "text" as const,
         placeholder: "행복한 우리집",
         maxLength: 8,
-        helperText: "최대 8글자, 우리 가족에게만 보여지며, 추후 수정이 가능해요.",
+        helperText: "최대 8글자, 추후 수정 가능",
     },
     [TYPE.JOIN]: {
         label: "가족 초대 코드를 입력해주세요!",
         type: "text" as const,
         placeholder: "000000",
         maxLength: 6,
-        helperText: "가족 초대코드는 6자리 숫자로 이루어져 있어요.",
+        helperText: "가족 초대코드는 6자리 숫자입니다.",
     },
 };
 
-const CreateFamilyFields: React.FC<{
-    formData: { verificationQuestion: string; verificationAnswer: string };
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ formData, onChange }) => (
-    <section>
-        <p className="mb-4 font-kccganpan text-2xl text-primary-200">이어서, 가족 검증 질문을 작성해주세요</p>
-        <InputField
-            id="verificationQuestion"
-            name="verificationQuestion"
-            label="Q. 질문"
-            placeholder="우리 가족 구성원은 몇 명 인가요?"
-            maxLength={20}
-            helperText="최대 20자, 추후 수정이 가능해요"
-            value={formData.verificationQuestion}
-            onChange={onChange}
-        />
-        <div className="mt-4" />
-        <InputField
-            id="verificationAnswer"
-            name="verificationAnswer"
-            label="A. 답변"
-            placeholder="4명"
-            maxLength={8}
-            helperText="최대 8자, 추후 수정이 가능해요"
-            value={formData.verificationAnswer}
-            onChange={onChange}
-        />
-    </section>
-);
-
 export const InputUserInfo: React.FC<Step1Props> = ({ type, code }) => {
     const navigate = useNavigate();
-
     const [isLoading, setIsLoading] = useState(false);
-
     const [formData, setFormData] = useState({
         nickname: '',
         familyName: code ?? '',
@@ -108,29 +76,29 @@ export const InputUserInfo: React.FC<Step1Props> = ({ type, code }) => {
 
     const handleSubmit = async () => {
         setIsLoading(true);
-
         try {
             if (type === TYPE.CREATE) {
                 await familyCreate(formData);
                 localStorage.setItem("nickname", formData.nickname);
-
-                navigate("/auth/on-boarding/create-complete", {
-                    state: { nickname: formData.nickname }
-                });
+                navigate("/auth/on-boarding/create-complete", { state: { nickname: formData.nickname } });
             } else if (type === TYPE.JOIN) {
-                await familyJoinRequest(formData.nickname, formData.familyName);
-
-                navigate(`/auth/on-boarding/join-question?code=${formData.familyName}&nickname=${formData.nickname}`);
+                const res = await familyJoinRequest(formData.nickname, formData.familyName);
+                navigate(`/auth/on-boarding/join-question`, {
+                    state: {
+                        code: formData.familyName,
+                        nickname: formData.nickname,
+                        verificationQuestion: res.data.verificationQuestion,
+                    }
+                });
             }
         } catch (err) {
-            FailToast(err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.");
-            console.error("API Error:", err);
+            FailToast(err instanceof Error ? err.message : "알 수 없는 오류 발생");
         } finally {
             setIsLoading(false);
         }
     };
 
-    const currentFamilyConfig = familyInputConfig[type];
+    const currentConfig = familyInputConfig[type];
     const submitButtonText = type === TYPE.CREATE ? "생성하기" : "다음";
 
     return (
@@ -144,45 +112,36 @@ export const InputUserInfo: React.FC<Step1Props> = ({ type, code }) => {
                             label="먼저 닉네임을 설정해주세요!"
                             placeholder="귀여운막내"
                             maxLength={5}
-                            helperText="최대 5글자, 추후 수정이 가능해요."
+                            helperText="최대 5글자, 추후 수정 가능"
                             value={formData.nickname}
                             onChange={handleInputChange}
                         />
                         <InputField
                             id="familyName"
                             name="familyName"
-                            label={currentFamilyConfig.label}
-                            type={currentFamilyConfig.type}
-                            placeholder={currentFamilyConfig.placeholder}
-                            maxLength={currentFamilyConfig.maxLength}
-                            helperText={currentFamilyConfig.helperText}
+                            label={currentConfig.label}
+                            type={currentConfig.type}
+                            placeholder={currentConfig.placeholder}
+                            maxLength={currentConfig.maxLength}
+                            helperText={currentConfig.helperText}
                             value={formData.familyName}
                             onChange={handleInputChange}
                         />
                     </section>
-
-                    {type === TYPE.CREATE && formData.nickname && formData.familyName && (
-                        <CreateFamilyFields
-                            formData={formData}
-                            onChange={handleInputChange}
-                        />
-                    )}
                 </main>
-
                 <footer className="w-full max-w-[1000px] mt-12">
                     <div className="flex items-center justify-between gap-6">
                         <div className="flex items-center">
-                            <img src={OptionIconGreen} className="size-6" alt="옵션 아이콘" />
+                            <img src={OptionIconGreen} className="size-6" alt="옵션" />
                             <p className="ml-2 font-gangwon text-2xl">
-                                가족명과 가족 검증 질문은 추후 홈화면 &gt; 가족설정에서{" "}
-                                <span className="text-point-color-orange">수정할 수 있어요.</span>
+                                가족명과 질문은 추후 홈화면 &gt; 가족설정에서 수정 가능
                             </p>
                         </div>
                         <div className="flex flex-col items-end">
                             <button
                                 onClick={handleSubmit}
                                 disabled={isLoading || !formData.nickname || !formData.familyName}
-                                className="h-[80px] w-[220px] rounded-2xl bg-primary-200 text-xl font-semibold text-white transition-opacity hover:opacity-90 disabled:bg-gray-300"
+                                className="h-[80px] w-[220px] rounded-2xl bg-primary-200 text-xl font-semibold text-white disabled:bg-gray-300"
                             >
                                 {isLoading ? '처리 중...' : submitButtonText}
                             </button>
@@ -190,8 +149,6 @@ export const InputUserInfo: React.FC<Step1Props> = ({ type, code }) => {
                     </div>
                 </footer>
             </div>
-
-            {/* 모바일 페이지 */}
             <MobileUserInfoPage />
         </>
     );
