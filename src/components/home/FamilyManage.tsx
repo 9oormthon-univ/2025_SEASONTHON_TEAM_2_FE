@@ -11,6 +11,7 @@ import { SuccessToast } from "../toast/SuccessToast";
 import { FailToast } from "../toast/FailToast";
 import type { AxiosError } from "axios";
 
+// 가족 정보 조회/수정 및 초대 링크 복사를 제공하는 관리 페이지입니다.
 export default function FamilyManage() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -31,6 +32,7 @@ export default function FamilyManage() {
         },
     });
 
+    // 내 가족 구성원 목록
     const { data: familyMembers } = useQuery({
         queryKey: ["my-family-members"],
         queryFn: getMyFamilyMembers,
@@ -46,6 +48,7 @@ export default function FamilyManage() {
         }
     }, [familyInfo]);
 
+    // 가족 정보 수정 뮤테이션
     const { mutate: editFamilyMutation } = useMutation({
         mutationFn: editFamilyInfo,
         onSuccess: () => {
@@ -79,6 +82,7 @@ export default function FamilyManage() {
         setIsEditing(false);
     };
 
+    // 초대 링크를 클립보드에 복사합니다.
     const handleCopyClipBoard = async (code: string) => {
         try {
             await navigator.clipboard.writeText(`${import.meta.env.VITE_DEPLOY_URL}/invite/${code}`);
@@ -93,8 +97,8 @@ export default function FamilyManage() {
                 <div className="flex items-center justify-center gap-2">
                     <img src={Xmark} className="size-6" />
                     <span className="font-semibold text-red-500">
-            초대링크 복사에 실패했습니다. 다시 시도해주세요.
-          </span>
+                        초대링크 복사에 실패했습니다. 다시 시도해주세요.
+                    </span>
                 </div>
             );
         }
@@ -178,8 +182,8 @@ export default function FamilyManage() {
                                     />
                                 ) : (
                                     <span className="text-dark-gray text-2xl">
-                    {familyInfo.verificationQuestion}
-                  </span>
+                                        {familyInfo.verificationQuestion}
+                                    </span>
                                 )}
                             </li>
                             <li className="flex flex-col gap-2">
@@ -196,8 +200,8 @@ export default function FamilyManage() {
                                     />
                                 ) : (
                                     <span className="text-dark-gray text-2xl">
-                    {familyInfo.verificationAnswer}
-                  </span>
+                                        {familyInfo.verificationAnswer}
+                                    </span>
                                 )}
                             </li>
                         </ul>

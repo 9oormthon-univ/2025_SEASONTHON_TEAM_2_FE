@@ -1,3 +1,5 @@
+// 인증/유저 정보를 관리하는 Zustand 스토어입니다.
+// - accessToken, refreshToken, user, familyCode 등을 영속 저장합니다.
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
@@ -35,6 +37,7 @@ export const useAuthStore = create<AuthState>()(
       setRefreshToken: (token) => set({ refreshToken: token }),
       setAccessToken: (token) => set({ accessToken: token }),
 
+      // 유저 정보와 함께 전달되는 familyCode를 분리해 저장합니다.
       setUser: (userWithFamilyCode) => {
         if (userWithFamilyCode) {
           const { familyCode, ...userWithoutFamilyCode } = userWithFamilyCode;
@@ -51,6 +54,7 @@ export const useAuthStore = create<AuthState>()(
       setWelcomeToastShown: (shown) => set({ welcomeToastShown: shown }),
       setFamilyCode: (code) => set({ familyCode: code }),
 
+      // 로그아웃 등 저장된 인증 상태를 초기화합니다.
       clear: () =>
         set({
           refreshToken: null,

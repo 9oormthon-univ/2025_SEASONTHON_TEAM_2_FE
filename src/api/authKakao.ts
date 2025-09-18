@@ -1,6 +1,10 @@
+// 카카오 OAuth 관련 API 유틸리티
+// - 인가 코드로 카카오 토큰(ID 토큰)을 발급받습니다.
+// - 발급받은 ID 토큰으로 백엔드에 로그인하여 서비스 토큰을 저장합니다.
 import axios from "axios";
 import { useAuthStore } from "../store/auth";
 
+// 카카오 인가 코드로 ID 토큰을 교환합니다.
 const getKakaoToken = async (code: string) => {
   const params = {
     grant_type: "authorization_code",
@@ -15,6 +19,7 @@ const getKakaoToken = async (code: string) => {
   return res.data.id_token;
 };
 
+// 백엔드에 ID 토큰을 전달하여 서비스용 액세스 토큰을 발급받고 저장합니다.
 const loginToServer = async (id_token: string) => {
   const res = await axios.post(
     `${import.meta.env.VITE_API_URL}/auth/login`,

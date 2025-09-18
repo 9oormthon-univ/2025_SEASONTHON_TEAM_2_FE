@@ -1,3 +1,6 @@
+// 라우팅 트리를 정의하는 파일입니다.
+// - PublicLayout과 PrivateLayout으로 인증 상태에 따라 페이지를 분기합니다.
+// - 중첩 라우트로 레이아웃을 구성하고, 일부 모바일 전용 라우트도 포함합니다.
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import KakaoCallback from "./pages/KakaoCallback";
@@ -28,6 +31,7 @@ import MobileFamilyInvitePage from "./pages/onboarding/MobileFamilyInvitePage.ts
 import FamilyMemoDetail from "./components/FamilyMemoDetail.tsx";
 
 
+// 앱 전역에서 사용할 라우터 인스턴스를 생성합니다.
 export const router = createBrowserRouter([
     {
         element: <RootLayout />,
@@ -35,11 +39,14 @@ export const router = createBrowserRouter([
             {
                 element: <PublicLayout />,
                 children: [
+                    // 랜딩 페이지
                     { path: "/", element: <MainPage /> },
+                    // 모바일 온보딩 진입점 (공개 경로)
                     { path: "mobile/on-boarding", element: <IntroPage /> },
                     { path: "mobile/user-info", element: <MobileUserInfoPage /> },
                     { path: "mobile/family-invite", element: <MobileFamilyInvitePage /> },
 
+                    // 초대 코드로 진입하는 라우트 (공개 경로)
                     { path: "/invite/:familyCode", element: <FamilyInvitePage /> },
                     {
                         path: "/auth",
@@ -50,6 +57,7 @@ export const router = createBrowserRouter([
                             </div>
                         ),
                         children: [
+                            // 카카오 로그인 콜백 처리
                             { path: "kakao/callback", element: <KakaoCallback /> },
                             {
                                 path: "on-boarding",
@@ -73,9 +81,13 @@ export const router = createBrowserRouter([
                         path: "/home",
                         element: <Home />,
                         children: [
+                            // 홈 대시보드
                             { index: true, element: <HomeIndex /> },
+                            // 책 상세 보기
                             { path: "books/:bookId", element: <FamilyBookshelfDetail /> },
+                            // 가족 관리 페이지
                             { path: "family/manage", element: <FamilyManage /> },
+                            // 가족 메모 상세
                             { path: "family/memo", element: <FamilyMemoDetail /> },
                         ]
                     },
@@ -83,9 +95,10 @@ export const router = createBrowserRouter([
                         path: "/notifications",
                         element: <NotificationsPage />
                     },
+                    // 모바일 전용 페이지
                     { path: "/book", element: <BookPage /> },
                     { path: "/memo", element: <MemoPage /> },
-                    { path: "/profile", element: <ProfilePage/> },
+                    { path: "/profile", element: <ProfilePage /> },
                     { path: "/mobile/notifications", element: <MobileNotificationsPage /> },
                     { path: "/today", element: <LargeTodaysQuestionPage /> },
                 ]

@@ -1,17 +1,18 @@
+// 앱 전역 레이아웃: 토스트 컨테이너와 알림 모달, 중첩 라우트를 렌더링합니다.
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "../style/CustomToast.css";
 import useSSE from '../hooks/useSSE.tsx';
 import NotificationModal from '../components/modal/NotificationModal.tsx';
-import {useState} from "react"; // NotificationModal 경로 확인 필요
+import { useState } from "react"; // NotificationModal 경로 확인 필요
 
 
 const RootLayout = () => {
-    const [isNotificationModalOpen, setNotificationModalOpen] = useState(false);
+  const [isNotificationModalOpen, setNotificationModalOpen] = useState(false);
 
-    useSSE(() => {
-        setNotificationModalOpen(true);
-    });
+  useSSE(() => {
+    setNotificationModalOpen(true);
+  });
 
   return (
     <>
@@ -30,10 +31,10 @@ const RootLayout = () => {
         theme="light"
         toastClassName="custom-welcome-toast"
       />
-        <NotificationModal
-            isOpen={isNotificationModalOpen}
-            onClose={() => setNotificationModalOpen(false)}
-        />
+      <NotificationModal
+        isOpen={isNotificationModalOpen}
+        onClose={() => setNotificationModalOpen(false)}
+      />
     </>
   );
 };
