@@ -1,8 +1,11 @@
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "../style/CustomToast.css";
+import useSSE from '../hooks/useSSE';
 
 const RootLayout = () => {
+    useSSE();
+
   return (
     <>
       <Outlet />
