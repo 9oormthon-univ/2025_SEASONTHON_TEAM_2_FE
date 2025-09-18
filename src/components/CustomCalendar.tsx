@@ -92,7 +92,7 @@ const CustomCalendar = () => {
             id: appt.appointmentId,
             title: appt.appointmentName,
             details: `${moment(appt.startTime).format('HH:mm')}~${moment(appt.endTime).format('HH:mm')}, ${appt.location}`,
-            attendees: `${appt.proposeUserName} 외 ${appt.participantNum > 1 ? appt.participantNum - 1 + '명' : '0명'}`,
+            attendees: `${appt.proposeUserName}${appt.participantNum > 0 ? ` 외 ${appt.participantNum}명` : ''}`,
             color: appt.color,
         }));
     }, [dailyAppointmentsData]);
