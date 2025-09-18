@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { useAuthStore } from '../store/auth';
 import BellIcon from '../assets/icons/home/Bell.svg';
 
-const useSSE = () => {
+const useSSE = (onAppointmentNotification: () => void) => {
     const { accessToken } = useAuthStore.getState();
 
     useEffect(() => {
@@ -35,16 +35,20 @@ const useSSE = () => {
                     return;
                 }
 
-                const message = notificationData.contentText || '새로운 알림이 도착했습니다!';
-                console.log('🔔 Toast message content:', message);
-                toast(
-                    () => (
-                        <div className="flex items-center gap-3 font-pretendard">
-                        <img src={BellIcon} alt="알림" className="w-6 h-6" />
-                <p className="text-sm text-black">{message}</p>
-                    </div>
-            )
-            );
+                if (notificationData.contentText && notificationData.contentText.includes('약속을 신청')) {
+                    onAppointmentNotification();
+                } else {
+                    const message = notificationData.contentText || '새로운 알림이 도착했습니다!';
+                    console.log('🔔 Toast message content:', message);
+                    toast(
+                        () => (
+                            <div className="flex items-center gap-3 font-pretendard">
+                                <img src={BellIcon} alt="알림" className="w-6 h-6" />
+                                <p className="text-sm text-black">{message}</p>
+                            </div>
+                        )
+                    );
+                }
 
             } catch (error) {
                 if (event.data.includes('EventStream Created')) {
@@ -66,7 +70,7 @@ const useSSE = () => {
             eventSource.close();
             console.log('SSE connection closed.');
         };
-    }, [accessToken]);
+    }, [accessToken, onAppointmentNotification]);
 };
 
 export default useSSE;
