@@ -1,14 +1,13 @@
-# 2025_SEASONTHON_TEAM_2_FE
+<h1> <p align="center"> ☁️ [2025 kakao X 9oorm 시즌톤] 2팀 Everflow (에버플로우) ☁️ </p> </h1>
 
-[2025 kakao X groom 시즌톤] 2팀 [ Everflow ] 프론트 레포지토리
-
-![Image](https://github.com/user-attachments/assets/7eee9319-e1f0-4633-91a0-8b86d3455606)
+[2025 kakao X groom 시즌톤] 2팀 [ Everflow ] FE 레포지토리
 
 # EverFlow
 
-**가족 간 소통과 추억을 기록하는 디지털 가족 책장 플랫폼**
+<p align="center">$\huge{\rm{\color{#5ad7b7}세대를\ 잇는\ 소통의\ 흐름}}$</p>
+<h2> <p align="center">🌊 Everflow 와 함께해보세요.</p> </h2>
 
-EverFlow는 가족 구성원들이 함께 질문에 답하고, 서로의 생각을 공유하며, 소중한 추억을 기록할 수 있는 웹 애플리케이션입니다. 매일 제공되는 질문을 통해 가족 간의 깊이 있는 대화를 유도하고, 모든 답변을 디지털 책장 형태로 보관하여 가족의 성장 과정을 시각적으로 추적할 수 있습니다.
+![Image](https://github.com/user-attachments/assets/7eee9319-e1f0-4633-91a0-8b86d3455606)
 
 ## 🚀 핵심 기술 스택
 
@@ -32,7 +31,7 @@ EverFlow는 가족 구성원들이 함께 질문에 답하고, 서로의 생각�
 
 ### 💭 오늘의 질문 (Daily Questions)
 
-- 매일 새로운 질문이 제공되어 가족 간 대화 유도
+- 3일 간격으로 새로운 질문이 제공되어 가족 간 대화 유도
 - 질문별 답변 기간 표시 (예: "3일 남음")
 - 가족 구성원들의 답변을 실시간으로 확인
 - 답변 수정 및 지난 질문 히스토리 조회 기능
