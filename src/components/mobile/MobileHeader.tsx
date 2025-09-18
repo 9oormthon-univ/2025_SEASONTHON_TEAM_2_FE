@@ -14,14 +14,17 @@ export default function MobileHeader({
                                          isLarge = false,
                                      }: MobileHeaderProps) {
     const navigate = useNavigate();
-
     const [items, setItems] = useState<NotiItem[]>([]);
 
     useEffect(() => {
-        getRecentNotifications()
-            .then((dtos) => setItems(dtos.map(mapDtoToNotiItem)))
-            .catch(() => setItems([]));
-    }, []);
+        const accessToken = localStorage.getItem('accessToken');
+
+        if (accessToken) {
+            getRecentNotifications()
+                .then((dtos) => setItems(dtos.map(mapDtoToNotiItem)))
+                .catch(() => setItems([]));
+        }
+    }, []); // 최초 렌더링 시 한 번만 실행
 
     const hasAny = items.length > 0;
     const bellIcon = hasAny ? BellActive : Bell;

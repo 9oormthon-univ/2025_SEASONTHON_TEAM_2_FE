@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react"; // useRef를 import 합니다.
 import { useNavigate } from "react-router-dom";
 import { getKakaoToken, loginToServer } from "../api/authKakao";
 import { getUserProfile } from "../api/user";
@@ -7,6 +7,7 @@ export default function KakaoCallback() {
     const code =
         new URL(document.location.toString()).searchParams.get("code") || "";
     const navigate = useNavigate();
+    const isProcessing = useRef(false); // ✅ 실행 여부를 체크하기 위한 ref 추가
 
     useEffect(() => {
         const handleLogin = async () => {
@@ -26,10 +27,12 @@ export default function KakaoCallback() {
                 }
             } catch (error) {
                 console.error("로그인 처리 중 에러 발생:", error);
+                navigate("/"); // 에러 발생 시 메인 페이지로 이동
             }
         };
 
-        if (code) {
+        if (code && !isProcessing.current) {
+            isProcessing.current = true; // 실행 중이라고 표시
             handleLogin();
         }
     }, [code, navigate]);
