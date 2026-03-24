@@ -2,7 +2,7 @@
 <p align="center">$\huge{\rm{\color{#B1CEB1}세대를\ 잇는\ 소통의\ 흐름}}$</p>
 <h3> <p align="center">🌊 Everflow 와 함께해보세요.</p> </h3>
 
-<img width="7680" height="4320" alt="Image" src="https://github.com/user-attachments/assets/5a03afa9-36c2-433c-ae41-59e6e6c06761" />
+<img width="1920" height="960" alt="Image" src="https://github.com/user-attachments/assets/feb75d44-7a51-4385-bcab-65e8e0030765" />
 
 ## 🚀 핵심 기술 스택
 
