@@ -1,3 +1,4 @@
+// 홈 레이아웃: 데스크톱/모바일 뷰를 분기해 대시보드를 구성합니다.
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import MainHeader from "../components/MainHeader";

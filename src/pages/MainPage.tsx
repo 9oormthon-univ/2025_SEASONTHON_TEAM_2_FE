@@ -1,3 +1,4 @@
+// 랜딩 페이지: 카카오 로그인 진입 버튼과 배경 애니메이션을 제공합니다.
 import KakaoSocialBtn from "../components/KakaoSocialBtn";
 import { MobileIcon } from "../assets/icons/mobile";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
@@ -10,7 +11,7 @@ function MainPage() {
                     src="/main.lottie"
                     loop
                     autoplay
-                    className="w-full h-auto object-contain scale-[3] md:scale-[2] lg:scale-[1.5] origin-center"/>
+                    className="w-full h-auto object-contain scale-[3] md:scale-[2] lg:scale-[1.5] origin-center" />
             </div>
             {/* Desktop */}
             <div className="hidden lg:flex flex-col items-center gap-5 w-full max-w-[600px] relative z-10">

@@ -1,3 +1,6 @@
+// 공용 Axios 인스턴스를 생성하고 인터셉터를 설정합니다.
+// - baseURL은 VITE_API_URL 환경 변수에서 주입됩니다.
+// - 모든 요청에 Zustand 스토어의 accessToken을 자동으로 헤더에 첨부합니다.
 import axios, {
   AxiosError,
   type AxiosInstance,
@@ -5,11 +8,12 @@ import axios, {
 } from "axios";
 import { useAuthStore } from "../store/auth";
 
+// 애플리케이션 전역에서 사용할 Axios 인스턴스입니다.
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-// 모든 요청을 보낼 때마다 자동으로 토큰을 헤더에 추가해주는 코드입니다.
+// 요청 인터셉터: Authorization 헤더에 Bearer 토큰을 자동으로 추가합니다.
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     config.headers = config.headers ?? {};
@@ -27,57 +31,5 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-// axiosInstance.interceptors.response.use(
-//   (response: AxiosResponse) => {
-//     return response;
-//   },
-//   async (error: AxiosError) => {
-//     const originalRequest = error.config as InternalAxiosRequestConfig & {
-//       _retry?: boolean;
-//     };
-//     if (
-//       error.response?.status === 401 &&
-//       originalRequest &&
-//       !originalRequest._retry
-//     ) {
-//       originalRequest._retry = true;
-
-//       try {
-//         const { refreshToken, setAccessToken, setRefreshToken, clear } =
-//           useAuthStore.getState();
-//         if (!refreshToken) {
-//           console.error("Refresh token이 없습니다. 로그인이 필요합니다.");
-//           clear();
-//           window.location.href = "/";
-//           return Promise.reject(error);
-//         }
-
-//         const res = await axios.post(
-//           `${import.meta.env.VITE_API_URL}/auth/reissue`,
-//           {
-//             refreshToken,
-//           }
-//         );
-//         const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-//           res.data;
-
-//         setAccessToken(newAccessToken);
-//         setRefreshToken(newRefreshToken);
-
-//         if (originalRequest.headers) {
-//           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-//         }
-
-//         return axiosInstance(originalRequest);
-//       } catch (refreshError) {
-//         console.error("토큰 재발급 실패 : ", refreshError);
-//         const { clear } = useAuthStore.getState();
-//         clear();
-//         return Promise.reject(refreshError);
-//       }
-//     }
-//   }
-// );
 
 export default axiosInstance;

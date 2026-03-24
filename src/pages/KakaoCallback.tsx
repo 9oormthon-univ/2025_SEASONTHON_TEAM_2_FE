@@ -1,3 +1,4 @@
+// 카카오 OAuth 콜백 페이지: 인가 코드를 받아 서비스 로그인까지 처리합니다.
 import { useEffect, useRef } from "react"; // useRef를 import 합니다.
 import { useNavigate } from "react-router-dom";
 import { getKakaoToken, loginToServer } from "../api/authKakao";

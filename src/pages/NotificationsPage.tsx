@@ -1,3 +1,4 @@
+// 알림 페이지: 읽지 않은 알림을 로드하고 액션/읽기 처리 및 모달 연동을 제공합니다.
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import MainHeader from "../components/MainHeader";
@@ -114,11 +115,10 @@ export default function NotificationsPage() {
                             </span>
                         </div>
                         <button
-                            className={`h-8 px-3 rounded-lg text-[19px] font-semibold font-pretendard mr-5 ${
-                                hasReadNotis
-                                    ? "text-primary-300 cursor-pointer hover:underline"
-                                    : "text-gray-400 cursor-not-allowed"
-                            }`}
+                            className={`h-8 px-3 rounded-lg text-[19px] font-semibold font-pretendard mr-5 ${hasReadNotis
+                                ? "text-primary-300 cursor-pointer hover:underline"
+                                : "text-gray-400 cursor-not-allowed"
+                                }`}
                             onClick={handleMarkAllRead}
                             disabled={!hasReadNotis}
                             type="button"

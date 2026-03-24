@@ -1,3 +1,4 @@
+// 실시간 알림(SSE) 구독 훅: 액세스 토큰이 있을 때 서버 이벤트를 수신합니다.
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useAuthStore } from '../store/auth'; // 경로는 실제 프로젝트에 맞게 확인해주세요.

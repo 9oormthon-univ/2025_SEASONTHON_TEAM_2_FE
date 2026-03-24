@@ -1,3 +1,4 @@
+// 홈 인덱스: 오늘의 질문 + 캘린더 섹션을 배치합니다.
 import TodaysQuestion from "../components/home/TodaysQuestion";
 import CustomCalendar from "../components/CustomCalendar";
 

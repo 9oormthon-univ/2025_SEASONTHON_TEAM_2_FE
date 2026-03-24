@@ -1,8 +1,11 @@
+// 사용자 관련 API 유틸리티
+// - 프로필 조회/수정, 로그아웃을 제공합니다.
 import axios from "axios";
 import { useAuthStore, type AuthUser } from "../store/auth";
 import axiosInstance from "./axiosInstance";
 import { SuccessToast } from "../components/toast/SuccessToast";
 
+// 액세스 토큰으로 현재 유저 정보를 조회합니다.
 const getUserProfile = async (accessToken: string): Promise<AuthUser> => {
   const res = await axios
     .get(`${import.meta.env.VITE_API_URL}/auth/me`, {
@@ -18,6 +21,7 @@ const getUserProfile = async (accessToken: string): Promise<AuthUser> => {
   return res.data;
 };
 
+// 닉네임을 수정하고 성공 시 로그아웃을 수행합니다.
 const modifyNickname = async (nickname: string) => {
   try {
     const res = await axiosInstance.patch("/api/users/me/nickname", {
@@ -40,6 +44,7 @@ const modifyNickname = async (nickname: string) => {
   }
 };
 
+// 프로필 이미지를 수정하고 성공 시 로그아웃을 수행합니다.
 const modifyProfileImg = async (profileImg: File) => {
   const formData = new FormData();
 
@@ -69,6 +74,7 @@ const modifyProfileImg = async (profileImg: File) => {
   }
 };
 
+// 서버 로그아웃 후 로컬 스토어를 초기화합니다.
 const authLogout = async () => {
   const res = await axiosInstance.post("/auth/logout");
   if (res.data.success) {
